@@ -25,7 +25,8 @@ X[:,1] = x
 X[:,2] = x**2
 # We split the data in test and training data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-# matrix inversion to find beta
+
+# matrix inversion to find beta_ols
 beta = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
 print(beta)
 
