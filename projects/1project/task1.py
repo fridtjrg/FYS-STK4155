@@ -19,11 +19,13 @@ def FrankeFunction(x,y): #code from task
 	term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
 	return term1 + term2 + term3 + term4
 
+#calculates R2 score and MSE
 def R2(y_data, y_model): #week 35 exercise
     return 1 - np.sum((y_data - y_model) ** 2) / np.sum((y_data - np.mean(y_data)) ** 2)
 def MSE(y_data,y_model):
     n = np.size(y_model)
     return np.sum((y_data-y_model)**2)/n
+
 
 def SVD(A): #week35 SVD
     U, S, VT = np.linalg.svd(A,full_matrices=True)
@@ -32,7 +34,7 @@ def SVD(A): #week35 SVD
         D[i,i]=S[i]
     return U @ D @ VT
 
-
+#Makes a 3d plot of the franke function
 def Plot_franke_function(): #code from task
 	fig = plt.figure()
 	ax = fig.gca(projection="3d")
@@ -56,6 +58,7 @@ def Plot_franke_function(): #code from task
 	fig.colorbar(surf, shrink=0.5, aspect=5)
 	plt.show()
 
+
 #setting up data
 n = 100
 
@@ -63,7 +66,7 @@ x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + sigma_N*np.random.randn(100)
+z = FrankeFunction(x,y) + sigma_N*np.random.randn(100)	#adding noise to the dataset
 
 
 #Setting up design matrix from week 35-36 lecture slides
@@ -89,7 +92,7 @@ X = create_X(x, y, highest_order)
 
 
 
-#Scale or split first? does it matter?
+
 
 #Splitting training and test data
 X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
@@ -100,6 +103,7 @@ scaler.fit(X_train)
 
 X_scaled = scaler.transform(X_train)
 
+#used to scale train and test
 z_mean = np.mean(z_train)
 z_sigma = np.std(z_train)
 
@@ -109,11 +113,11 @@ z_train = (z_train- z_mean)/z_sigma
 
 
 #Singular value decomposition
-X_train = SVD(X_train) #is this inversed?
+X_train = SVD(X_train) 
 
 
 # Calculating Beta Ordinary Least Square with matrix inversion
-beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #singular matrix
+beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
 
 z_test = (z_test- z_mean)/z_sigma
 
