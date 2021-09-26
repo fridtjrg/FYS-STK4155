@@ -1,4 +1,7 @@
-# FYS-STK4155 – Applied Data Analysis and Machine Learning
+
+ <img align="right" width="300" src="https://user-images.githubusercontent.com/59051647/134805563-ac2b3d50-c0b2-4acd-a22a-32d7dc1fd999.jpg">
+
+ # FYS-STK4155 – Applied Data Analysis and Machine Learning
 
 ![license](https://img.shields.io/github/license/adelezaini/MachineLearning)
 
