@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
+import statistics
 
 
 
@@ -94,7 +95,7 @@ X = create_X(x, y, highest_order)
 
 
 
-#Splitting training and test data
+#Splitting training and test data (20%test)
 X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
 
 #scaling the the input with standardscalar (week35)
@@ -117,23 +118,46 @@ X_train = SVD(X_train)
 
 
 # Calculating Beta Ordinary Least Square with matrix inversion
-beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
+ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
 
 z_test = (z_test- z_mean)/z_sigma
 
 X_test = scaler.transform(X_test)
 
-ztilde = X_train @ beta
+ztilde = X_train @ ols_beta
 print("Training R2")
 print(R2(z_train,ztilde))
 print("Training MSE")
 print(MSE(z_train,ztilde))
-zpredict = X_test @ beta
+
+
+zpredict = X_test @ ols_beta
 print("Test R2")
 print(R2(z_test,zpredict))
 print("Test MSE")
 print(MSE(z_test,zpredict))
 
-plt.plot()
 
 
+"""
+What to plot? (use mesh, x,y, z and z_tilda?)
+How to find confidence? y-y_tilda
+
+print("Beta(ols) variance:") //variance of beta? or = np.mean( np.var(y_pred, axis=1, keepdims=True) )
+print(statistics.variance(ols_beta))
+
+
+plt.plot(X_train,ztilde, label ="u values")   
+
+
+
+
+plt.xlabel("x-values")
+plt.ylabel("u and v values")
+plt.title("Comparison between u and v values (n="+str(n)+")")
+plt.legend()
+plt.grid()     
+#plt.savefig('u_and_v_plotls(n='+str(n)+').pdf')
+plt.show()     
+
+"""
