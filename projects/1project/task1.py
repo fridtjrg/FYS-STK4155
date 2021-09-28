@@ -64,13 +64,13 @@ def Plot_franke_function(): #code from task
 
 
 #setting up data
-n = 100
+n = 1000 #does it matter?
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + sigma_N*np.random.randn(100)	#adding noise to the dataset
+z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the dataset
 
 
 #Setting up design matrix from week 35-36 lecture slides
@@ -90,55 +90,55 @@ def create_X(x, y, n):
 
 	return X
 
-highest_order = 5 #5th ordere polynomial
-X = create_X(x, y, highest_order)
+
+def OLS_solver(order=5):
+	highest_order = order #5th ordere polynomial
+	X = create_X(x, y, highest_order)
+
+
+	#Splitting training and test data (20%test)
+	X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
+
+	#scaling the the input with standardscalar (week35)
+	scaler = StandardScaler(with_std=False)
+	scaler.fit(X_train)
+
+	X_scaled = scaler.transform(X_train)
+
+	#used to scale train and test
+	z_mean = np.mean(z_train)
+	z_sigma = np.std(z_train)
+
+	z_train = (z_train- z_mean)/z_sigma
 
 
 
 
+	#Singular value decomposition
+	X_train = SVD(X_train) 
 
 
-#Splitting training and test data (20%test)
-X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
+	# Calculating Beta Ordinary Least Square with matrix inversion
+	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
 
-#scaling the the input with standardscalar (week35)
-scaler = StandardScaler(with_std=False)
-scaler.fit(X_train)
+	z_test = (z_test- z_mean)/z_sigma
 
-X_scaled = scaler.transform(X_train)
+	X_test = scaler.transform(X_test)
 
-#used to scale train and test
-z_mean = np.mean(z_train)
-z_sigma = np.std(z_train)
-
-z_train = (z_train- z_mean)/z_sigma
+	ztilde = X_train @ ols_beta
+	print("Training R2")
+	print(R2(z_train,ztilde))
+	print("Training MSE")
+	print(MSE(z_train,ztilde))
 
 
+	zpredict = X_test @ ols_beta
+	print("Test R2")
+	print(R2(z_test,zpredict))
+	print("Test MSE")
+	print(MSE(z_test,zpredict))
 
-
-#Singular value decomposition
-X_train = SVD(X_train) 
-
-
-# Calculating Beta Ordinary Least Square with matrix inversion
-ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
-
-z_test = (z_test- z_mean)/z_sigma
-
-X_test = scaler.transform(X_test)
-
-ztilde = X_train @ ols_beta
-print("Training R2")
-print(R2(z_train,ztilde))
-print("Training MSE")
-print(MSE(z_train,ztilde))
-
-
-zpredict = X_test @ ols_beta
-print("Test R2")
-print(R2(z_test,zpredict))
-print("Test MSE")
-print(MSE(z_test,zpredict))
+	return MSE(z_train,ztilde), MSE(z_test,zpredict)
 
 
 """
@@ -163,10 +163,41 @@ plt.plot(X_train,ztilde, label ="u values")
 
 #------Task 2------
 
+#gives a weird graph which does not bahve as expected
+#Because bootsatrap is not implemented?
+complexity = []
+MSE_train_set = []
+MSE_test_set = []
+
+for i in range(2,30): #goes out of range for high i?
+	MSE_train, MSE_test = OLS_solver(i)
+	complexity.append(i)
+	MSE_train_set.append(MSE_train)
+	MSE_test_set.append(MSE_test)
+
+
+
+plt.plot(complexity,MSE_train_set, label ="train")  
+plt.plot(complexity,MSE_test_set, label ="test")  
+ 
+
+
+plt.xlabel("complexity")
+plt.ylabel("MSE")
+plt.title("Plot of the MSE as a function of complexity of the model")
+plt.legend()
+plt.grid()     
+#plt.savefig('Task2plot(n='+str(n)+').pdf')
+plt.show() 
+
+
+"""
+How to use combine bootstrap with OLS?
+
 
 # Returns mean of bootstrap samples 
-# Bootstrap algorithm
-def bootstrap(data, datapoints):
+# Bootstrap algorithm, returns estimated mean values for each bootstrap operation
+def bootstrap(data, datapoints): #from week 37 lecture notes
     t = np.zeros(datapoints)
     n = len(data)
     # non-parametric bootstrap         
@@ -179,20 +210,21 @@ def bootstrap(data, datapoints):
     return t
 
 
-datapoints = 1000
+datapoints = 10000 #For bootstrap
 
-t = bootstrap(X_train,datapoints)
+bootstrap_means = bootstrap(z,datapoints)
 
 
-    
-n, binsboot, patches = plt.hist(t, 50, density=True, facecolor='red', alpha=0.75)
+#from week 37 notes
+n, binsboot, patches = plt.hist(bootstrap_means, 50, density=True, facecolor='red', alpha=0.75)
 # add a 'best fit' line  
-y = norm.pdf(binsboot, np.mean(t), np.std(t))
+y = norm.pdf(binsboot, np.mean(bootstrap_means), np.std(bootstrap_means))
 lt = plt.plot(binsboot, y, 'b', linewidth=1)
 plt.xlabel('x')
 plt.ylabel('Probability')
 plt.grid(True)
 plt.show()
+"""
 
 
 """
