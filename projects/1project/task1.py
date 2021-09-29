@@ -172,7 +172,7 @@ n = 500 #does it matter?
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
-sigma_N = 0.2; mu_N = 0 #change for value of sigma_N to appropriate values
+sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the dataset
 
 #gives a weird graph which does not bahve as expected
@@ -188,6 +188,7 @@ MSE_train, MSE_test = OLS_solver(X,z)
 
 
 
+#not working as intended
 for i in range(2,30): #goes out of range for high i?
 	
 	X = create_X(x, y, i)
@@ -202,7 +203,6 @@ plt.plot(complexity,MSE_train_set, label ="train")
 plt.plot(complexity,MSE_test_set, label ="test")  
  
 
-
 plt.xlabel("complexity")
 plt.ylabel("MSE")
 plt.title("Plot of the MSE as a function of complexity of the model")
@@ -211,7 +211,7 @@ plt.grid()
 #plt.savefig('Task2plot(n='+str(n)+').pdf')
 plt.show() 
 
-
+print(X)
 
 """
 How to use combine bootstrap with OLS?
@@ -220,8 +220,9 @@ How to use combine bootstrap with OLS?
 # Returns mean of bootstrap samples 
 # Bootstrap algorithm, returns estimated mean values for each bootstrap operation
 def bootstrap(data, datapoints): #from week 37 lecture notes
-    t = np.zeros(datapoints)
-    n = len(data)
+
+    t = np.zeros(datapoints) #Should be z from my understanding
+    n = len(data)			 #Data should be the designmatrix from my understanding
     # non-parametric bootstrap         
     for i in range(datapoints):
         t[i] = np.mean(data[np.random.randint(0,n,n)])
@@ -246,8 +247,8 @@ plt.xlabel('x')
 plt.ylabel('Probability')
 plt.grid(True)
 plt.show()
-"""
 
+"""
 
 """
 
