@@ -31,7 +31,7 @@ def MSE(y_data,y_model):
     return np.sum((y_data-y_model)**2)/n
 
 
-def SVD(A): #week35 SVD
+def SVD(A): #week35 SVD change to week 36
     U, S, VT = np.linalg.svd(A,full_matrices=True)
     D = np.zeros((len(U),len(VT)))
     print("shape D= ", np.shape(D))
@@ -196,6 +196,7 @@ for i in range(2,30): #goes out of range for high i?
 	complexity.append(i)
 	MSE_train_set.append(MSE_train)
 	MSE_test_set.append(MSE_test)
+
 
 
 
