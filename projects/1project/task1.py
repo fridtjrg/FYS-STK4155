@@ -140,8 +140,8 @@ def OLS_solver(designmatrix, datapoints):
 	print("Test MSE")
 	print(MSE(z_test,zpredict))
 
-	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv()
-	return MSE(z_train,ztilde), MSE(z_test,zpredict)
+	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv(X_train.T @ X_train) #Agree correct?
+	return ols_beta, MSE(z_train,ztilde), MSE(z_test,zpredict)
 
 
 """
@@ -183,7 +183,7 @@ MSE_test_set = []
 
 
 X = create_X(x, y, 40)
-MSE_train, MSE_test = OLS_solver(X,z)
+ols_beta, MSE_train, MSE_test = OLS_solver(X,z)
 
 
 
@@ -192,7 +192,7 @@ MSE_train, MSE_test = OLS_solver(X,z)
 for i in range(2,30): #goes out of range for high i?
 	
 	X = create_X(x, y, i)
-	MSE_train, MSE_test = OLS_solver(X,z)
+	ols_beta, MSE_train, MSE_test = OLS_solver(X,z)
 	complexity.append(i)
 	MSE_train_set.append(MSE_train)
 	MSE_test_set.append(MSE_test)
@@ -211,31 +211,34 @@ plt.grid()
 #plt.savefig('Task2plot(n='+str(n)+').pdf')
 plt.show() 
 
-print(X)
 
-"""
-How to use combine bootstrap with OLS?
+
+
+#How to use combine bootstrap with OLS?
 
 
 # Returns mean of bootstrap samples 
 # Bootstrap algorithm, returns estimated mean values for each bootstrap operation
-def bootstrap(data, datapoints): #from week 37 lecture notes
+def bootstrap(designmatrix, data, bootstrap_operations): #from week 37 lecture notes
 
-    t = np.zeros(datapoints) #Should be z from my understanding
-    n = len(data)			 #Data should be the designmatrix from my understanding
+    new_dataset_mean = np.zeros(bootstrap_operations) 
+    n = len(data)			 #Data should z from my understanding
     # non-parametric bootstrap         
-    for i in range(datapoints):
-        t[i] = np.mean(data[np.random.randint(0,n,n)])
+    for i in range(bootstrap_operations):
+        new_dataset_mean[i] = np.mean(data[np.random.randint(0,n,n)]) #is this beta*(is of size n)
+   		#Do we have ro relate back to fetch the OLS beta values here?
+   		#In that case, do we remove the mean of the values or take mean of the OLS values?
+
     # analysis    
     print("Bootstrap Statistics :")
     print("original           bias      std. error")
-    print("%8g %8g %14g %15g" % (np.mean(data), np.std(data),np.mean(t),np.std(t)))
-    return t
+    print("%8g %8g %14g %15g" % (np.mean(data), np.std(data),np.mean(new_dataset_mean),np.std(new_dataset_mean)))
+    return new_dataset_mean
 
 
-datapoints = 10000 #For bootstrap
+n_bootstrap = len(z) #number of bootstrap operations
 
-bootstrap_means = bootstrap(z,datapoints)
+bootstrap_means = bootstrap(X,z,n_bootstrap)
 
 
 #from week 37 notes
@@ -248,7 +251,7 @@ plt.ylabel('Probability')
 plt.grid(True)
 plt.show()
 
-"""
+
 
 """
 
