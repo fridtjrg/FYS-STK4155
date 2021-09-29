@@ -34,8 +34,15 @@ def MSE(y_data,y_model):
 def SVD(A): #week35 SVD
     U, S, VT = np.linalg.svd(A,full_matrices=True)
     D = np.zeros((len(U),len(VT)))
-    for i in range(0,len(VT)):
+    print("shape D= ", np.shape(D))
+    print("Shape S= ",np.shape(S))
+    print("lenVT =",len(VT))
+    print("lenU =",len(U))
+    D = np.eye(len(U),len(VT))*S
+    """
+    for i in range(0,VT.shape[0]): #was len(VT)
         D[i,i]=S[i]
+        print("i=",i)"""
     return U @ D @ VT
 
 #Makes a 3d plot of the franke function
@@ -63,14 +70,7 @@ def Plot_franke_function(): #code from task
 	plt.show()
 
 
-#setting up data
-n = 1000 #does it matter?
 
-x = np.linspace(0,1,n)
-y = np.linspace(0,1,n) 
-
-sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the dataset
 
 
 #Setting up design matrix from week 35-36 lecture slides
@@ -91,16 +91,17 @@ def create_X(x, y, n):
 	return X
 
 
-def OLS_solver(order=5):
-	highest_order = order #5th ordere polynomial
-	X = create_X(x, y, highest_order)
+
+def OLS_solver(designmatrix, datapoints):
+	X = designmatrix
+	z = datapoints
 
 
 	#Splitting training and test data (20%test)
 	X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
 
 	#scaling the the input with standardscalar (week35)
-	scaler = StandardScaler(with_std=False)
+	scaler = StandardScaler()
 	scaler.fit(X_train)
 
 	X_scaled = scaler.transform(X_train)
@@ -114,13 +115,14 @@ def OLS_solver(order=5):
 
 
 
-	#Singular value decomposition
-	X_train = SVD(X_train) 
+	#Singular value decomposition (removed as it doesn't work ref group teacher)
+	#X_train = SVD(X_train) 
 
 
 	# Calculating Beta Ordinary Least Square with matrix inversion
 	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
 
+	#Scaling test data
 	z_test = (z_test- z_mean)/z_sigma
 
 	X_test = scaler.transform(X_test)
@@ -138,6 +140,7 @@ def OLS_solver(order=5):
 	print("Test MSE")
 	print(MSE(z_test,zpredict))
 
+	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv()
 	return MSE(z_train,ztilde), MSE(z_test,zpredict)
 
 
@@ -163,14 +166,32 @@ plt.plot(X_train,ztilde, label ="u values")
 
 #------Task 2------
 
+#setting up data
+n = 500 #does it matter?
+
+x = np.linspace(0,1,n)
+y = np.linspace(0,1,n) 
+
+sigma_N = 0.2; mu_N = 0 #change for value of sigma_N to appropriate values
+z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the dataset
+
 #gives a weird graph which does not bahve as expected
 #Because bootsatrap is not implemented?
 complexity = []
 MSE_train_set = []
 MSE_test_set = []
 
+
+X = create_X(x, y, 40)
+MSE_train, MSE_test = OLS_solver(X,z)
+
+
+
+
 for i in range(2,30): #goes out of range for high i?
-	MSE_train, MSE_test = OLS_solver(i)
+	
+	X = create_X(x, y, i)
+	MSE_train, MSE_test = OLS_solver(X,z)
 	complexity.append(i)
 	MSE_train_set.append(MSE_train)
 	MSE_test_set.append(MSE_test)
@@ -189,6 +210,7 @@ plt.legend()
 plt.grid()     
 #plt.savefig('Task2plot(n='+str(n)+').pdf')
 plt.show() 
+
 
 
 """
