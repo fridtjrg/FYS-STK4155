@@ -15,7 +15,7 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 
 
-
+# FrankeFunction: a two-variables function to create the dataset of our vanilla problem
 def FrankeFunction(x,y): #code from task
 	term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
 	term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
@@ -23,14 +23,14 @@ def FrankeFunction(x,y): #code from task
 	term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
 	return term1 + term2 + term3 + term4
 
-#calculates R2 score and MSE
+# Error analysis: MSE and R2 score
 def R2(y_data, y_model): #week 35 exercise
     return 1 - np.sum((y_data - y_model) ** 2) / np.sum((y_data - np.mean(y_data)) ** 2)
 def MSE(y_data,y_model):
     n = np.size(y_model)
     return np.sum((y_data-y_model)**2)/n
 
-
+# SVD theorem
 def SVD(A): #week35 SVD change to week 36
     U, S, VT = np.linalg.svd(A,full_matrices=True)
     D = np.zeros((len(U),len(VT)))
@@ -69,10 +69,6 @@ def Plot_franke_function(): #code from task
 	fig.colorbar(surf, shrink=0.5, aspect=5)
 	plt.show()
 
-
-
-
-
 #Setting up design matrix from week 35-36 lecture slides
 def create_X(x, y, n):
 	if len(x.shape) > 1:
@@ -80,7 +76,7 @@ def create_X(x, y, n):
 		y = np.ravel(y)
 
 	N = len(x)
-	l = int((n+1)*(n+2)/2)		# Number of elements in beta
+	l = int((n+1)*(n+2)/2)		# Number of elements in beta, number of feutures (order-degree of polynomial)
 	X = np.ones((N,l))
 
 	for i in range(1,n+1):
@@ -90,58 +86,40 @@ def create_X(x, y, n):
 
 	return X
 
+def Split_and_Scale(X,z,test_size=0.2, scale=True):
 
+    #Splitting training and test data
+    X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=test_size)
 
-def OLS_solver(designmatrix, datapoints):
-	X = designmatrix
-	z = datapoints
+    #scaling the the input with standardscalar (week35)
+    if scale==True:
+        scaler=StandardScaler()
+        scaler.fit(X_train)
 
+        X_scaled = scaler.transform(X_train)
 
-	#Splitting training and test data (20%test)
-	X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
+        #used to scale train and test --> #why do you do it manually instead of using the Standard scaler?
+        """z_mean = np.mean(z_train)
+        z_sigma = np.std(z_train)
 
-	#scaling the the input with standardscalar (week35)
-	scaler = StandardScaler()
-	scaler.fit(X_train)
+        z_train = (z_train- z_mean)/z_sigma"""
 
-	X_scaled = scaler.transform(X_train)
+        #Scaling test data
+        X_test = scaler.transform(X_test)
+        #z_test = (z_test- z_mean)/z_sigma
+      
+    return X_train, X_test, z_train, z_test
 
-	#used to scale train and test
-	z_mean = np.mean(z_train)
-	z_sigma = np.std(z_train)
-
-	z_train = (z_train- z_mean)/z_sigma
-
-
-
-
-	#Singular value decomposition (removed as it doesn't work ref group teacher)
-	#X_train = SVD(X_train) 
-
+def OLS_solver(X,z):
 
 	# Calculating Beta Ordinary Least Square with matrix inversion
 	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
-
-	#Scaling test data
-	z_test = (z_test- z_mean)/z_sigma
-
-	X_test = scaler.transform(X_test)
-
-	ztilde = X_train @ ols_beta
-	print("Training R2")
-	print(R2(z_train,ztilde))
-	print("Training MSE")
-	print(MSE(z_train,ztilde))
-
-
-	zpredict = X_test @ ols_beta
-	print("Test R2")
-	print(R2(z_test,zpredict))
-	print("Test MSE")
-	print(MSE(z_test,zpredict))
+  
+	z_tilde = X_train @ ols_beta
+	z_predict = X_test @ ols_beta
 
 	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv(X_train.T @ X_train) #Agree correct?
-	return ols_beta, MSE(z_train,ztilde), MSE(z_test,zpredict)
+	return ols_beta, z_tilde, z_predict
 
 
 """
@@ -164,8 +142,9 @@ plt.plot(X_train,ztilde, label ="u values")
 """
 
 
-#------Task 2------
+#------Task 1------
 
+# Create vanilla dataset:
 #setting up data
 n = 500 #does it matter?
 
@@ -173,8 +152,27 @@ x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the dataset
+z = FrankeFunction(x,y) + mu_N+sigma_N*np.random.randn(n)	#adding noise to the dataset
 
+degree=5
+
+# OLS
+X = create_X(x, y, degree)
+X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
+ols_beta, z_tilde,z_predict = OLS_solver(X,z)
+
+print("Training MSE", MSE(z_train,z_tilde))
+print("Test MSE", MSE(z_test,z_predict))
+print("-------------------------------------")
+print("Training R2", R2(z_train,z_tilde))
+print("Test R2", R2(z_test,z_predict))
+
+# Missing confidence interval
+# I would plot the data anyway
+
+
+#------Task 2------
+"""
 #gives a weird graph which does not bahve as expected
 #Because bootsatrap is not implemented?
 complexity = []
@@ -252,9 +250,6 @@ plt.ylabel('Probability')
 plt.grid(True)
 plt.show()
 
-
-
-"""
 
 
 
