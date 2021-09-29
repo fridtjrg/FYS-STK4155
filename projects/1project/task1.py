@@ -110,7 +110,7 @@ def Split_and_Scale(X,z,test_size=0.2, scale=True):
       
     return X_train, X_test, z_train, z_test
 
-def OLS_solver(X,z):
+def OLS_solver(X_train, X_test, z_train, z_test):
 
 	# Calculating Beta Ordinary Least Square with matrix inversion
 	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
@@ -159,7 +159,7 @@ degree=5
 # OLS
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
-ols_beta, z_tilde,z_predict = OLS_solver(X,z)
+ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
 print("Training MSE", MSE(z_train,z_tilde))
 print("Test MSE", MSE(z_test,z_predict))
