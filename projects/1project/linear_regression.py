@@ -112,16 +112,18 @@ def OLS_solver(X_train, X_test, z_train, z_test):
 	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv(X_train.T @ X_train) #Agree correct?
 	return ols_beta, z_tilde, z_predict
 
-def plot_ols_compelxity():
+def plot_ols_compelxity(x,y,z):
 
     complexity = []
     MSE_train_set = []
     MSE_test_set = []
+
+
+
     #not working as intended
     for degree in range(2,30):
 
         X = create_X(x, y, degree)
-        print(np.shape(X))
         X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
         ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 

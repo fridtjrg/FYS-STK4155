@@ -1,6 +1,6 @@
 import numpy as np
 from random import random, seed
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2
+from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, plot_ols_compelxity
 
 
 # Create vanilla dataset:
@@ -11,8 +11,12 @@ n = 1000
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
+
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) + np.random.normal(mu_N,sigma_N,n)	#adding noise to the dataset
+
+plot_ols_compelxity(x,y,z)
+
 
 """
 degree=5
