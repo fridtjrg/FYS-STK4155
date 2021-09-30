@@ -3,28 +3,6 @@ from random import random, seed
 from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2
 
 
-"""
-Task 1 comments:
-We still need to find the variance of beta.
-
-
-
-What to plot? (use mesh, x,y, z and z_tilda?)
-How to find confidence? y-y_tilda = sigma
-Sima is the stardard deviation of the error?
-
-print("Beta(ols) variance:") //variance of beta? or = np.mean( np.var(y_pred, axis=1, keepdims=True) )
-print(statistics.variance(ols_beta))
-
-
-plt.plot(X_train,ztilde, label ="u values")   
-
-
-"""
-
-
-#------Task 1------
-
 # Create vanilla dataset:
 np.random.seed(3155)
 
