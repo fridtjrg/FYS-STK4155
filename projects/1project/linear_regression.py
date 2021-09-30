@@ -34,28 +34,22 @@ def FrankeFunction(x,y): #code from task
 	return term1 + term2 + term3 + term4
  
 # 3D plot of FrankeFunction
-def Plot_FrankeFunction(): #code from task
-  fig = plt.figure()
-  ax = fig.gca(projection="3d")
+def Plot_FrankeFunction(x,y,z, title="Dataset"): #code from task
+    fig = plt.figure()
+    ax = fig.gca(projection="3d")
 
-  # Make data.
-  x = np.arange(0, 1, 0.05)
-  y = np.arange(0, 1, 0.05)
-  x, y = np.meshgrid(x,y)
-  z = FrankeFunction(x, y)
+    # Plot the surface.
+    surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
-  # Plot the surface.
-  surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
-  linewidth=0, antialiased=False)
+    # Customize the z axis.
+    ax.set_zlim(-0.10, 1.40)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
-  # Customize the z axis.
-  ax.set_zlim(-0.10, 1.40)
-  ax.zaxis.set_major_locator(LinearLocator(10))
-  ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
-  # Add a color bar which maps values to colors.
-  fig.colorbar(surf, shrink=0.5, aspect=5)
-  plt.show()
+    # Add a color bar which maps values to colors.
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.title(title)
+    plt.show()
 
 # Error analysis: MSE and R2 score
 def R2(y_data, y_model): #week 35 exercise

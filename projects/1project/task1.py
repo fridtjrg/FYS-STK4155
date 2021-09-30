@@ -37,6 +37,7 @@ plt.plot(X_train,ztilde, label ="u values")
 
 
 """
+degree=5
 
 # Create vanilla dataset:
 np.random.seed(3155)
@@ -45,15 +46,16 @@ n = 1000
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
+x, y = np.meshgrid(x,y)
 
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + np.random.normal(mu_N,sigma_N,n)	#adding noise to the dataset
+z = FrankeFunction(x,y) +mu_N+sigma_N*np.random.randn(n,n)#+ np.random.normal(mu_N,sigma_N,n**2)  #adding noise to the dataset
 
-degree=5
+Plot_FrankeFunction(x,y,z, title="Noisy dataset")
 
 # OLS
 X = create_X(x, y, degree)
-X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
+X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
 print("Training MSE", MSE(z_train,z_tilde))
