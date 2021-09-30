@@ -22,6 +22,30 @@ def FrankeFunction(x,y): #code from task
 	term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
 	term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
 	return term1 + term2 + term3 + term4
+ 
+# 3D plot of FrankeFunction
+def Plot_franke_function(): #code from task
+  fig = plt.figure()
+  ax = fig.gca(projection="3d")
+
+  # Make data.
+  x = np.arange(0, 1, 0.05)
+  y = np.arange(0, 1, 0.05)
+  x, y = np.meshgrid(x,y)
+  z = FrankeFunction(x, y)
+
+  # Plot the surface.
+  surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
+  linewidth=0, antialiased=False)
+
+  # Customize the z axis.
+  ax.set_zlim(-0.10, 1.40)
+  ax.zaxis.set_major_locator(LinearLocator(10))
+  ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
+  # Add a color bar which maps values to colors.
+  fig.colorbar(surf, shrink=0.5, aspect=5)
+  plt.show()
 
 # Error analysis: MSE and R2 score
 def R2(y_data, y_model): #week 35 exercise
@@ -45,32 +69,8 @@ def SVD(A): #week35 SVD change to week 36
         print("i=",i)"""
     return U @ D @ VT
 
-#Makes a 3d plot of the franke function
-def Plot_franke_function(): #code from task
-	fig = plt.figure()
-	ax = fig.gca(projection="3d")
-
-	# Make data.
-	x = np.arange(0, 1, 0.05)
-	y = np.arange(0, 1, 0.05)
-	x, y = np.meshgrid(x,y)
-	z = FrankeFunction(x, y)
-
-	# Plot the surface.
-	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
-	linewidth=0, antialiased=False)
-
-	# Customize the z axis.
-	ax.set_zlim(-0.10, 1.40)
-	ax.zaxis.set_major_locator(LinearLocator(10))
-	ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
-	# Add a color bar which maps values to colors.
-	fig.colorbar(surf, shrink=0.5, aspect=5)
-	plt.show()
-
-#Setting up design matrix from week 35-36 lecture slides
-def create_X(x, y, n):
+# Design matrix
+def create_X(x, y, n): # week 35-36 lecture slides
 	if len(x.shape) > 1:
 		x = np.ravel(x)
 		y = np.ravel(y)
@@ -85,28 +85,24 @@ def create_X(x, y, n):
 			X[:,q+k] = (x**(i-k))*(y**k)
 
 	return X
-
+  
+# Splitting and rescaling data (rescaling is optional)
+# Default values: 20% of test data and the scaler is StandardScaler without std.dev.
 def Split_and_Scale(X,z,test_size=0.2, scale=True):
 
     #Splitting training and test data
     X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=test_size)
 
-    #scaling the the input with standardscalar (week35)
+    # Rescaling X and z (optional)
     if scale==True:
-        scaler=StandardScaler()
-        scaler.fit(X_train)
+        scaler_X = StandardScaler(with_std=False)
+        scaler_X.fit(X_train)
+        X_train = scaler_X.transform(X_train)
+        X_test = scaler_X.transform(X_test)
 
-        X_scaled = scaler.transform(X_train)
-
-        #used to scale train and test --> #why do you do it manually instead of using the Standard scaler?
-        """z_mean = np.mean(z_train)
-        z_sigma = np.std(z_train)
-
-        z_train = (z_train- z_mean)/z_sigma"""
-
-        #Scaling test data
-        X_test = scaler.transform(X_test)
-        #z_test = (z_test- z_mean)/z_sigma
+        scaler_z = StandardScaler(with_std=False)
+        z_train = np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1)))
+        z_test = np.squeeze(scaler_z.transform(z_test.reshape(-1, 1)))
       
     return X_train, X_test, z_train, z_test
 
@@ -145,14 +141,13 @@ plt.plot(X_train,ztilde, label ="u values")
 #------Task 1------
 
 # Create vanilla dataset:
-#setting up data
-n = 500 #does it matter?
+n = 1000
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + mu_N+sigma_N*np.random.randn(n)	#adding noise to the dataset
+z = FrankeFunction(x,y) + np.random.normal(mu_N,sigma_N,n)	#adding noise to the dataset
 
 degree=5
 
