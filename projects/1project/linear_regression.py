@@ -112,3 +112,33 @@ def OLS_solver(X_train, X_test, z_train, z_test):
 	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv(X_train.T @ X_train) #Agree correct?
 	return ols_beta, z_tilde, z_predict
 
+def plot_ols_compelxity(x,y,z):
+
+    complexity = []
+    MSE_train_set = []
+    MSE_test_set = []
+
+
+
+    #not working as intended
+    for degree in range(2,20):
+
+        X = create_X(x, y, degree)
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
+        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+
+        complexity.append(degree)
+        MSE_train_set.append(MSE(z_train,z_tilde))
+        MSE_test_set.append(MSE(z_test,z_predict))
+
+    plt.plot(complexity,MSE_train_set, label ="train")  
+    plt.plot(complexity,MSE_test_set, label ="test")  
+     
+
+    plt.xlabel("complexity")
+    plt.ylabel("MSE")
+    plt.title("Plot of the MSE as a function of complexity of the model")
+    plt.legend()
+    plt.grid()     
+    #plt.savefig('Task2plot(n='+str(n)+').pdf')
+    plt.show() 
