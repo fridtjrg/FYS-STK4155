@@ -6,12 +6,12 @@ from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_sol
 # Create vanilla dataset:
 np.random.seed(3155)
 
-n = 1000
+n = 500
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
-
+x,y = np.meshgrid(x,y)
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) + np.random.normal(mu_N,sigma_N,n)	#adding noise to the dataset
 
