@@ -4,15 +4,15 @@ from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_sol
 
 
 # Create vanilla dataset:
-np.random.seed(3155)
+np.random.seed(1234)
 
-n = 500
+n = 25
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
 x,y = np.meshgrid(x,y)
-sigma_N = 0.5; mu_N = 0 #change for value of sigma_N to appropriate values
+sigma_N = 0.2; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) +mu_N +sigma_N*np.random.randn(n,n)	#adding noise to the dataset
 
 
