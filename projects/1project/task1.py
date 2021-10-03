@@ -5,12 +5,12 @@ from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_sol
 # Create vanilla dataset:
 np.random.seed(3155)
 
-n = 1000
+n = 25
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
 
-sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
+sigma_N = 0.2; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) + np.random.normal(mu_N,sigma_N,n)	#adding noise to the dataset
 
 degree=5
@@ -19,6 +19,8 @@ degree=5
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
 ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+
+beta_ols_variance = sigma_N**2 * np.linalg.pinv(X_train.T @ X_train) #Calculates variance of beta
 
 print("Training MSE", MSE(z_train,z_tilde))
 print("Test MSE", MSE(z_test,z_predict))
