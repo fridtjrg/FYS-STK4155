@@ -119,6 +119,5 @@ def OLS_solver(X_train, X_test, z_train, z_test):
 	z_tilde = X_train @ ols_beta
 	z_predict = X_test @ ols_beta
 
-	#beta_ols_variance = z_sigma**2 @ np.linalg.pinv(X_train.T @ X_train) #Agree correct?
 	return ols_beta, z_tilde, z_predict
 

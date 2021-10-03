@@ -23,7 +23,7 @@ degree=5
 # Create vanilla dataset:
 np.random.seed(3155)
 
-n = 1000
+n = 25
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
@@ -38,6 +38,8 @@ Plot_FrankeFunction(x,y,z, title="Noisy dataset")
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+
+beta_ols_variance = sigma_N**2 * np.linalg.pinv(X_train.T @ X_train) #Calculates variance of beta
 
 print("Training MSE", MSE(z_train,z_tilde))
 print("Test MSE", MSE(z_test,z_predict))
