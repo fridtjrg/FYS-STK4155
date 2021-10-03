@@ -22,50 +22,6 @@ plot_ols_compelxity(x,y,z)
 
 
 """
-degree=5
-
-# OLS
-X = create_X(x, y, degree)
-X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
-ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
-
-#gives a weird graph which does not bahve as expected
-#Because bootsatrap is not implemented?
-complexity = []
-MSE_train_set = []
-MSE_test_set = []
-
-
-X = create_X(x, y, 40)
-ols_beta, MSE_train, MSE_test = OLS_solver(X,z)
-
-
-
-
-#not working as intended
-for i in range(2,30): #goes out of range for high i?
-	
-	X = create_X(x, y, i)
-	ols_beta, MSE_train, MSE_test = OLS_solver(X,z)
-	complexity.append(i)
-	MSE_train_set.append(MSE_train)
-	MSE_test_set.append(MSE_test)
-
-
-
-
-plt.plot(complexity,MSE_train_set, label ="train")  
-plt.plot(complexity,MSE_test_set, label ="test")  
- 
-
-plt.xlabel("complexity")
-plt.ylabel("MSE")
-plt.title("Plot of the MSE as a function of complexity of the model")
-plt.legend()
-plt.grid()     
-#plt.savefig('Task2plot(n='+str(n)+').pdf')
-plt.show() 
-
 
 
 
