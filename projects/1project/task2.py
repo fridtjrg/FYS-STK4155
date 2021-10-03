@@ -1,6 +1,6 @@
 import numpy as np
 from random import random, seed
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, plot_ols_compelxity
+from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, plot_ols_complexity
 
 
 # Create vanilla dataset:
@@ -15,10 +15,8 @@ x,y = np.meshgrid(x,y)
 sigma_N = 0.2; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) +mu_N +sigma_N*np.random.randn(n,n)	#adding noise to the dataset
 
-
-
-
-plot_ols_compelxity(x,y,z)
+complexity = range(2,20)
+plot_ols_complexity(x,y,z)
 
 
 """
