@@ -24,7 +24,8 @@ X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScale
 
 ridge_beta, opt_lambda, z_tilde,z_predict = ridge_reg(X_train, X_test, z_train, z_test)
 
-print("Ridge stk")
+print("-------------Ridge-------------")
+print("Lambda: ", opt_lambda)
 print("Training MSE", MSE(z_train,z_tilde))
 print("Test MSE", MSE(z_test,z_predict))
 print("-------------------------------------")
