@@ -22,7 +22,7 @@ from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_sol
 degree=5
 
 # Create vanilla dataset:
-np.random.seed(3155)
+np.random.seed(1234)
 
 n = 25
 
