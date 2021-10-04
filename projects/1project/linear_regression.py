@@ -120,4 +120,18 @@ def OLS_solver(X_train, X_test, z_train, z_test):
 	z_predict = X_test @ ols_beta
 
 	return ols_beta, z_tilde, z_predict
+ 
+def Confidence_Interval(beta, X, sigma=1):
+    #Calculates variance of beta, extracting just the diagonal elements of the matrix
+    #var(B_j)=sigma^2*(X^T*X)^{-1}_{jj}
+    beta_variance = np.diag(sigma**2 * np.linalg.pinv(X.T @ X))
+    ci1 = beta - 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    ci2 = beta + 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    print('Confidence interval of β-estimator at 95 %:')
+    ci_df = {r'$β_{-}$': ci1,
+             r'$β_{ols}$': beta,
+             r'$β_{+}$': ci2}
+    ci_df = pd.DataFrame(ci_df)
+    display(np.round(ci_df,3))
+    return ci1, ci2
 
