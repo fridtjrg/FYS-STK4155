@@ -72,6 +72,19 @@ def SVD(A): #week35 SVD change to week 36
         D[i,i]=S[i]
         print("i=",i)"""
     return U @ D @ VT
+    
+# SVD inversion
+def SVDinv(A):
+    U, s, VT = np.linalg.svd(A)
+    # reciprocals of singular values of s
+    d = 1.0 / s
+    # create m x n D matrix
+    D = np.zeros(A.shape)
+    # populate D with n x n diagonal matrix
+    D[:A.shape[1], :A.shape[1]] = np.diag(d)
+    UT = np.transpose(U)
+    V = np.transpose(VT)
+    return np.matmul(V,np.matmul(D.T,UT))
 
 # Design matrix
 def create_X(x, y, n): # week 35-36 lecture slides
@@ -118,7 +131,7 @@ def OLS_solver(X_train, X_test, z_train, z_test):
   
 	z_tilde = X_train @ ols_beta
 	z_predict = X_test @ ols_beta
-
+  
 	return ols_beta, z_tilde, z_predict
 
 def plot_ols_complexity(x, y, z, complexity = range(2,20)):
@@ -138,7 +151,6 @@ def plot_ols_complexity(x, y, z, complexity = range(2,20)):
     plt.plot(complexity,MSE_train_set, label ="train")  
     plt.plot(complexity,MSE_test_set, label ="test")  
      
-
     plt.xlabel("complexity")
     plt.ylabel("MSE")
     plt.title("Plot of the MSE as a function of complexity of the model")
