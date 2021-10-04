@@ -158,3 +158,50 @@ def plot_ols_complexity(x, y, z, complexity = range(2,20)):
     plt.grid()     
     #plt.savefig('Task2plot(n='+str(n)+').pdf')
     plt.show() 
+
+def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 0):
+
+
+    MSEPredict = np.zeros(nlambdas)
+    lambdas = np.logspace(lmbd_start, lmbd_end, nlambdas)
+
+    MSE_values = np.zeros(nlambdas)
+
+
+
+    for i in range(nlambdas):
+
+        # Optimal paramaters for Ridge
+        #Not sure about np.eye(len(X_train.T)), just to get right size
+        ridge_beta = np.linalg.pinv(X_train.T @ X_train + lambdas[i]*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+
+        z_model = X_train @ ridge_beta #calculates model
+
+        MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
+
+
+    #finds the lambda that gave the best MSE
+    best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
+
+
+    if best_lamda == lambdas[0]:
+        print("NB, the best lambda was the was the first lambda value")
+
+
+    if best_lamda == lambdas[-1]:
+            print("NB, the best lambda was the was the last lambda value")
+
+    #Calculates this Ridge_beta again
+    ridge_beta_opt = np.linalg.pinv(X_train.T @ X_train + best_lamda*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+
+    """
+    print(np.min(MSE_values))
+    print(MSE_values)
+    print(lambdas)
+    print(best_lamda)
+    """
+    z_model = X_train @ ridge_beta_opt
+    z_predict = X_test @ ridge_beta_opt
+
+
+    return ridge_beta_opt, best_lamda, z_model, z_predict
