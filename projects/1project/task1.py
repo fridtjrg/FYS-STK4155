@@ -17,7 +17,7 @@
 import numpy as np
 from random import random, seed
 import pandas as pd
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction
+from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
 
 degree=5
 
