@@ -17,7 +17,7 @@
 import numpy as np
 from random import random, seed
 import pandas as pd
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction
+from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
 
 degree=5
 
@@ -51,6 +51,10 @@ print("Test R2:", np.round(R2(z_test,z_predict),prec))
 print("––––––––––––––––––––––––––––––––––––––––––––")
 
 # Confidence interval
+beta1, beta2 = Confidence_Interval(ols_beta, X_train, sigma_N)
+print("––––––––––––––––––––––––––––––––––––––––––––")
+
+"""
 beta_ols_variance = sigma_N**2 * np.linalg.pinv(X_train.T @ X_train) #Calculates variance of beta
 var_diag=np.diag(beta_ols_variance)
 ci1 = ols_beta - 1.96 * np.sqrt(var_diag)/(X.shape[0])
@@ -61,4 +65,4 @@ ci_df = {r'$β_{-}$': ci1,
          r'$β_{+}$': ci2}
 ci_df = pd.DataFrame(ci_df)
 display(np.round(ci_df,3))#prec
-print("––––––––––––––––––––––––––––––––––––––––––––")
+"""

@@ -11,10 +11,18 @@ This repository aims to explore different tecniques of Machine Learning and Data
 
 It is created for the course [*FYS-STK4155 - Applied Data Analysis and Machine Learning*](https://www.uio.no/studier/emner/matnat/fys/FYS-STK4155/index-eng.html) held by professor [Morten Hjorth-Jensen](https://github.com/mhjensen) (University of Oslo, AY2021-2022).
 
+👩🏻‍💻 The main contributors to this repository are [Fridtjof Gjengset](https://github.com/fridtjrg), [Adele Zaini](https://github.com/adelezaini) and Gaute Holen.
+
+
 ## Description
 [...]
 
 Follow the [GitHub link](https://github.com/CompPhysics/MachineLearning) of the course for any further information.
+
+## Projects
+During the course we are asked to handle in three projects with tasks that allow us to practice on the different techniques.
+All the material is located on the ```projects``` derectory, including the source codes and delivery reports (quick link here for the [```reports``` directory](https://github.com/fridtjrg/FYS-STK4155/tree/main/projects/reports)).
+
 
 ## Contributing
 

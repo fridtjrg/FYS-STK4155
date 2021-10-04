@@ -15,8 +15,8 @@
 # IN THE SOFTWARE.
 
 import numpy as np
+import pandas as pd
 from random import random, seed
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
@@ -72,6 +72,19 @@ def SVD(A): #week35 SVD change to week 36
         D[i,i]=S[i]
         print("i=",i)"""
     return U @ D @ VT
+    
+# SVD inversion
+def SVDinv(A):
+    U, s, VT = np.linalg.svd(A)
+    # reciprocals of singular values of s
+    d = 1.0 / s
+    # create m x n D matrix
+    D = np.zeros(A.shape)
+    # populate D with n x n diagonal matrix
+    D[:A.shape[1], :A.shape[1]] = np.diag(d)
+    UT = np.transpose(U)
+    V = np.transpose(VT)
+    return np.matmul(V,np.matmul(D.T,UT))
 
 # Design matrix
 def create_X(x, y, n): # week 35-36 lecture slides
@@ -120,4 +133,18 @@ def OLS_solver(X_train, X_test, z_train, z_test):
 	z_predict = X_test @ ols_beta
 
 	return ols_beta, z_tilde, z_predict
+ 
+def Confidence_Interval(beta, X, sigma=1):
+    #Calculates variance of beta, extracting just the diagonal elements of the matrix
+    #var(B_j)=sigma^2*(X^T*X)^{-1}_{jj}
+    beta_variance = np.diag(sigma**2 * np.linalg.pinv(X.T @ X))
+    ci1 = beta - 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    ci2 = beta + 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    print('Confidence interval of β-estimator at 95 %:')
+    ci_df = {r'$β_{-}$': ci1,
+             r'$β_{ols}$': beta,
+             r'$β_{+}$': ci2}
+    ci_df = pd.DataFrame(ci_df)
+    display(np.round(ci_df,3))
+    return ci1, ci2
 
