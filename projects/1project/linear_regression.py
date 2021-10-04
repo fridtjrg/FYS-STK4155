@@ -148,3 +148,27 @@ def Confidence_Interval(beta, X, sigma=1):
     display(np.round(ci_df,3))
     return ci1, ci2
 
+def plot_ols_complexity(x, y, z, complexity = range(2,20)):
+
+    MSE_train_set = []
+    MSE_test_set = []
+
+    for degree in complexity:
+
+        X = create_X(x, y, degree)
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
+        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+
+        MSE_train_set.append(MSE(z_train,z_tilde))
+        MSE_test_set.append(MSE(z_test,z_predict))
+
+    plt.plot(complexity,MSE_train_set, label ="train")  
+    plt.plot(complexity,MSE_test_set, label ="test")  
+     
+    plt.xlabel("complexity")
+    plt.ylabel("MSE")
+    plt.title("Plot of the MSE as a function of complexity of the model")
+    plt.legend()
+    plt.grid()     
+    #plt.savefig('Task2plot(n='+str(n)+').pdf')
+    plt.show() 
