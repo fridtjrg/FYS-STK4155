@@ -167,26 +167,18 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20,
 
     MSE_values = np.zeros(nlambdas)
 
-
-
     for i in range(nlambdas):
-
         # Optimal paramaters for Ridge
         #Not sure about np.eye(len(X_train.T)), just to get right size
         ridge_beta = np.linalg.pinv(X_train.T @ X_train + lambdas[i]*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
-
         z_model = X_train @ ridge_beta #calculates model
-
         MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
-
 
     #finds the lambda that gave the best MSE
     best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
 
-
     if best_lamda == lambdas[0]:
         print("NB, the best lambda was the was the first lambda value")
-
 
     if best_lamda == lambdas[-1]:
             print("NB, the best lambda was the was the last lambda value")
