@@ -16,10 +16,14 @@
 
 import numpy as np
 from random import random, seed
-from linear_regression import plot_ols_complexity, create_xyz_dataset, plot_bias_variance_complexity
+from linear_regression import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity
+import matplotlib.pyplot as plt
 
 def train_n(n,test_size):
-    return n*n*(1-test_size)
+    return int(n*n*(1-test_size))
+    
+def test_n(n,test_size):
+    return int(n*n*test_size)
     
 # Create vanilla dataset:
 np.random.seed(1234)
@@ -29,71 +33,66 @@ n = 25
 # Paramaters of noise distribution
 mu_N = 0; sigma_N = 0.2
 # Parameter of splitting data
-test_size=0.2
+test_size = 0.2
 
-x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
-z = z.reshape(n*n,1)
+x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.reshape(n*n,1)
 
-print(r"Part 1: $MSE_{train}$ and $MSE_{test}$ in function of the complexity of the model (degree-order of polynomial)")
+print("Part 1: $MSE_{train}$ and $MSE_{test}$ in function of the complexity of the model (degree-order of polynomial) \n")
 complexity = np.arange(2,21)
 plot_ols_complexity(x,y,z, complexity)
 
-print("Part 2: perform a bias-variance tradeoff analysis")
-complexity = np.arange(0,15)
-print("Datapoints:", train_n(n,test_size), "– Complexity:", complexity)
-plot_bias_variance_complexity(x, y, z, complexity)
+print("Part 2: perform a bias-variance tradeoff analysis \n")
+complexity = np.arange(0,11)
+print("Train datapoints:", train_n(n,test_size))
+print("Test datapoints:", test_n(n,test_size))
+bias_variance_complexity(x, y, z, complexity, test_size=test_size)
 
-"""
+print("Bias-variance tradeoff analysis with variation in training and testing datapoints")
+n_ = [25,40]
+test_size_ = [0.2, 1/3]
+complexity = np.arange(0,18)
 
+fig=plt.figure(figsize=(15, 10))
 
+for i in n_:
 
-#How to use combine bootstrap with OLS?
-
-
-# Returns mean of bootstrap samples 
-# Bootstrap algorithm, returns estimated mean values for each bootstrap operation
-def bootstrap(designmatrix, data, bootstrap_operations): #from week 37 lecture notes
-
-    new_dataset_mean = np.zeros(bootstrap_operations) 
-    n = len(data)			 #Data should z from my understanding
-    # non-parametric bootstrap         
-    for i in range(bootstrap_operations):
-        new_dataset_mean[i] = np.mean(data[np.random.randint(0,n,n)]) #is this beta*(is of size n)
-   		#Do we have ro relate back to fetch the OLS beta values here?
-   		#In that case, do we remove the mean of the values or take mean of the OLS values?
-
-    # analysis    
-    print("Bootstrap Statistics :")
-    print("original           bias      std. error")
-    print("%8g %8g %14g %15g" % (np.mean(data), np.std(data),np.mean(new_dataset_mean),np.std(new_dataset_mean)))
-    return new_dataset_mean
-
-
-n_bootstrap = len(z) #number of bootstrap operations
-
-bootstrap_means = bootstrap(X,z,n_bootstrap)
-
-
-#from week 37 notes
-n, binsboot, patches = plt.hist(bootstrap_means, 50, density=True, facecolor='red', alpha=0.75)
-# add a 'best fit' line  
-y = norm.pdf(binsboot, np.mean(bootstrap_means), np.std(bootstrap_means))
-lt = plt.plot(binsboot, y, 'b', linewidth=1)
-plt.xlabel('x')
-plt.ylabel('Probability')
-plt.grid(True)
-plt.show()
-
-
-
-
-
-plt.xlabel("x-values")
-plt.ylabel("u and v values")
-plt.title("Comparison between u and v values (n="+str(n)+")")
+    x,y,z = create_xyz_dataset(i,mu_N, sigma_N); z = z.reshape(i*i,1)
+    
+    for ts in test_size_:
+        print("Datapoints:", i*i, "– Test size:", round(ts,3))
+        
+        error, bias, variance = bias_variance_complexity(x, y, z, complexity, test_size=ts, plot=False)
+        plt.plot(complexity, error, label='Error-n_train'+str(train_n(i,ts))+'-n_test'+str(test_n(i,ts)))
+        plt.plot(complexity, bias, label=r'$Bias^2$-n_train'+str(train_n(i,ts))+'-n_test'+str(test_n(i,ts)))
+        plt.plot(complexity, variance, label='Variance-n_train'+str(train_n(i,ts))+'-n_test'+str(test_n(i,ts)))
+        
+plt.xlabel("complexity")
+plt.ylabel("MSE")
+plt.title("Bias variance analysis - datapoints variantions")
 plt.legend()
-plt.grid()     
-#plt.savefig('u_and_v_plotls(n='+str(n)+').pdf')
-plt.show()     
+plt.show()
+ 
+"""
+n = 40
+complexity = np.arange(0,11)
+print("Train datapoints:", train_n(n,test_size))
+print("Test datapoints:", test_n(n,test_size))
+print("Complexity:", complexity)
+x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.reshape(n*n,1)
+plot_bias_variance_complexity(x, y, z, complexity, test_size=test_size)
+
+complexity = np.arange(0,18)
+print("Train datapoints:", train_n(n,test_size))
+print("Test datapoints:", test_n(n,test_size))
+print("Complexity:", complexity)
+plot_bias_variance_complexity(x, y, z, complexity, test_size=test_size)
+
+n = 40
+complexity = np.arange(0,18)
+test_size=0.3
+print("Train datapoints:", train_n(n,test_size))
+print("Test datapoints:", test_n(n,test_size))
+print("Complexity:", complexity)
+plot_bias_variance_complexity(x, y, z, complexity, test_size=test_size)
 
 """

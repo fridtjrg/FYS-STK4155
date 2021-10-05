@@ -196,9 +196,9 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100):
 
 # conclude with cross validation
 
-def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling=100):
+def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling = 100):
     if(resampling=="bootstrap"):
-        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_resampling)
+        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling)
     """ else:
         z_pred = crossvalidation(X_train, X_test, z_train, z_test, n_resampling)
     """
@@ -217,8 +217,8 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     return error, bias2, variance
     
 # Plot bias-variance tradeoff in function of complexity of the model
-def plot_bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling=100, title="Bias-variance analysis: MSE as a function of model complexity"):
-    
+def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity"):
+
     error = np.zeros(complexity.size)
     bias = np.zeros(complexity.size)
     variance = np.zeros(complexity.size)
@@ -226,14 +226,17 @@ def plot_bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resam
     for degree in complexity:
 
         X = create_X(x, y, degree)
-        X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,z,test_size=test_size) #StardardScaler, test_size=0.2, scale=true
         error[degree], bias[degree], variance[degree] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling)
-        
-    plt.plot(complexity, error, label='Error')
-    plt.plot(complexity, bias, label=r'$Bias^2$')
-    plt.plot(complexity, variance, label='Variance')
-    plt.xlabel("complexity")
-    plt.ylabel("MSE")
-    plt.title(title)
-    plt.legend()
-    plt.show()
+    
+    if (plot==True):
+        plt.plot(complexity, error, label='Error')
+        plt.plot(complexity, bias, label=r'$Bias^2$')
+        plt.plot(complexity, variance, label='Variance')
+        plt.xlabel("complexity")
+        plt.ylabel("MSE")
+        plt.title(title)
+        plt.legend()
+        plt.show()
+    
+    return error, bias, variance
