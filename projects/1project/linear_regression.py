@@ -159,7 +159,7 @@ def plot_ols_complexity(x, y, z, complexity = range(2,20)):
     #plt.savefig('Task2plot(n='+str(n)+').pdf')
     plt.show() 
 
-def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 0):
+def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 20):
 
 
     MSEPredict = np.zeros(nlambdas)
@@ -181,7 +181,7 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20,
         print("NB, the best lambda was the was the first lambda value")
 
     if best_lamda == lambdas[-1]:
-            print("NB, the best lambda was the was the last lambda value")
+        print("NB, the best lambda was the was the last lambda value")
 
     #Calculates this Ridge_beta again
     ridge_beta_opt = np.linalg.pinv(X_train.T @ X_train + best_lamda*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
