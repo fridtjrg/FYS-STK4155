@@ -17,12 +17,13 @@
 import numpy as np
 from random import random, seed
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.utils import resample
 
 
 # FrankeFunction: a two-variables function to create the dataset of our vanilla problem
@@ -50,6 +51,16 @@ def Plot_FrankeFunction(x,y,z, title="Dataset"): #code from task
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.title(title)
     plt.show()
+    
+# Create xyz dataset from the FrankeFunction with a added normal distributed noise
+def create_xyz_dataset(n,mu_N, sigma_N):
+    x = np.linspace(0,1,n)
+    y = np.linspace(0,1,n)
+
+    x,y = np.meshgrid(x,y)
+    z = FrankeFunction(x,y) +mu_N +sigma_N*np.random.randn(n,n)
+    
+    return x,y,z
 
 # Error analysis: MSE and R2 score
 def R2(y_data, y_model): #week 35 exercise
@@ -118,23 +129,25 @@ def Split_and_Scale(X,z,test_size=0.2, scale=True):
         X_test = scaler_X.transform(X_test)
 
         scaler_z = StandardScaler(with_std=False)
-        z_train = np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1)))
-        z_test = np.squeeze(scaler_z.transform(z_test.reshape(-1, 1)))
+        z_train = scaler_z.fit_transform(z_train) #np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1)))
+        z_test = scaler_z.transform(z_test) #np.squeeze(scaler_z.transform(z_test.reshape(-1, 1)))
       
     return X_train, X_test, z_train, z_test
 
 # OLS equation
 def OLS_solver(X_train, X_test, z_train, z_test):
 
-	# Calculating Beta Ordinary Least Square with matrix inversion
-	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train #psudoinverse
+	# Calculating Beta Ordinary Least Square Equation with matrix pseudoinverse
+    # Altervatively to Numpy pseudoinverse it is possible to use the SVD theorem to evalute the inverse of a matrix (even in case it is singular). Just replace 'np.linalg.pinv' with 'SVDinv'.
+	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train
   
-	z_tilde = X_train @ ols_beta
-	z_predict = X_test @ ols_beta
+	z_tilde = X_train @ ols_beta # z_prediction of the train data
+	z_predict = X_test @ ols_beta # z_prediction of the test data
   
 	return ols_beta, z_tilde, z_predict
 
-def plot_ols_complexity(x, y, z, complexity = range(2,20)):
+# Plot MSE in function of complexity of the model
+def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a function of model complexity"):
 
     MSE_train_set = []
     MSE_test_set = []
@@ -142,19 +155,85 @@ def plot_ols_complexity(x, y, z, complexity = range(2,20)):
     for degree in complexity:
 
         X = create_X(x, y, degree)
-        X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
-        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
+        ols_beta, z_tilde, z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
         MSE_train_set.append(MSE(z_train,z_tilde))
         MSE_test_set.append(MSE(z_test,z_predict))
 
-    plt.plot(complexity,MSE_train_set, label ="train")  
-    plt.plot(complexity,MSE_test_set, label ="test")  
+    plt.plot(complexity,MSE_train_set, label =r"$MSE_{train}$")
+    plt.plot(complexity,MSE_test_set, label =r"$MSE_{test}$")  
      
     plt.xlabel("complexity")
     plt.ylabel("MSE")
-    plt.title("Plot of the MSE as a function of complexity of the model")
+    plt.title(title)
     plt.legend()
     plt.grid()     
     #plt.savefig('Task2plot(n='+str(n)+').pdf')
-    plt.show() 
+    plt.show()
+    
+# Bootstrap resampling
+# Return a (m x n_bootstraps) matrix with the column vectors z_pred for each bootstrap iteration.
+def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100):
+    z_pred_boot = np.empty((z_test.shape[0], n_boostraps))
+    for i in range(n_boostraps):
+        # Draw a sample of our dataset
+        X_sample, z_sample = resample(X_train, z_train)
+        # Perform OLS equation
+        beta, z_tilde,z_pred = OLS_solver(X_train, X_test, z_train, z_test)
+        # Evaluate the new model on the same test data each time.
+        z_pred_boot[:, i] = z_pred.ravel()
+    return z_pred_boot
+    
+# Bias-variance tradeoff
+
+# Note: Expectations and variances taken w.r.t. different training
+# data sets, hence the axis=1. Subsequent means are taken across the test data
+# set in order to obtain a total value, but before this we have error/bias/variance
+# calculated per data point in the test set.
+# Note 2: The use of keepdims=True is important in the calculation of bias as this
+# maintains the column vector form. Dropping this yields very unexpected results.
+
+# conclude with cross validation
+
+def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling=100):
+    if(resampling=="bootstrap"):
+        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_resampling)
+    """ else:
+        z_pred = crossvalidation(X_train, X_test, z_train, z_test, n_resampling)
+    """
+    error = np.mean( np.mean((z_test - z_pred)**2, axis=1, keepdims=True) ) # MSE
+    bias2 = np.mean( (z_test - np.mean(z_pred, axis=1, keepdims=True))**2 ) # bias^2
+    variance = np.mean( np.var(z_pred, axis=1, keepdims=True) )
+    
+    """ # For debugging
+    print('Error:', error[degree])
+    print('Bias^2:', bias[degree])
+    print('Var:', variance[degree])
+    print('{} >= {} + {} = {}'.format(error[degree], bias[degree], variance[degree], bias[degree]+variance[degree]))
+    """
+  # test: close to the precision...
+
+    return error, bias2, variance
+    
+# Plot bias-variance tradeoff in function of complexity of the model
+def plot_bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling=100, title="Bias-variance analysis: MSE as a function of model complexity"):
+    
+    error = np.zeros(complexity.size)
+    bias = np.zeros(complexity.size)
+    variance = np.zeros(complexity.size)
+
+    for degree in complexity:
+
+        X = create_X(x, y, degree)
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
+        error[degree], bias[degree], variance[degree] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling)
+        
+    plt.plot(complexity, error, label='Error')
+    plt.plot(complexity, bias, label=r'$Bias^2$')
+    plt.plot(complexity, variance, label='Variance')
+    plt.xlabel("complexity")
+    plt.ylabel("MSE")
+    plt.title(title)
+    plt.legend()
+    plt.show()
