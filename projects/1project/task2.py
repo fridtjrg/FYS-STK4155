@@ -16,7 +16,7 @@
 
 import numpy as np
 from random import random, seed
-from linear_regression import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity
+from linear_regression import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity, Plot_FrankeFunction
 import matplotlib.pyplot as plt
 
 def train_n(n,test_size):
@@ -49,7 +49,7 @@ bias_variance_complexity(x, y, z, complexity, test_size=test_size)
 
 print("Bias-variance tradeoff analysis with variation in training and testing datapoints")
 n_ = [25,40]
-test_size_ = [0.2, 1/3]
+test_size_ = [0.2, 0.33]
 complexity = np.arange(0,18)
 
 fig=plt.figure(figsize=(15, 10))

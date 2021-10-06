@@ -27,7 +27,7 @@ from sklearn.utils import resample
 
 
 # FrankeFunction: a two-variables function to create the dataset of our vanilla problem
-def FrankeFunction(x,y): #code from task
+def FrankeFunction(x,y):
 	term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
 	term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
 	term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
@@ -35,7 +35,7 @@ def FrankeFunction(x,y): #code from task
 	return term1 + term2 + term3 + term4
  
 # 3D plot of FrankeFunction
-def Plot_FrankeFunction(x,y,z, title="Dataset"): #code from task
+def Plot_FrankeFunction(x,y,z, title="Dataset"):
     fig = plt.figure()
     ax = fig.gca(projection="3d")
 
@@ -70,7 +70,7 @@ def MSE(y_data,y_model):
     return np.sum((y_data-y_model)**2)/n
 
 # SVD theorem
-def SVD(A): #week35 SVD change to week 36
+def SVD(A):
     U, S, VT = np.linalg.svd(A,full_matrices=True)
     D = np.zeros((len(U),len(VT)))
     print("shape D= ", np.shape(D))
@@ -97,14 +97,14 @@ def SVDinv(A):
     V = np.transpose(VT)
     return np.matmul(V,np.matmul(D.T,UT))
 
-# Design matrix
-def create_X(x, y, n): # week 35-36 lecture slides
+# Design matrix for two indipendent variables x,y
+def create_X(x, y, n):
 	if len(x.shape) > 1:
 		x = np.ravel(x)
 		y = np.ravel(y)
 
 	N = len(x)
-	l = int((n+1)*(n+2)/2)		# Number of elements in beta, number of feutures (order-degree of polynomial)
+	l = int((n+1)*(n+2)/2)		# Number of elements in beta, number of feutures (degree of polynomial)
 	X = np.ones((N,l))
 
 	for i in range(1,n+1):
@@ -180,7 +180,7 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100):
         # Draw a sample of our dataset
         X_sample, z_sample = resample(X_train, z_train)
         # Perform OLS equation
-        beta, z_tilde,z_pred = OLS_solver(X_train, X_test, z_train, z_test)
+        beta, z_tilde, z_pred = OLS_solver(X_train, X_test, z_train, z_test)
         # Evaluate the new model on the same test data each time.
         z_pred_boot[:, i] = z_pred.ravel()
     return z_pred_boot
@@ -205,14 +205,6 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     error = np.mean( np.mean((z_test - z_pred)**2, axis=1, keepdims=True) ) # MSE
     bias2 = np.mean( (z_test - np.mean(z_pred, axis=1, keepdims=True))**2 ) # bias^2
     variance = np.mean( np.var(z_pred, axis=1, keepdims=True) )
-    
-    """ # For debugging
-    print('Error:', error[degree])
-    print('Bias^2:', bias[degree])
-    print('Var:', variance[degree])
-    print('{} >= {} + {} = {}'.format(error[degree], bias[degree], variance[degree], bias[degree]+variance[degree]))
-    """
-  # test: close to the precision...
 
     return error, bias2, variance
     
@@ -229,6 +221,14 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
         X_train, X_test, z_train, z_test = Split_and_Scale(X,z,test_size=test_size) #StardardScaler, test_size=0.2, scale=true
         error[degree], bias[degree], variance[degree] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling)
     
+        # For debugging
+        print('Error:', error[degree])
+        print('Bias^2:', bias[degree])
+        print('Var:', variance[degree])
+        print('{} >= {} + {} = {}'.format(error[degree], bias[degree], variance[degree], bias[degree]+variance[degree]))
+
+        # test: close to the precision...
+        
     if (plot==True):
         plt.plot(complexity, error, label='Error')
         plt.plot(complexity, bias, label=r'$Bias^2$')
