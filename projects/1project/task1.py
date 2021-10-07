@@ -54,6 +54,7 @@ print("––––––––––––––––––––––––�
 beta1, beta2 = Confidence_Interval(ols_beta, X_train, sigma_N)
 print("––––––––––––––––––––––––––––––––––––––––––––")
 
+
 """
 beta_ols_variance = sigma_N**2 * np.linalg.pinv(X_train.T @ X_train) #Calculates variance of beta
 var_diag=np.diag(beta_ols_variance)
