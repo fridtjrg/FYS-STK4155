@@ -191,6 +191,10 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     #plt.savefig('Task2plot(n='+str(n)+').pdf')
     plt.show() 
 
+def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 20):
+    
+    return NotImplemented
+
 def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 20):
 
 
