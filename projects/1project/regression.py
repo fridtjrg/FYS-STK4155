@@ -97,6 +97,7 @@ def SVDinv(A):
     V = np.transpose(VT)
     return np.matmul(V,np.matmul(D.T,UT))
 
+
 # Design matrix for two indipendent variables x,y
 def create_X(x, y, n):
 	if len(x.shape) > 1:
@@ -124,7 +125,6 @@ def scale_Xz(X_train, X_test, z_train, z_test):
     z_train = np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1))) #scaler_z.fit_transform(z_train) #
     z_test = np.squeeze(scaler_z.transform(z_test.reshape(-1, 1))) #scaler_z.transform(z_test) #  
     return X_train, X_test, z_train, z_test
-
 
 # Splitting and rescaling data (rescaling is optional)
 # Default values: 20% of test data and the scaler is StandardScaler without std.dev.
@@ -180,16 +180,62 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
         MSE_train_set.append(MSE(z_train,z_tilde))
         MSE_test_set.append(MSE(z_test,z_predict))
 
-    plt.plot(complexity,MSE_train_set, label =r"$MSE_{train}$")
-    plt.plot(complexity,MSE_test_set, label =r"$MSE_{test}$")  
+    plt.plot(complexity,MSE_train_set, label ="train")  
+    plt.plot(complexity,MSE_test_set, label ="test")  
      
     plt.xlabel("complexity")
     plt.ylabel("MSE")
-    plt.title(title)
+    plt.title("Plot of the MSE as a function of complexity of the model")
     plt.legend()
-    plt.grid()
-    plt.show()
-    
+    plt.grid()     
+    #plt.savefig('Task2plot(n='+str(n)+').pdf')
+    plt.show() 
+
+def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 20):
+
+
+    MSEPredict = np.zeros(nlambdas)
+    lambdas = np.logspace(lmbd_start, lmbd_end, nlambdas)
+
+    MSE_values = np.zeros(nlambdas)
+
+    for i in range(nlambdas):
+        # Optimal paramaters for Ridge
+        #Not sure about np.eye(len(X_train.T)), just to get right size
+        ridge_beta = np.linalg.pinv(X_train.T @ X_train + lambdas[i]*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+        z_model = X_train @ ridge_beta #calculates model
+        MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
+
+
+    #finds the lambda that gave the best MSE
+    #best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
+    best_lamda = lambdas[np.argmin(MSE_values)]
+    if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
+        print("NB: No unique value for lamda gets best MSE, multiple lamda gives smallest MSE")
+        best_lamda = best_lamda[0]
+
+    if best_lamda == lambdas[0]:
+        print("NB, the best lambda was the was the first lambda value")
+
+    if best_lamda == lambdas[-1]:
+        print("NB, the best lambda was the was the last lambda value")
+
+    #Calculates this Ridge_beta again
+    ridge_beta_opt = np.linalg.pinv(X_train.T @ X_train + best_lamda*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+
+    """
+    print(np.min(MSE_values))
+    print(MSE_values)
+    print(lambdas)
+    print(best_lamda)
+    """
+    z_model = X_train @ ridge_beta_opt
+    z_predict = X_test @ ridge_beta_opt
+
+
+    return ridge_beta_opt, z_model, z_predict, best_lamda
+ 
+
 # Bootstrap resampling
 # Return a (m x n_bootstraps) matrix with the column vectors z_pred for each bootstrap iteration.
 def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100):
