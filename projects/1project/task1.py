@@ -16,27 +16,9 @@
 
 import numpy as np
 from random import random, seed
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2
+from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction
 
 
-"""
-Task 1 comments:
-We still need to find the variance of beta.
-
-
-
-What to plot? (use mesh, x,y, z and z_tilda?)
-How to find confidence? y-y_tilda = sigma
-Sima is the stardard deviation of the error?
-
-print("Beta(ols) variance:") //variance of beta? or = np.mean( np.var(y_pred, axis=1, keepdims=True) )
-print(statistics.variance(ols_beta))
-
-
-plt.plot(X_train,ztilde, label ="u values")   
-
-
-"""
 degree=5
 
 # Create vanilla dataset:
@@ -64,5 +46,21 @@ print("-------------------------------------")
 print("Training R2", R2(z_train,z_tilde))
 print("Test R2", R2(z_test,z_predict))
 
-# Missing confidence interval
-# I would plot the data anyway
+
+# Confidence interval
+beta1, beta2 = Confidence_Interval(ols_beta, X_train, sigma_N)
+print("––––––––––––––––––––––––––––––––––––––––––––")
+
+
+"""
+beta_ols_variance = sigma_N**2 * np.linalg.pinv(X_train.T @ X_train) #Calculates variance of beta
+var_diag=np.diag(beta_ols_variance)
+ci1 = ols_beta - 1.96 * np.sqrt(var_diag)/(X.shape[0])
+ci2 = ols_beta + 1.96 * np.sqrt(var_diag)/(X.shape[0])
+print('Confidence interval of β-estimator at 95 %:')
+ci_df = {r'$β_{-}$': ci1,
+         r'$β_{ols}$': ols_beta,
+         r'$β_{+}$': ci2}
+ci_df = pd.DataFrame(ci_df)
+display(np.round(ci_df,3))#prec
+"""
