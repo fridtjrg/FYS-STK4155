@@ -174,8 +174,13 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20,
         z_model = X_train @ ridge_beta #calculates model
         MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
 
+
     #finds the lambda that gave the best MSE
-    best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
+    #best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
+    best_lamda = lambdas[np.argmin(MSE_values)]
+    if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
+        print("NB: No unique value for lamda gets best MSE, multiple lamda gives smallest MSE")
+        best_lamda = best_lamda[0]
 
     if best_lamda == lambdas[0]:
         print("NB, the best lambda was the was the first lambda value")
@@ -196,4 +201,4 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20,
     z_predict = X_test @ ridge_beta_opt
 
 
-    return ridge_beta_opt, best_lamda, z_model, z_predict
+    return ridge_beta_opt, z_model, z_predict, best_lamda
