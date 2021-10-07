@@ -16,7 +16,7 @@
 
 import numpy as np
 from random import random, seed
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction
+from regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
 
 
 degree=5
@@ -24,7 +24,7 @@ degree=5
 # Create vanilla dataset:
 np.random.seed(1234)
 
-n = 1000
+n = 25
 
 x = np.linspace(0,1,n)
 y = np.linspace(0,1,n) 
@@ -33,7 +33,7 @@ x, y = np.meshgrid(x,y)
 sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
 z = FrankeFunction(x,y) +mu_N+sigma_N*np.random.randn(n,n)#+ np.random.normal(mu_N,sigma_N,n**2)  #adding noise to the dataset
 
-Plot_FrankeFunction(x,y,z, title="Noisy dataset")
+Plot_FrankeFunction(x,y,z, title="Original noisy dataset")
 
 # OLS
 X = create_X(x, y, degree)
@@ -41,13 +41,13 @@ X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScale
 ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
 prec=4
- print("––––––––––––––––––––––––––––––––––––––––––––")
- print("Train MSE:", np.round(MSE(z_train,z_tilde),prec))
- print("Test MSE:", np.round(MSE(z_test,z_predict),prec))
- print("––––––––––––––––––––––––––––––––––––––––––––")
- print("Train R2:", np.round(R2(z_train,z_tilde),prec))
- print("Test R2:", np.round(R2(z_test,z_predict),prec))
- print("––––––––––––––––––––––––––––––––––––––––––––")
+print("––––––––––––––––––––––––––––––––––––––––––––")
+print("Train MSE:", np.round(MSE(z_train,z_tilde),prec))
+print("Test MSE:", np.round(MSE(z_test,z_predict),prec))
+print("––––––––––––––––––––––––––––––––––––––––––––")
+print("Train R2:", np.round(R2(z_train,z_tilde),prec))
+print("Test R2:", np.round(R2(z_test,z_predict),prec))
+print("––––––––––––––––––––––––––––––––––––––––––––")
 
 
 # Confidence interval

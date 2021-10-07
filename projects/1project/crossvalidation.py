@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from random import randint
 import numpy as np
-from ols_solver import OLS_solver
+from regression import OLS_solver
 
 
 def group_indeces(n, random_groupsize = False, sections = 10):

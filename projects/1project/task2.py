@@ -16,7 +16,7 @@
 
 import numpy as np
 from random import random, seed
-from linear_regression import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity, Plot_FrankeFunction
+from regression import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity, Plot_FrankeFunction
 import matplotlib.pyplot as plt
 
 def train_n(n,test_size):
@@ -35,7 +35,7 @@ mu_N = 0; sigma_N = 0.2
 test_size = 0.2
 
 # Create vanilla dataset:
-x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.reshape(n*n,1)
+x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.ravel()
 
 print("Part 1: $MSE_{train}$ and $MSE_{test}$ in function of the complexity of the model (degree-order of polynomial) \n")
 complexity = np.arange(2,21)
@@ -56,7 +56,7 @@ fig=plt.figure(figsize=(15, 10))
 
 for i in n_:
 
-    x,y,z = create_xyz_dataset(i,mu_N, sigma_N); z = z.reshape(i*i,1)
+    x,y,z = create_xyz_dataset(i,mu_N, sigma_N); z = z.ravel()
     
     for ts in test_size_:
         print("Datapoints:", i*i, "– Test size:", round(ts,3))

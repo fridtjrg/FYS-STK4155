@@ -16,9 +16,7 @@
 
 import numpy as np
 from random import random, seed
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
@@ -65,7 +63,7 @@ def create_xyz_dataset(n,mu_N, sigma_N):
     return x,y,z
 
 # Error analysis: MSE and R2 score
-def R2(y_data, y_model): #week 35 exercise
+def R2(y_data, y_model):
     return 1 - np.sum((y_data - y_model) ** 2) / np.sum((y_data - np.mean(y_data)) ** 2)
 def MSE(y_data,y_model):
     n = np.size(y_model)
@@ -217,8 +215,9 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     """ else:
         z_pred = crossvalidation(X_train, X_test, z_train, z_test, n_resampling)
     """
-    error = np.mean( np.mean((z_test - z_pred)**2, axis=1, keepdims=True) ) # MSE
-    bias2 = np.mean( (z_test - np.mean(z_pred, axis=1, keepdims=True))**2 ) # bias^2
+
+    error = np.mean( np.mean((z_test.reshape(-1,1) - z_pred)**2, axis=1, keepdims=True) ) # MSE
+    bias2 = np.mean( (z_test.reshape(-1,1) - np.mean(z_pred, axis=1, keepdims=True))**2 ) # bias^2
     variance = np.mean( np.var(z_pred, axis=1, keepdims=True) )
 
     return error, bias2, variance

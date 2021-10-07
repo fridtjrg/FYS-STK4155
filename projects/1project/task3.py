@@ -19,21 +19,21 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from linear_regression import create_X, create_xyz_dataset
+from regression import create_X, create_xyz_dataset
 from crossvalidation import cross_validation
 
 
 np.random.seed(1234)
 
 # Datapoints (squared root of datapoints -> meshgrid)
-n = 25
+n = 30
 # Paramaters of noise distribution
 mu_N = 0; sigma_N = 0.1
 # Parameter of splitting data
 test_size = 0.2
 
 # Create vanilla dataset:
-x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.reshape(n*n,1)
+x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.ravel()
 
 """
 n = 30 #does it matter?
