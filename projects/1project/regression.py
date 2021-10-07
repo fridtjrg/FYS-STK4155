@@ -148,7 +148,6 @@ def Confidence_Interval(beta, X, sigma=1):
     display(np.round(ci_df,3))
     return ci1, ci2
 
-
 def plot_ols_complexity(x, y, z, complexity = range(2,20)):
 
     MSE_train_set = []
