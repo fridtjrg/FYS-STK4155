@@ -19,10 +19,23 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from linear_regression import FrankeFunction, create_X
+from linear_regression import create_X, create_xyz_dataset,
 from crossvalidation import cross_validation
 
 
+np.random.seed(1234)
+
+# Datapoints (squared root of datapoints -> meshgrid)
+n = 25
+# Paramaters of noise distribution
+mu_N = 0; sigma_N = 0.1
+# Parameter of splitting data
+test_size = 0.2
+
+# Create vanilla dataset:
+x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.reshape(n*n,1)
+
+"""
 n = 30 #does it matter?
 
 x = np.linspace(0,1,n)
@@ -33,15 +46,18 @@ z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the datase
 print(z.shape)
 #gives a weird graph which does not bahve as expected
 #Because bootsatrap is not implemented?
+"""
+
+# Studying the MSE_train and MSE_test VS complexity with cross validation method
 complexity = []
 MSE_train_set = []
 MSE_test_set = []
-
+k=5
 
 for i in range(2,50): #goes out of range for high i?
 	
 	X = create_X(x, y, i)
-	ols_beta, MSE_train, MSE_test = cross_validation(5,X,z)
+	ols_beta, MSE_train, MSE_test = cross_validation(k,X,z)
 	complexity.append(i)
 	MSE_train_set.append(MSE_train)
 	MSE_test_set.append(MSE_test)
