@@ -15,8 +15,10 @@
 # IN THE SOFTWARE.
 
 import numpy as np
+import pandas as pd
 from random import random, seed
-import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
@@ -129,8 +131,8 @@ def Split_and_Scale(X,z,test_size=0.2, scale=True):
         X_test = scaler_X.transform(X_test)
 
         scaler_z = StandardScaler(with_std=False)
-        z_train = scaler_z.fit_transform(z_train) #np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1)))
-        z_test = scaler_z.transform(z_test) #np.squeeze(scaler_z.transform(z_test.reshape(-1, 1)))
+        z_train = np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1))) #scaler_z.fit_transform(z_train) #
+        z_test = np.squeeze(scaler_z.transform(z_test.reshape(-1, 1))) #scaler_z.transform(z_test) #
       
     return X_train, X_test, z_train, z_test
 
@@ -140,11 +142,25 @@ def OLS_solver(X_train, X_test, z_train, z_test):
 	# Calculating Beta Ordinary Least Square Equation with matrix pseudoinverse
     # Altervatively to Numpy pseudoinverse it is possible to use the SVD theorem to evalute the inverse of a matrix (even in case it is singular). Just replace 'np.linalg.pinv' with 'SVDinv'.
 	ols_beta = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ z_train
-  
+
 	z_tilde = X_train @ ols_beta # z_prediction of the train data
 	z_predict = X_test @ ols_beta # z_prediction of the test data
   
 	return ols_beta, z_tilde, z_predict
+ 
+def Confidence_Interval(beta, X, sigma=1):
+    #Calculates variance of beta, extracting just the diagonal elements of the matrix
+    #var(B_j)=sigma^2*(X^T*X)^{-1}_{jj}
+    beta_variance = np.diag(sigma**2 * np.linalg.pinv(X.T @ X))
+    ci1 = beta - 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    ci2 = beta + 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    print('Confidence interval of β-estimator at 95 %:')
+    ci_df = {r'$β_{-}$': ci1,
+             r'$β_{ols}$': beta,
+             r'$β_{+}$': ci2}
+    ci_df = pd.DataFrame(ci_df)
+    display(np.round(ci_df,3))
+    return ci1, ci2
 
 # Plot MSE in function of complexity of the model
 def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a function of model complexity"):
@@ -155,8 +171,8 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     for degree in complexity:
 
         X = create_X(x, y, degree)
-        X_train, X_test, z_train, z_test = Split_and_Scale(X,z) #StardardScaler, test_size=0.2, scale=true
-        ols_beta, z_tilde, z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
+        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
         MSE_train_set.append(MSE(z_train,z_tilde))
         MSE_test_set.append(MSE(z_test,z_predict))
@@ -168,8 +184,7 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     plt.ylabel("MSE")
     plt.title(title)
     plt.legend()
-    plt.grid()     
-    #plt.savefig('Task2plot(n='+str(n)+').pdf')
+    plt.grid()
     plt.show()
     
 # Bootstrap resampling
