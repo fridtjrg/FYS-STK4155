@@ -25,7 +25,6 @@ def train_n(n,test_size):
 def test_n(n,test_size):
     return int(n*n*test_size)
     
-# Create vanilla dataset:
 np.random.seed(1234)
 
 # Datapoints (squared root of datapoints -> meshgrid)
@@ -35,6 +34,7 @@ mu_N = 0; sigma_N = 0.2
 # Parameter of splitting data
 test_size = 0.2
 
+# Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.reshape(n*n,1)
 
 print("Part 1: $MSE_{train}$ and $MSE_{test}$ in function of the complexity of the model (degree-order of polynomial) \n")
