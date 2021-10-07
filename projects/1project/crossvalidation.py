@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from random import randint
 import numpy as np
-from regression import OLS_solver, scale_Xz, MSE
+from regression import OLS_solver, scale_Xz, MSE, ridge_reg, lasso_reg
 
 
 def group_indeces(n, random_groupsize = False, sections = 10):
@@ -99,7 +99,7 @@ def combine_groups(index_pairs, data):
     return combined_groups
 
 
-def cross_validation(k, designmatrix, datapoints, random_groupsize = False):
+def cross_validation(k, designmatrix, datapoints, solver="OLS",random_groupsize = False):
     """Divides the dataset into k folds of n groups and peforms cross validation
 
     Args:
@@ -113,6 +113,9 @@ def cross_validation(k, designmatrix, datapoints, random_groupsize = False):
         [type]: [description]
     """
     
+    if solver not in ["OLS", "RIDGE", "LASSO"]:
+        raise ValueError("solver must be OLS, RIDGE OR LASSO")
+
     #Defaults to using 2/10 groups for testing
     #Currently only tested for 5 folds, 10 groups
 
@@ -136,8 +139,6 @@ def cross_validation(k, designmatrix, datapoints, random_groupsize = False):
         del train_index_pairs[i]
         #print("TRAIN index pairs: ",train_index_pairs)
 
-
-
         X_train = combine_groups(train_index_pairs, designmatrix)
         X_test = combine_groups(test_index_pairs, designmatrix)
         z_train = combine_groups(train_index_pairs, datapoints)
@@ -145,14 +146,18 @@ def cross_validation(k, designmatrix, datapoints, random_groupsize = False):
 
         X_train, X_test, z_train, z_test = scale_Xz(X_train, X_test, z_train, z_test)
 
-        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+        if solver == "OLS":
+            ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+        elif solver == "RIDGE":
+            ridge_beta_opt, z_tilde, z_predict, best_lamda = ridge_reg(X_train, X_test, z_train, z_test)
+        elif solver == "LASSO":
+            z_tilde, z_predict, best_lamda = lasso_reg(X_train, X_test, z_train, z_test)
 
         MSE_train = MSE(z_train,z_tilde)
         MSE_test = MSE(z_test,z_predict)
-        ols_beta_set.append(ols_beta)
         MSE_train_set.append(MSE_train)
         MSE_test_set.append(MSE_test)
 
         #print(ols_beta,MSE_train,MSE_test)
     
-    return np.mean(ols_beta_set), np.mean(MSE_train_set), np.mean(MSE_test_set)
+    return np.mean(MSE_train_set), np.mean(MSE_test_set)

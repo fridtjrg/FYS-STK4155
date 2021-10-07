@@ -22,6 +22,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from sklearn.model_selection import train_test_split
+from sklearn import linear_model
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
 
@@ -191,11 +192,56 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     #plt.savefig('Task2plot(n='+str(n)+').pdf')
     plt.show() 
 
-def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 20):
-    
-    return NotImplemented
+def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, lmbd_end = 20):
+    """Lasso regression using sklearn
 
-def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=1000, lmbd_start = -20, lmbd_end = 20):
+    Args:
+        X_train ([type]): [description]
+        X_test ([type]): [description]
+        z_train ([type]): [description]
+        z_test ([type]): [description]
+        nlambdas (int, optional): [description]. Defaults to 1000.
+        lmbd_start (int, optional): [description]. Defaults to -20.
+        lmbd_end (int, optional): [description]. Defaults to 20.
+
+    Returns:
+        [type]: [description]
+    """
+
+    lambdas = np.logspace(lmbd_start, lmbd_end, nlambdas)
+    MSE_values = np.zeros(nlambdas)
+
+    for i in range(nlambdas):
+        lmb = lambdas[i]
+        RegLasso = linear_model.Lasso(lmb)
+        RegLasso.fit(X_train,z_train)
+        z_model = RegLasso.predict(X_train)
+        z_predict = RegLasso.predict(X_test)
+
+        MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
+    
+    #Find best lamda
+    best_lamda = lambdas[np.argmin(MSE_values)]
+    if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
+        print("NB: No unique value for lamda gets best MSE, multiple lamda gives smallest MSE")
+        best_lamda = best_lamda[0]
+
+    if best_lamda == lambdas[0]:
+        print("NB, the best lambda was the was the first lambda value")
+
+    if best_lamda == lambdas[-1]:
+        print("NB, the best lambda was the was the last lambda value")
+    
+    RegLasso = linear_model.Lasso(best_lamda)
+    RegLasso.fit(X_train,z_train)
+    z_model = RegLasso.predict(X_train)
+    beta = RegLasso.alpha
+    z_predict = RegLasso.predict(X_test)
+
+    
+    return z_model, z_predict, best_lamda
+
+def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lmbd_end = 4):
 
 
     MSEPredict = np.zeros(nlambdas)
