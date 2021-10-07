@@ -57,7 +57,7 @@ k=5
 for i in range(2,20): #goes out of range for high i?
 	
 	X = create_X(x, y, i)
-	ols_beta, MSE_train, MSE_test = cross_validation(k,X,z)
+	MSE_train, MSE_test = cross_validation(k,X,z,solver="LASSO")
 	complexity.append(i)
 	MSE_train_set.append(MSE_train)
 	MSE_test_set.append(MSE_test)
