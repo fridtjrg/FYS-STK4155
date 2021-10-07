@@ -15,8 +15,8 @@
 # IN THE SOFTWARE.
 
 import numpy as np
+import pandas as pd
 from random import random, seed
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
@@ -131,5 +131,44 @@ def OLS_solver(X_train, X_test, z_train, z_test):
   
 	z_tilde = X_train @ ols_beta
 	z_predict = X_test @ ols_beta
-  
+
 	return ols_beta, z_tilde, z_predict
+ 
+def Confidence_Interval(beta, X, sigma=1):
+    #Calculates variance of beta, extracting just the diagonal elements of the matrix
+    #var(B_j)=sigma^2*(X^T*X)^{-1}_{jj}
+    beta_variance = np.diag(sigma**2 * np.linalg.pinv(X.T @ X))
+    ci1 = beta - 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    ci2 = beta + 1.96 * np.sqrt(beta_variance)/(X.shape[0])
+    print('Confidence interval of β-estimator at 95 %:')
+    ci_df = {r'$β_{-}$': ci1,
+             r'$β_{ols}$': beta,
+             r'$β_{+}$': ci2}
+    ci_df = pd.DataFrame(ci_df)
+    display(np.round(ci_df,3))
+    return ci1, ci2
+
+def plot_ols_complexity(x, y, z, complexity = range(2,20)):
+
+    MSE_train_set = []
+    MSE_test_set = []
+
+    for degree in complexity:
+
+        X = create_X(x, y, degree)
+        X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
+        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+
+        MSE_train_set.append(MSE(z_train,z_tilde))
+        MSE_test_set.append(MSE(z_test,z_predict))
+
+    plt.plot(complexity,MSE_train_set, label ="train")  
+    plt.plot(complexity,MSE_test_set, label ="test")  
+     
+    plt.xlabel("complexity")
+    plt.ylabel("MSE")
+    plt.title("Plot of the MSE as a function of complexity of the model")
+    plt.legend()
+    plt.grid()     
+    #plt.savefig('Task2plot(n='+str(n)+').pdf')
+    plt.show() 
