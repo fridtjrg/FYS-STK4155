@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from linear_regression import create_X, create_xyz_dataset,
+from linear_regression import create_X, create_xyz_dataset
 from crossvalidation import cross_validation
 
 

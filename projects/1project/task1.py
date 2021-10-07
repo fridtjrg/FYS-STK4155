@@ -22,7 +22,7 @@ from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_sol
 degree=5
 
 # Create vanilla dataset:
-np.random.seed(3155)
+np.random.seed(1234)
 
 n = 1000
 
@@ -40,11 +40,14 @@ X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
-print("Training MSE", MSE(z_train,z_tilde))
-print("Test MSE", MSE(z_test,z_predict))
-print("-------------------------------------")
-print("Training R2", R2(z_train,z_tilde))
-print("Test R2", R2(z_test,z_predict))
+prec=4
+ print("––––––––––––––––––––––––––––––––––––––––––––")
+ print("Train MSE:", np.round(MSE(z_train,z_tilde),prec))
+ print("Test MSE:", np.round(MSE(z_test,z_predict),prec))
+ print("––––––––––––––––––––––––––––––––––––––––––––")
+ print("Train R2:", np.round(R2(z_train,z_tilde),prec))
+ print("Test R2:", np.round(R2(z_test,z_predict),prec))
+ print("––––––––––––––––––––––––––––––––––––––––––––")
 
 
 # Confidence interval
