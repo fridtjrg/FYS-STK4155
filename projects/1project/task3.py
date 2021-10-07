@@ -54,7 +54,7 @@ MSE_train_set = []
 MSE_test_set = []
 k=5
 
-for i in range(2,50): #goes out of range for high i?
+for i in range(2,20): #goes out of range for high i?
 	
 	X = create_X(x, y, i)
 	ols_beta, MSE_train, MSE_test = cross_validation(k,X,z)

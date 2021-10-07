@@ -113,7 +113,19 @@ def create_X(x, y, n):
 			X[:,q+k] = (x**(i-k))*(y**k)
 
 	return X
-  
+
+def scale_Xz(X_train, X_test, z_train, z_test):
+    scaler_X = StandardScaler(with_std=False)
+    scaler_X.fit(X_train)
+    X_train = scaler_X.transform(X_train)
+    X_test = scaler_X.transform(X_test)
+
+    scaler_z = StandardScaler(with_std=False)
+    z_train = np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1))) #scaler_z.fit_transform(z_train) #
+    z_test = np.squeeze(scaler_z.transform(z_test.reshape(-1, 1))) #scaler_z.transform(z_test) #  
+    return X_train, X_test, z_train, z_test
+
+
 # Splitting and rescaling data (rescaling is optional)
 # Default values: 20% of test data and the scaler is StandardScaler without std.dev.
 def Split_and_Scale(X,z,test_size=0.2, scale=True):
@@ -122,15 +134,8 @@ def Split_and_Scale(X,z,test_size=0.2, scale=True):
     X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=test_size)
 
     # Rescaling X and z (optional)
-    if scale==True:
-        scaler_X = StandardScaler(with_std=False)
-        scaler_X.fit(X_train)
-        X_train = scaler_X.transform(X_train)
-        X_test = scaler_X.transform(X_test)
-
-        scaler_z = StandardScaler(with_std=False)
-        z_train = np.squeeze(scaler_z.fit_transform(z_train.reshape(-1, 1))) #scaler_z.fit_transform(z_train) #
-        z_test = np.squeeze(scaler_z.transform(z_test.reshape(-1, 1))) #scaler_z.transform(z_test) #
+    if scale:
+        X_train, X_test, z_train, z_test = scale_Xz(X_train, X_test, z_train, z_test)
       
     return X_train, X_test, z_train, z_test
 

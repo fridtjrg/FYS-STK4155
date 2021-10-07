@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from random import randint
 import numpy as np
-from regression import OLS_solver
+from regression import OLS_solver, scale_Xz, MSE
 
 
 def group_indeces(n, random_groupsize = False, sections = 10):
@@ -121,8 +121,6 @@ def cross_validation(k, designmatrix, datapoints, random_groupsize = False):
     index_pairs = group_indeces(n,True, n_groups)
     #print("Index pairs: ",index_pairs)
 
-    CV_stats = []
-
     ols_beta_set = []
     MSE_train_set = []
     MSE_test_set = []
@@ -138,14 +136,23 @@ def cross_validation(k, designmatrix, datapoints, random_groupsize = False):
         del train_index_pairs[i]
         #print("TRAIN index pairs: ",train_index_pairs)
 
+
+
         X_train = combine_groups(train_index_pairs, designmatrix)
         X_test = combine_groups(test_index_pairs, designmatrix)
         z_train = combine_groups(train_index_pairs, datapoints)
         z_test = combine_groups(test_index_pairs, datapoints)
 
-        ols_beta, MSE_train, MSE_test = OLS_solver(X_train, X_test, z_train, z_test)
+        X_train, X_test, z_train, z_test = scale_Xz(X_train, X_test, z_train, z_test)
+
+        ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+
+        MSE_train = MSE(z_train,z_tilde)
+        MSE_test = MSE(z_test,z_predict)
         ols_beta_set.append(ols_beta)
         MSE_train_set.append(MSE_train)
         MSE_test_set.append(MSE_test)
+
+        #print(ols_beta,MSE_train,MSE_test)
     
     return np.mean(ols_beta_set), np.mean(MSE_train_set), np.mean(MSE_test_set)
