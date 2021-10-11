@@ -17,7 +17,7 @@ It is created for the course [*FYS-STK4155 - Applied Data Analysis and Machine L
 ## Description
 Different techniques of Applied Data Analysis and Machine Learning are here explored. The work is divided into three projects:
 
-- *Project1*: Regression and resampling techniques (OLS, Ridge, Lasso Reegression - Bootstrap and cross validation). Bias-variance analysis.
+- *Project1*: Regression and resampling techniques (OLS, Ridge, Lasso Regression - Bootstrap and cross validation). Bias-variance analysis.
 
 **⚠️ Deadline: 11 Oct 2021 (POSTPONED: 12 Oct 2021)**
 - *Project2*:
@@ -29,6 +29,8 @@ Deadline: 13 Nov 2021
 Deadline: 13 Dic 2021
 
 📂 All the material is located on the ```projects``` derectory, including the source codes and delivery reports (quick link here for the [```reports``` directory](https://github.com/fridtjrg/FYS-STK4155/tree/main/projects/reports)).
+
+*Advise*: the Jupyter Notebook may not display properly when opened directly from Github , we suggest to download the file and open it locally.
 
 Follow the [GitHub link](https://github.com/CompPhysics/MachineLearning) of the course for any further information.
 
