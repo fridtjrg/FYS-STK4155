@@ -16,24 +16,22 @@
 
 import numpy as np
 from random import random, seed
-from regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
+from regression import create_xyz_dataset, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
 
 
 degree=5
 
-# Create vanilla dataset:
-np.random.seed(1234)
-
+# Datapoints (squared root of datapoints -> meshgrid)
 n = 25
+# Paramaters of noise distribution
+mu_N = 0; sigma_N = 0.1
+# Parameter of splitting data
+test_size = 0.2
 
-x = np.linspace(0,1,n)
-y = np.linspace(0,1,n) 
-x, y = np.meshgrid(x,y)
-
-sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) +mu_N+sigma_N*np.random.randn(n,n)#+ np.random.normal(mu_N,sigma_N,n**2)  #adding noise to the dataset
-
-Plot_FrankeFunction(x,y,z, title="Original noisy dataset")
+# Create vanilla dataset:
+x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
+Plot_FrankeFunction(x,y,z, title="Original dataset: : \nFranke Function with stochastic noise")
+z = z.ravel()
 
 # OLS
 X = create_X(x, y, degree)

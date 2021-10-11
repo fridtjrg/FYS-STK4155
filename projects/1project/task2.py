@@ -42,7 +42,7 @@ complexity = np.arange(2,21)
 plot_ols_complexity(x,y,z, complexity)
 
 print("Part 2: perform a bias-variance tradeoff analysis \n")
-complexity = np.arange(0,11)
+complexity = np.arange(0,21)
 print("Train datapoints:", train_n(n,test_size))
 print("Test datapoints:", test_n(n,test_size))
 bias_variance_complexity(x, y, z, complexity, test_size=test_size)
@@ -50,7 +50,7 @@ bias_variance_complexity(x, y, z, complexity, test_size=test_size)
 print("Bias-variance tradeoff analysis with variation in training and testing datapoints")
 n_ = [25,40]
 test_size_ = [0.2, 0.33]
-complexity = np.arange(0,18)
+complexity = np.arange(0,30)
 
 fig=plt.figure(figsize=(15, 10))
 

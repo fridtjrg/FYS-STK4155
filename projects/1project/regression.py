@@ -37,7 +37,7 @@ def FrankeFunction(x,y):
  
 # 3D plot of FrankeFunction
 def Plot_FrankeFunction(x,y,z, title="Dataset"):
-    fig = plt.figure()
+    fig = plt.figure(figsize=(8, 7))
     ax = fig.gca(projection="3d")
 
     # Plot the surface.
@@ -45,6 +45,9 @@ def Plot_FrankeFunction(x,y,z, title="Dataset"):
 
     # Customize the z axis.
     ax.set_zlim(-0.10, 1.40)
+    ax.set_xlabel(r"$x$")
+    ax.set_ylabel(r"$y$")
+    ax.set_zlabel(r"$z$")
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
@@ -64,11 +67,11 @@ def create_xyz_dataset(n,mu_N, sigma_N):
     return x,y,z
 
 # Error analysis: MSE and R2 score
-def R2(y_data, y_model):
-    return 1 - np.sum((y_data - y_model) ** 2) / np.sum((y_data - np.mean(y_data)) ** 2)
-def MSE(y_data,y_model):
-    n = np.size(y_model)
-    return np.sum((y_data-y_model)**2)/n
+def R2(z_data, z_model):
+    return 1 - np.sum((z_data - z_model) ** 2) / np.sum((z_data - np.mean(z_data)) ** 2)
+def MSE(z_data,z_model):
+    n = np.size(z_model)
+    return np.sum((z_data-z_model)**2)/n
 
 # SVD theorem
 def SVD(A):
@@ -242,7 +245,6 @@ def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, l
     return z_model, z_predict, best_lamda
 
 def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lmbd_end = 4):
-
 
     MSEPredict = np.zeros(nlambdas)
     lambdas = np.logspace(lmbd_start, lmbd_end, nlambdas)
