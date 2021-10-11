@@ -16,7 +16,7 @@
 
 import numpy as np
 from random import random, seed
-from regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
+from regan import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
 
 
 degree=5

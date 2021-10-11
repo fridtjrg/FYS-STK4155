@@ -1,6 +1,6 @@
 import numpy as np
 from random import random, seed
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg
+from regan import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg
 
 
 

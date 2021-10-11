@@ -3,28 +3,42 @@ from typing_extensions import runtime
 from regan import *
 import numpy as np
 from time import time
+import os
 
 def run_CV(k,x,y,z,solver,m, n_lambdas = 20):
     complexity = []
     MSE_train_set = []
     MSE_test_set = []
     runtime_set = []
-    for i in range(2,m): #goes out of range for high i?
+    for i in range(2,m):
         t_0 = time()
         X = create_X(x, y, i)
         MSE_train, MSE_test = cross_validation(k,X,z,solver=solver,n_lambdas = n_lambdas)
         complexity.append(i)
         MSE_train_set.append(MSE_train)
         MSE_test_set.append(MSE_test)
-        runtime_set.append(time()-t_0)
+        runtime_set.append((time()-t_0)/k)
 
     return complexity,MSE_train_set,MSE_test_set, runtime_set
 
-def run_bootstrap():
+def run_BS(x,y,z,solver,m,n_resampling,n_lambdas=20):
+    bias_set = []
+    variance_set = []
+    error_set = []
+    runtime_set = []
+    for i in range(2,m):
+        t_0 = time()
+        error, bias2, variance = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,n_lambdas=n_lambdas)
+        bias_set.append(bias2)
+        variance_set.append(variance)
+        error_set.append(error)
+        runtime_set.append(t_0-time())
 
-    return 0
+    print("RUN_BS: ",bias_set)
+    return bias_set, variance_set, error_set, runtime_set
 
-def run_plot_compare(datapoints, title, N = 50, plot=False, n_lambdas = 20, k = 5, poly_degree = 10):
+
+def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lambdas = 20, k = 5, poly_degree = 10, plot_runtime=True, saveplots=False):
     """[summary]
 
     Args:
@@ -38,12 +52,23 @@ def run_plot_compare(datapoints, title, N = 50, plot=False, n_lambdas = 20, k = 
     """
 
     #----------------------------------------------------------------------------
+    #                         Storing figures
+    #----------------------------------------------------------------------------
+    if saveplots and plot:
+        path = 'Figures'
+        foldername = title.replace(' ','')
+        try:
+            os.mkdir(path+'/'+foldername)
+        except FileExistsError:
+            print("Dir already exists")
+        path = path+'/'+foldername+'/'
+
+    #----------------------------------------------------------------------------
     #                           Preparing the dataset
     #----------------------------------------------------------------------------
     #Plot datapoints   
     m = poly_degree # polynomial order
     datapoints = datapoints[:N,:N]
-
     z = datapoints
 
     # Creates mesh of image pixels
@@ -54,10 +79,54 @@ def run_plot_compare(datapoints, title, N = 50, plot=False, n_lambdas = 20, k = 
 
     if plot:
         fig, ax = plt.subplots()
-        plt.imshow(datapoints, cmap='gray')
-        plt.xlabel('X')
-        plt.ylabel('Y')
-        plt.show()
+        im = ax.imshow(datapoints, cmap='gray')
+        ax.set_title(title)
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        fig.colorbar(im)
+        if saveplots: fig.savefig(path+"Image")
+
+    solvers = ['OLS','RIDGE','LASSO']
+
+
+    #----------------------------------------------------------------------------
+    #                           Bootstrap
+    #----------------------------------------------------------------------------
+
+    BS_bias = []
+    BS_error = []
+    BS_variance = []
+    BS_runtimes = []
+    for solver in solvers:
+        bias2, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,n_lambdas=n_lambdas)
+        bias = np.zeros(bias2.shape); np.sqrt(bias2,bias)
+        BS_bias.append(bias)
+        BS_error.append(variance)
+        BS_variance.append(error)
+
+    if plot:
+        fig3, ax3 = plt.subplots()
+        ax3.set_yscale('log')
+        #ax4 = ax3.twinx()
+        BS_complexity = [x for x in range(1,m)]
+        lns = []
+        for i in range(len(solvers)):
+            lns.append(ax3.plot(BS_complexity,BS_bias[i], label =solvers[i]+" bias"))
+            lns.append(ax3.plot(BS_complexity,BS_error[i], label =solvers[i]+ " error", linestyle = 'dashed'))
+            lns.append(ax3.plot(BS_complexity,BS_variance[i], label =solvers[i]+ " variance", linestyle = 'dotted') )
+
+        lns = [l[0] for l in lns]
+        labs = [l.get_label() for l in lns]
+        ax3.legend(lns,labs)
+
+        ax3.set_xlabel("complexity")
+        ax3.set_ylabel("MSE")
+        #ax4.set_ylabel("variance")
+        ax3.set_title(f"bias, variance and error from bootstrap resampling as a function of complexity \n with n_samples = {n_resampling}, and $N_\lambda$ = {n_lambdas}")
+        ax3.grid()
+        if saveplots: fig3.savefig(path+"BS.png")
+
+
 
     #----------------------------------------------------------------------------
     #                           CrossValidation
@@ -66,7 +135,6 @@ def run_plot_compare(datapoints, title, N = 50, plot=False, n_lambdas = 20, k = 
     CV_MSE_test = []
     CV_complexity = []
     CV_runtimes = []
-    solvers = ['OLS','RIDGE','LASSO']
 
     for solver in solvers:
         complexity,MSE_train_set,MSE_test_set,runtimes = run_CV(k,x,y,z,solver,m,n_lambdas = n_lambdas)
@@ -75,32 +143,36 @@ def run_plot_compare(datapoints, title, N = 50, plot=False, n_lambdas = 20, k = 
         CV_complexity.append(complexity)
         CV_runtimes.append(runtimes)
     
-    if True:
+    
+    if plot:
         fig1, ax1 = plt.subplots()
         fig2, ax2 = plt.subplots()
         ax1.set_yscale('log')
-        ax2.set_yscale('log')
+        if plot_runtime:
+            ax2.set_yscale('log')
         for i in range(len(solvers)):
             ax1.plot(CV_complexity[i],CV_MSE_train[i], label =solvers[i]+" train",linestyle = 'dashed')  
             ax1.plot(CV_complexity[i],CV_MSE_test[i], label =solvers[i]+ " test")  
-            ax2.plot(CV_complexity[i],CV_runtimes[i], label =solvers[i]+ " runtime")
+            if plot_runtime:
+                ax2.plot(CV_complexity[i],CV_runtimes[i], label =solvers[i]+ " runtime")
     
         ax1.set_xlabel("complexity")
         ax1.set_ylabel("MSE")
         ax1.set_title(f"Plot of the MSE as a function of complexity of the models \n with k = {k}, and $N_\lambda$ = {n_lambdas}")
         ax1.legend()
         ax1.grid()
+        if saveplots: fig1.savefig(path+"CV.png")
 
-        ax2.set_xlabel("complexity")
-        ax2.set_ylabel("Runtime [s]")
-        ax2.set_title("Plot of the runtime as a function of complexity of the models")
-        ax2.legend()
-        ax2.grid()
+        if plot_runtime:
+            ax2.set_xlabel("complexity")
+            ax2.set_ylabel("Runtime [s]")
+            ax2.set_title("Plot of the runtime as a function of complexity of the models")
+            ax2.legend()
+            ax2.grid()
+            if saveplots: fig2.savefig(path+"Runtime.png")
+
+
         plt.show() 
     
-    #----------------------------------------------------------------------------
-    #                           Bootstrap
-    #----------------------------------------------------------------------------
-
     
-
+    
