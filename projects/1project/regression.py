@@ -294,7 +294,7 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100):
         # Draw a sample of our dataset
         X_sample, z_sample = resample(X_train, z_train)
         # Perform OLS equation
-        beta, z_tilde, z_pred = OLS_solver(X_train, X_test, z_train, z_test)
+        beta, z_tilde, z_pred = OLS_solver(X_sample, X_test, z_sample, z_test)
         # Evaluate the new model on the same test data each time.
         z_pred_boot[:, i] = z_pred.ravel()
     return z_pred_boot
