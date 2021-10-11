@@ -19,8 +19,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from regression import create_X, create_xyz_dataset
-from crossvalidation import cross_validation
+from regan import create_X, create_xyz_dataset, cross_validation
 
 
 np.random.seed(1234)
@@ -57,6 +56,7 @@ k=5
 for i in range(2,20): #goes out of range for high i?
 	
 	X = create_X(x, y, i)
+	print(X.shape)
 	MSE_train, MSE_test = cross_validation(k,X,z,solver="LASSO")
 	complexity.append(i)
 	MSE_train_set.append(MSE_train)

@@ -16,7 +16,7 @@
 
 import numpy as np
 from random import random, seed
-from regression import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity, Plot_FrankeFunction
+from regan import plot_ols_complexity, create_xyz_dataset, bias_variance_complexity, Plot_FrankeFunction
 import matplotlib.pyplot as plt
 
 def train_n(n,test_size):
