@@ -16,8 +16,8 @@
 
 import numpy as np
 from random import random, seed
-import pandas as pd
-from linear_regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
+from regression import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
+
 
 degree=5
 
@@ -40,7 +40,6 @@ X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
 
-# Error Analysis
 prec=4
 print("––––––––––––––––––––––––––––––––––––––––––––")
 print("Train MSE:", np.round(MSE(z_train,z_tilde),prec))
@@ -50,9 +49,11 @@ print("Train R2:", np.round(R2(z_train,z_tilde),prec))
 print("Test R2:", np.round(R2(z_test,z_predict),prec))
 print("––––––––––––––––––––––––––––––––––––––––––––")
 
+
 # Confidence interval
 beta1, beta2 = Confidence_Interval(ols_beta, X_train, sigma_N)
 print("––––––––––––––––––––––––––––––––––––––––––––")
+
 
 """
 beta_ols_variance = sigma_N**2 * np.linalg.pinv(X_train.T @ X_train) #Calculates variance of beta
