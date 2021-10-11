@@ -268,5 +268,4 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lm
     z_model = X_train @ ridge_beta_opt
     z_predict = X_test @ ridge_beta_opt
 
-
     return ridge_beta_opt, z_model, z_predict, best_lamda
