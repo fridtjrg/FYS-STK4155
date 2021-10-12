@@ -102,7 +102,7 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
         plt.plot(complexity, bias, '--', alpha=0.3, color="forestgreen", label ="Bias (actual values)")
         plt.plot(complexity, variance, '--', alpha=0.3, color="darkorange", label ="Variance (actual values)")
          
-        plt.xlim(complexity[~np.isnan(error_mean)][0]-1,complexity[-1]+1)
+        #plt.xlim(complexity[~np.isnan(error_mean)][0]-1,complexity[-1]+1)
         title=title+str("\n– Rolling mean and one-sigma region –")
         plt.grid()
     
@@ -112,7 +112,6 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
         plt.plot(complexity, variance, label='Variance')
         """
         plt.xlabel("Complexity")
-        plt.ylabel("MSE")
         plt.title(title)
         plt.legend()
         plt.show()
