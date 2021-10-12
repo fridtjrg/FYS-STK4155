@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from regan import create_X, create_xyz_dataset, cross_validation
+from regan import create_X, create_xyz_dataset, cross_validation, Split_and_Scale, OLS_solver, MSE
 
 
 np.random.seed(1234)
@@ -30,48 +30,60 @@ n = 30
 mu_N = 0; sigma_N = 0.1
 # Parameter of splitting data
 test_size = 0.2
-
+#degree of polynomial
+degree = 20
 # Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.ravel()
 
-"""
-n = 30 #does it matter?
-
-x = np.linspace(0,1,n)
-y = np.linspace(0,1,n) 
-
-sigma_N = 0.1; mu_N = 0 #change for value of sigma_N to appropriate values
-z = FrankeFunction(x,y) + sigma_N*np.random.randn(n)	#adding noise to the dataset
-print(z.shape)
-#gives a weird graph which does not bahve as expected
-#Because bootsatrap is not implemented?
-"""
 
 # Studying the MSE_train and MSE_test VS complexity with cross validation method
 complexity = []
-MSE_train_set = []
-MSE_test_set = []
-k=5
+MSE_train_set_k5 = []
+MSE_test_set_k5 = []
+MSE_train_set_k10 = []
+MSE_test_set_k10 = []
 
-for i in range(2,20): #goes out of range for high i?
-	
+
+MSE_train_noCV = []
+MSE_test_noCV = []
+
+for i in range(2,degree): #goes out of range for high i?
+
+
+	#OLS no CV
 	X = create_X(x, y, i)
-	print(X.shape)
-	MSE_train, MSE_test = cross_validation(k,X,z,solver="LASSO")
+	X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
+	ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
+	MSE_train_noCV.append(MSE(z_train,z_tilde))
+	MSE_test_noCV.append(MSE(z_test,z_predict))
+
 	complexity.append(i)
-	MSE_train_set.append(MSE_train)
-	MSE_test_set.append(MSE_test)
+	#k = 5
+	MSE_train, MSE_test = cross_validation(5,X,z,solver="OLS")
+	MSE_train_set_k5.append(MSE_train)
+	MSE_test_set_k5.append(MSE_test)
+
+	#k = 10
+	MSE_train, MSE_test = cross_validation(10,X,z,solver="OLS")
+	MSE_train_set_k10.append(MSE_train)
+	MSE_test_set_k10.append(MSE_test)
 
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
-ax.plot(complexity,MSE_train_set, label ="train")  
-ax.plot(complexity,MSE_test_set, label ="test")  
+ax.plot(complexity,MSE_train_noCV, label ="train k=1", color = 'red', linestyle = 'dashed')  
+ax.plot(complexity,MSE_test_noCV, label ="test k=1", color = 'red')
+ax.plot(complexity,MSE_train_set_k5, label ="train k=5", color = 'green', linestyle = 'dashed')  
+ax.plot(complexity,MSE_test_set_k5, label ="test k=5", color = 'green')  
+ax.plot(complexity,MSE_train_set_k10, label ="train k=10", color = 'blue', linestyle = 'dashed')  
+ax.plot(complexity,MSE_test_set_k10, label ="test k=10", color = 'blue')    
 ax.set_yscale('log')
 
 plt.xlabel("complexity")
 plt.ylabel("MSE")
-plt.title("Plot of the MSE as a function of complexity of the model")
+plt.title("Plot of the MSE for different number of folds in crossvalidation")
 plt.legend()
 plt.grid()
+plt.savefig("./1project/Figures/Task3/MSE.png")
 plt.show() 
+
