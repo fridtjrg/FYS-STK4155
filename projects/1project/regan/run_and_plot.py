@@ -98,8 +98,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
     BS_variance = []
     BS_runtimes = []
     for solver in solvers:
-        bias2, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,n_lambdas=n_lambdas)
-        bias = np.zeros(bias2.shape); np.sqrt(bias2,bias)
+        bias, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,n_lambdas=n_lambdas)
         BS_bias.append(bias)
         BS_error.append(variance)
         BS_variance.append(error)
@@ -111,7 +110,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
         BS_complexity = [x for x in range(1,m)]
         lns = []
         for i in range(len(solvers)):
-            lns.append(ax3.plot(BS_complexity,BS_bias[i], label =solvers[i]+" bias"))
+            lns.append(ax3.plot(BS_complexity,BS_bias[i], label =solvers[i]+" bias$^2$"))
             lns.append(ax3.plot(BS_complexity,BS_error[i], label =solvers[i]+ " error", linestyle = 'dashed'))
             lns.append(ax3.plot(BS_complexity,BS_variance[i], label =solvers[i]+ " variance", linestyle = 'dotted') )
 
