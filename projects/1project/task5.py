@@ -18,7 +18,7 @@ from regan import *
 import numpy as np
 
 savefigures = False
-
+degree=5
 np.random.seed(1234)
 
 # Datapoints (squared root of datapoints -> meshgrid)
