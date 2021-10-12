@@ -17,6 +17,7 @@
 from regan import *
 import numpy as np
 
+degree=5
 np.random.seed(1234)
 
 # Datapoints (squared root of datapoints -> meshgrid)
@@ -26,5 +27,19 @@ mu_N = 0; sigma_N = 0.2
 
 # Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
+
+# Lasso
+X = create_X(x, y, degree)
+X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z))
+
+print("-------------Lasso-------------------")
+z_tilde,z_predict, opt_lambda = lasso_reg(X_train, X_test, z_train, z_test)
+
+print("Lambda: ", opt_lambda)
+print("Training MSE", MSE(z_train,z_tilde))
+print("Test MSE", MSE(z_test,z_predict))
+print("-------------------------------------")
+print("Training R2", R2(z_train,z_tilde))
+print("Test R2", R2(z_test,z_predict))
 
 run_plot_compare(z,'Task 5 Franke Function', 100, N=n, n_lambdas=30, k=5,poly_degree = 5,plot=True,saveplots=True)
