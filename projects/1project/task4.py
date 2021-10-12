@@ -1,3 +1,19 @@
+# The MIT License (MIT)
+#
+# Copyright © 2021 Fridtjof Gjengset, Adele Zaini, Gaute Holen
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the “Software”), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+# the Software. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+# LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+# SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+# CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+
 import numpy as np
 from random import random, seed
 from regan import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg, lasso_reg
@@ -24,6 +40,7 @@ X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
 
+<<<<<<< HEAD
 n_lambdas = 30
 lmd_start = -10
 lmd_end = 10
@@ -47,3 +64,12 @@ plt.legend()
 plt.grid()
 plt.savefig("./1project/Figures/Task4/MSE.png")
 plt.show() 
+=======
+print("-------------Ridge-------------------")
+print("Lambda: ", opt_lambda)
+print("Training MSE", MSE(z_train,z_tilde))
+print("Test MSE", MSE(z_test,z_predict))
+print("-------------------------------------")
+print("Training R2", R2(z_train,z_tilde))
+print("Test R2", R2(z_test,z_predict))
+>>>>>>> 6d78d3bc797b23ba6dffc6a7c0feffc6e5c18219

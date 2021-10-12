@@ -235,14 +235,14 @@ def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, l
     #Find best lamda
     best_lamda = lambdas[np.argmin(MSE_values)]
     if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
-        print("NB: No unique value for lamda gets best MSE, multiple lamda gives smallest MSE")
+        print("NB: No unique value for lambda gets best MSE, multiple lambda gives smallest MSE")
         best_lamda = best_lamda[0]
 
     if best_lamda == lambdas[0]:
-        print("NB, the best lambda was the was the first lambda value")
+        print("NB: the best lambda is the first lambda value")
 
     if best_lamda == lambdas[-1]:
-        print("NB, the best lambda was the was the last lambda value")
+        print("NB: the best lambda is the last lambda value")
     
     RegLasso = linear_model.Lasso(best_lamda)
     RegLasso.fit(X_train,z_train)
@@ -279,14 +279,14 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lm
     #best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
     best_lamda = lambdas[np.argmin(MSE_values)]
     if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
-        print("NB: No unique value for lamda gets best MSE, multiple lamda gives smallest MSE")
+        print("NB: No unique value for lambda gets best MSE, multiple lambda gives smallest MSE")
         best_lamda = best_lamda[0]
 
     if best_lamda == lambdas[0]:
-        print("NB, the best lambda was the was the first lambda value")
+        print("NB: the best lambda is the first lambda value")
 
     if best_lamda == lambdas[-1]:
-        print("NB, the best lambda was the was the last lambda value")
+        print("NB: the best lambda is the last lambda value")
 
     #Calculates this Ridge_beta again
     ridge_beta_opt = np.linalg.pinv(X_train.T @ X_train + best_lamda*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
