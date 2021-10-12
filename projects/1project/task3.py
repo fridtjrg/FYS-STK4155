@@ -31,7 +31,7 @@ mu_N = 0; sigma_N = 0.1
 # Parameter of splitting data
 test_size = 0.2
 #degree of polynomial
-degree = 20
+degree = 12
 # Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.ravel()
 
@@ -47,7 +47,7 @@ MSE_test_set_k10 = []
 MSE_train_noCV = []
 MSE_test_noCV = []
 
-for i in range(2,degree): #goes out of range for high i?
+for i in range(0,degree): #goes out of range for high i?
 
 
 	#OLS no CV
@@ -69,7 +69,7 @@ for i in range(2,degree): #goes out of range for high i?
 	MSE_test_set_k10.append(MSE_test)
 
 
-fig = plt.figure()
+fig = plt.figure(figsize=(10,7))
 ax = fig.add_subplot(1,1,1)
 ax.plot(complexity,MSE_train_noCV, label ="train k=1", color = 'red', linestyle = 'dashed')  
 ax.plot(complexity,MSE_test_noCV, label ="test k=1", color = 'red')
@@ -84,6 +84,6 @@ plt.ylabel("MSE")
 plt.title("Plot of the MSE for different number of folds in crossvalidation")
 plt.legend()
 plt.grid()
-plt.savefig("./1project/Figures/Task3/MSE.png")
+#plt.savefig("./1project/Figures/Task3/MSE.png")
 plt.show() 
 
