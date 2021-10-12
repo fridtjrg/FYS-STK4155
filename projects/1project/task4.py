@@ -19,7 +19,7 @@ from random import random, seed
 from regan import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg, lasso_reg
 import matplotlib.pyplot as plt
 
-
+savefigure = False
 
 degree=5
 
@@ -60,5 +60,6 @@ plt.ylabel("MSE")
 plt.title("Plot of the MSE for different $\lambda$")
 plt.legend()
 plt.grid()
-plt.savefig("./1project/Figures/Task4/MSE.png")
+if savefigure:
+    plt.savefig("./1project/Figures/Task4/MSE.png")
 plt.show() 

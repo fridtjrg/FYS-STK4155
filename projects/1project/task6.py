@@ -22,7 +22,7 @@ from regan import *
 from imageio import imread
 import matplotlib.pyplot as plt
 
-
+savefigure = False
 
 
 # Load the terrain
@@ -32,7 +32,7 @@ N = 25
 #---------------------------------------------------
 #RUN cv and bootstrap
 
-run_plot_compare(terrain,'terrain in Norway', 100, N=N, n_lambdas=30, k=5,poly_degree = 10,plot=True,saveplots=True_)
+run_plot_compare(terrain,'terrain in Norway', 100, N=N, n_lambdas=30, k=5,poly_degree = 5,plot=True,saveplots=savefigure)
 
 
 #----------------------------------------------------
@@ -70,5 +70,6 @@ plt.ylabel("MSE")
 plt.title(f"Plot of the MSE for different $\lambda$ for {degree} degree polynomial")
 plt.legend()
 plt.grid()
-plt.savefig("./Figures/Task6/MSE.png")
+if savefigure:
+    plt.savefig("./Figures/Task6/MSE.png")
 plt.show() 

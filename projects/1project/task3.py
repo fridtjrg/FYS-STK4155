@@ -21,6 +21,8 @@ import matplotlib.pyplot as plt
 
 from regan import create_X, create_xyz_dataset, cross_validation, Split_and_Scale, OLS_solver, MSE
 
+savefigure = False
+
 
 np.random.seed(1234)
 
@@ -84,6 +86,7 @@ plt.ylabel("MSE")
 plt.title("Plot of the MSE for different number of folds in crossvalidation")
 plt.legend()
 plt.grid()
-#plt.savefig("./1project/Figures/Task3/MSE.png")
+if savefigure:
+	plt.savefig("./1project/Figures/Task3/MSE.png")
 plt.show() 
 
