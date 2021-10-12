@@ -20,7 +20,7 @@ def Confidence_Interval(beta, X, sigma=1):
 
 # Bootstrap resampling
 # Return a (m x n_bootstraps) matrix with the column vectors z_pred for each bootstrap iteration.
-def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = 'OLS', n_lambdas = 20):
+def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS", n_lambdas = 20):
     if solver not in ["OLS", "RIDGE", "LASSO"]:
         raise ValueError("solver must be OLS, RIDGE OR LASSO")
 
@@ -30,11 +30,11 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = 'OLS',
         X_sample, z_sample = resample(X_train, z_train)
         # Perform OLS equation
         if solver == "OLS":
-            ols_beta, z_tilde, z_pred = OLS_solver(X_train, X_test, z_train, z_test)
+            ols_beta, z_tilde, z_pred = OLS_solver(X_sample, X_test, z_sample, z_test)
         elif solver == "RIDGE":
-            ridge_beta_opt, z_tilde, z_pred, best_lamda = ridge_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas)
+            ridge_beta_opt, z_tilde, z_pred, best_lamda = ridge_reg(X_sample, X_test, z_sample, z_test, nlambdas=n_lambdas)
         elif solver == "LASSO":
-            z_tilde, z_pred, best_lamda = lasso_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas)
+            z_tilde, z_pred, best_lamda = lasso_reg(X_sample, X_test, z_sample, z_test, nlambdas=n_lambdas)
 
         z_pred_boot[:, i] = z_pred.ravel()
     return z_pred_boot
@@ -50,9 +50,9 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = 'OLS',
 
 # conclude with cross validation
 
-def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling = 100, solver = 'OLS', n_lambdas = 20):
+def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling = 100, solver = "OLS", n_lambdas = 20):
     if(resampling=="bootstrap"):
-        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling, solver = 'OLS', n_lambdas = 20)
+        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling, solver = solver,n_lambdas = n_lambdas)
     """ else:
         z_pred = crossvalidation(X_train, X_test, z_train, z_test, n_resampling)
     """
@@ -64,7 +64,7 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     return error, bias2, variance
     
 # Plot bias-variance tradeoff in function of complexity of the model
-def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = 'OLS', n_lambdas = 20):
+def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", n_lambdas = 20):
 
     if complexity.__class__ == int:
         complexity = np.arange(1,complexity)
@@ -75,7 +75,7 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
     for degree in complexity:
         X = create_X(x, y, degree)
         X_train, X_test, z_train, z_test = Split_and_Scale(X,z,test_size=test_size) #StardardScaler, test_size=0.2, scale=true
-        error[degree-1], bias[degree-1], variance[degree-1] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling)
+        error[degree-1], bias[degree-1], variance[degree-1] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling,solver = solver,n_lambdas = n_lambdas)
     
         # For debugging
         #print('Error:', error[degree])
@@ -88,19 +88,19 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
     if (plot==True):
         plt.figure( figsize = ( 10, 7))
             
-        error_mean, error_down, error_up = Rolling_Mean(error)
+        error_mean, error_down, error_up = Rolling_Mean(error,2)
         plt.plot(complexity, error_mean, label ="Error (rolling ave.)", color="purple")
-        plt.fill_between(complexity, error_down, error_up, alpha=0.2, color="purple")
-        bias_mean, bias_down, bias_up = Rolling_Mean(bias)
+        plt.fill_between(complexity, error_down, error_up, alpha=0.1, color="purple")
+        bias_mean, bias_down, bias_up = Rolling_Mean(bias,2)
         plt.plot(complexity, bias_mean, label =r"Bias$^2$ (rolling ave.)", color="forestgreen")
-        plt.fill_between(complexity, bias_down, bias_up, alpha=0.2, color="forestgreen")
-        variance_mean, variance_down, variance_up = Rolling_Mean(variance)
-        plt.plot(complexity, variance_mean, label ="Variance (rolling ave.)", color="gold")
-        plt.fill_between(complexity, variance_down, variance_up, alpha=0.2, color="gold")
+        plt.fill_between(complexity, bias_down, bias_up, alpha=0.1, color="forestgreen")
+        variance_mean, variance_down, variance_up = Rolling_Mean(variance,2)
+        plt.plot(complexity, variance_mean, label ="Variance (rolling ave.)", color="darkorange")
+        plt.fill_between(complexity, variance_down, variance_up, alpha=0.1, color="darkorange")
         
         plt.plot(complexity, error, '--', alpha=0.3, color="purple", label ="Error (actual values)")
         plt.plot(complexity, bias, '--', alpha=0.3, color="forestgreen", label ="Bias (actual values)")
-        plt.plot(complexity, variance, '--', alpha=0.3, color="gold", label ="Variance (actual values)")
+        plt.plot(complexity, variance, '--', alpha=0.3, color="darkorange", label ="Variance (actual values)")
          
         plt.xlim(complexity[~np.isnan(error_mean)][0]-1,complexity[-1]+1)
         title=title+str("\n– Rolling mean and one-sigma region –")
