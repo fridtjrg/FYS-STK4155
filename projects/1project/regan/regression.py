@@ -306,3 +306,11 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lm
         return ridge_beta_opt, z_model, z_predict, best_lamda
 
     
+def Ridge_solver(X_train, X_test, z_train, z_test, lamb):
+
+  ridge_beta = ridge_beta = np.linalg.pinv(X_train.T @ X_train + lamb*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+
+  z_tilde = X_train @ ridge_beta # z_prediction of the train data
+  z_predict = X_test @ ridge_beta # z_prediction of the test data
+  
+  return ridge_beta, z_tilde, z_predict
