@@ -166,7 +166,22 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
 
         MSE_train_set.append(MSE(z_train,z_tilde))
         MSE_test_set.append(MSE(z_test,z_predict))
-
+        
+    MSE_df = {'MSE_train': MSE_train_set,
+             'MSE_test': MSE_test_set}
+             #r'$β_{+}$': ci2}
+    MSE_df = pd.DataFrame(MSE_df)
+    # computing the rolling average
+    MSE_df[ 'MSE_train_rolling' ] = MSE_df.MSE_train.rolling(4).mean()
+    MSE_df[ 'MSE_test_rolling' ] = MSE_df.MSE_test.rolling(4).mean()
+    display(np.round(MSE_df,3))
+  
+    
+    plt.figure( figsize = ( 8, 7))
+    MSE_df.plot()
+    plt.show()
+    
+    """
     plt.plot(complexity,MSE_train_set, label ="train")  
     plt.plot(complexity,MSE_test_set, label ="test")  
      
@@ -174,9 +189,9 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     plt.ylabel("MSE")
     plt.title("Plot of the MSE as a function of complexity of the model")
     plt.legend()
-    plt.grid()     
-    #plt.savefig('Task2plot(n='+str(n)+').pdf')
-    plt.show() 
+    plt.grid()
+    plt.show()
+    """
 
 def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, lmbd_end = 20):
     """Lasso regression using sklearn

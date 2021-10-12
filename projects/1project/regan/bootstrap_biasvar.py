@@ -86,6 +86,7 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
         # test: close to the precision...
         
     if (plot==True):
+        plt.figure( figsize = ( 8, 7))
         plt.plot(complexity, error, label='Error')
         plt.plot(complexity, bias, label=r'$Bias^2$')
         plt.plot(complexity, variance, label='Variance')
