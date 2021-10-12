@@ -1,6 +1,7 @@
 import numpy as np
 from random import random, seed
-from regan import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg
+from regan import FrankeFunction, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg, lasso_reg
+import matplotlib.pyplot as plt
 
 
 
@@ -22,12 +23,27 @@ z = FrankeFunction(x,y) +mu_N+sigma_N*np.random.randn(n,n)#+ np.random.normal(mu
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
-ridge_beta, z_tilde,z_predict, opt_lambda, = ridge_reg(X_train, X_test, z_train, z_test)
 
-print("-------------Ridge-------------------")
-print("Lambda: ", opt_lambda)
-print("Training MSE", MSE(z_train,z_tilde))
-print("Test MSE", MSE(z_test,z_predict))
-print("-------------------------------------")
-print("Training R2", R2(z_train,z_tilde))
-print("Test R2", R2(z_test,z_predict))
+n_lambdas = 30
+lmd_start = -10
+lmd_end = 10
+
+MSE_lmd_ridge_train, MSE_lmd_ridge_test, lmd = ridge_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas, lmbd_start = lmd_start, lmbd_end =lmd_end, return_MSE_lmb = True)
+MSE_lmd_lasso_train, MSE_lmd_lasso_test, lmd = lasso_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas, lmbd_start = lmd_start, lmbd_end =lmd_end, return_MSE_lmb = True)
+
+
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+ax.plot(lmd,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
+ax.plot(lmd,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')
+ax.plot(lmd,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')  
+ax.plot(lmd,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')  
+ax.set_xscale('log')
+
+plt.xlabel("$\lambda$")
+plt.ylabel("MSE")
+plt.title("Plot of the MSE for different $\lambda$")
+plt.legend()
+plt.grid()
+plt.savefig("./1project/Figures/Task4/MSE.png")
+plt.show() 
