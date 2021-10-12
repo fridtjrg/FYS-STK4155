@@ -25,7 +25,7 @@ def train_n(n,test_size):
 def test_n(n,test_size):
     return int(n*n*test_size)
     
-np.random.seed(1234)
+np.random.seed(123)
 
 # Datapoints (squared root of datapoints -> meshgrid)
 n = 25
@@ -38,11 +38,11 @@ test_size = 0.2
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.ravel()
 
 print("Part 1: $MSE_{train}$ and $MSE_{test}$ in function of the complexity of the model (degree-order of polynomial) \n")
-complexity = np.arange(2,21)
+complexity = np.arange(0,21)
 plot_ols_complexity(x,y,z, complexity)
 
 print("Part 2: perform a bias-variance tradeoff analysis \n")
-complexity = np.arange(0,11)
+complexity = np.arange(0,30)
 print("Train datapoints:", train_n(n,test_size))
 print("Test datapoints:", test_n(n,test_size))
 bias_variance_complexity(x, y, z, complexity, test_size=test_size)

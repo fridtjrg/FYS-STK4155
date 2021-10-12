@@ -1,5 +1,5 @@
 import numpy as np
-from .regression import resample, OLS_solver, ridge_reg, lasso_reg, create_X, Split_and_Scale
+from .regression import resample, OLS_solver, ridge_reg, lasso_reg, create_X, Split_and_Scale, Rolling_Mean
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -86,11 +86,32 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
         # test: close to the precision...
         
     if (plot==True):
-        plt.figure( figsize = ( 8, 7))
+        plt.figure( figsize = ( 10, 7))
+            
+        error_mean, error_down, error_up = Rolling_Mean(error)
+        plt.plot(complexity, error_mean, label ="Error (rolling ave.)", color="purple")
+        plt.fill_between(complexity, error_down, error_up, alpha=0.2, color="purple")
+        bias_mean, bias_down, bias_up = Rolling_Mean(bias)
+        plt.plot(complexity, bias_mean, label =r"Bias$^2$ (rolling ave.)", color="forestgreen")
+        plt.fill_between(complexity, bias_down, bias_up, alpha=0.2, color="forestgreen")
+        variance_mean, variance_down, variance_up = Rolling_Mean(variance)
+        plt.plot(complexity, variance_mean, label ="Variance (rolling ave.)", color="gold")
+        plt.fill_between(complexity, variance_down, variance_up, alpha=0.2, color="gold")
+        
+        plt.plot(complexity, error, '--', alpha=0.3, color="purple", label ="Error (actual values)")
+        plt.plot(complexity, bias, '--', alpha=0.3, color="forestgreen", label ="Bias (actual values)")
+        plt.plot(complexity, variance, '--', alpha=0.3, color="gold", label ="Variance (actual values)")
+         
+        plt.xlim(complexity[~np.isnan(error_mean)][0]-1,complexity[-1]+1)
+        title=title+str("\n– Rolling mean and one-sigma region –")
+        plt.grid()
+    
+        """
         plt.plot(complexity, error, label='Error')
         plt.plot(complexity, bias, label=r'$Bias^2$')
         plt.plot(complexity, variance, label='Variance')
-        plt.xlabel("complexity")
+        """
+        plt.xlabel("Complexity")
         plt.ylabel("MSE")
         plt.title(title)
         plt.legend()

@@ -152,7 +152,20 @@ def OLS_solver(X_train, X_test, z_train, z_test):
   
 	return ols_beta, z_tilde, z_predict
 
-# Plot MSE in function of complexity of the model
+
+# Return the rolling mean of a vector and two values at one sigma from the rolling average
+def Rolling_Mean(vector, windows=3):
+    vector_df = pd.DataFrame({'vector': vector})
+    # computing the rolling average
+    rolling_mean = vector_df.vector.rolling(windows).mean().to_numpy()
+    # computing the values at two sigmas from the rolling average
+    rolling_std = vector_df.vector.rolling(windows).std().to_numpy()
+    value_up = rolling_mean + rolling_std
+    value_down = rolling_mean - rolling_std
+    
+    return rolling_mean, value_down, value_up
+
+# Plot MSE in function of complexity of the model (rolling mean)
 def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a function of model complexity"):
 
     MSE_train_set = []
@@ -166,32 +179,27 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
 
         MSE_train_set.append(MSE(z_train,z_tilde))
         MSE_test_set.append(MSE(z_test,z_predict))
+    
+    plt.figure( figsize = ( 10, 7))
         
-    MSE_df = {'MSE_train': MSE_train_set,
-             'MSE_test': MSE_test_set}
-             #r'$β_{+}$': ci2}
-    MSE_df = pd.DataFrame(MSE_df)
-    # computing the rolling average
-    MSE_df[ 'MSE_train_rolling' ] = MSE_df.MSE_train.rolling(4).mean()
-    MSE_df[ 'MSE_test_rolling' ] = MSE_df.MSE_test.rolling(4).mean()
-    display(np.round(MSE_df,3))
-  
+    MSE_train_mean, MSE_train_down, MSE_train_up = Rolling_Mean(MSE_train_set)
+    plt.plot(complexity, MSE_train_mean, label ="Train (rolling ave.)", color="purple")
+    plt.fill_between(complexity, MSE_train_down, MSE_train_up, alpha=0.2, color="purple")
+    MSE_test_mean, MSE_test_down, MSE_test_up = Rolling_Mean(MSE_test_set)
+    plt.plot(complexity, MSE_test_mean, label ="Test (rolling ave.)", color="orange")
+    plt.fill_between(complexity, MSE_test_down, MSE_test_up, alpha=0.2, color="orange")
     
-    plt.figure( figsize = ( 8, 7))
-    MSE_df.plot()
-    plt.show()
-    
-    """
-    plt.plot(complexity,MSE_train_set, label ="train")  
-    plt.plot(complexity,MSE_test_set, label ="test")  
+    plt.plot(complexity, MSE_train_set, '--', alpha=0.3, color="purple", label ="Train (actual values)")
+    plt.plot(complexity, MSE_test_set, '--', alpha=0.3, color="orange", label ="Test (actual values)")
      
-    plt.xlabel("complexity")
+    plt.xlabel("Complexity")
     plt.ylabel("MSE")
-    plt.title("Plot of the MSE as a function of complexity of the model")
+    plt.xlim(complexity[~np.isnan(MSE_train_mean)][0]-1,complexity[-1]+1)
+    plt.title("Plot of the MSE as a function of complexity of the model\n– Rolling mean and one-sigma region –")
     plt.legend()
     plt.grid()
     plt.show()
-    """
+    
 
 def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, lmbd_end = 20):
     """Lasso regression using sklearn
