@@ -39,8 +39,6 @@ z = FrankeFunction(x,y) +mu_N+sigma_N*np.random.randn(n,n)#+ np.random.normal(mu
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
-
-<<<<<<< HEAD
 n_lambdas = 30
 lmd_start = -10
 lmd_end = 10
@@ -64,12 +62,3 @@ plt.legend()
 plt.grid()
 plt.savefig("./1project/Figures/Task4/MSE.png")
 plt.show() 
-=======
-print("-------------Ridge-------------------")
-print("Lambda: ", opt_lambda)
-print("Training MSE", MSE(z_train,z_tilde))
-print("Test MSE", MSE(z_test,z_predict))
-print("-------------------------------------")
-print("Training R2", R2(z_train,z_tilde))
-print("Test R2", R2(z_test,z_predict))
->>>>>>> 6d78d3bc797b23ba6dffc6a7c0feffc6e5c18219
