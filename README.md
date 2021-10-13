@@ -19,7 +19,7 @@ Different techniques of Applied Data Analysis and Machine Learning are here expl
 
 - *Project1*: Regression and resampling techniques (OLS, Ridge, Lasso Regression - Bootstrap and cross validation). Bias-variance analysis.
 
-**⚠️ Deadline: 11 Oct 2021 (POSTPONED: 12 Oct 2021)**
+**⚠️ Deadline: 11 Oct 2021 (POSTPONED: 13 Oct 2021)**
 - *Project2*:
 
 Deadline: 13 Nov 2021
