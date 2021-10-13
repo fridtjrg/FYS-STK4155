@@ -38,7 +38,7 @@ def run_CV(k,x,y,z,solver,m, lmd = 10**(-12)):
     return complexity,MSE_train_set,MSE_test_set, runtime_set
 
 
-def run_plot_compare(datapoints, n_resampling, N = 50, plot=False, lmd=10**(-12), k = 5, poly_degree = 10, plot_runtime=True, saveplots=False, foldername = 'Figures'):
+def run_plot_compare(datapoints, n_resampling, N = 50, plot=False, lmd=10**(-12), k = 5, poly_degree = 10, plot_runtime=True, saveplots=False, foldername = 'Figures', title="Terrain"):
     """[summary]
 
     Args:
@@ -82,11 +82,11 @@ def run_plot_compare(datapoints, n_resampling, N = 50, plot=False, lmd=10**(-12)
     if plot:
         fig, ax = plt.subplots(figsize = ( 10, 7))
         im = ax.imshow(datapoints, cmap='gray')
-        ax.set_title("Terrain")
+        ax.set_title(title)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         fig.colorbar(im)
-        if saveplots: fig.savefig(path+"Terrain")
+        if saveplots: fig.savefig(path+"Terrain.png")
 
     solvers = ['OLS','RIDGE','LASSO']
 

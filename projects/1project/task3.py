@@ -22,7 +22,6 @@ from regan import create_X, create_xyz_dataset, cross_validation, Split_and_Scal
 
 savefigure = True
 
-
 np.random.seed(1234)
 
 # Datapoints (squared root of datapoints -> meshgrid)
@@ -72,8 +71,8 @@ for i in range(0,degree): #goes out of range for high i?
 
 fig = plt.figure(figsize=(10,7))
 ax = fig.add_subplot(1,1,1)
-ax.plot(complexity,MSE_train_noCV, label ="train k=1", color = 'red', linestyle = 'dashed')  
-ax.plot(complexity,MSE_test_noCV, label ="test k=1", color = 'red')
+#ax.plot(complexity,MSE_train_noCV, label ="train k=1", color = 'red', linestyle = 'dashed')
+#ax.plot(complexity,MSE_test_noCV, label ="test k=1", color = 'red')
 ax.plot(complexity,MSE_train_set_k5, label ="train k=5", color = 'green', linestyle = 'dashed')  
 ax.plot(complexity,MSE_test_set_k5, label ="test k=5", color = 'green')  
 ax.plot(complexity,MSE_train_set_k10, label ="train k=10", color = 'blue', linestyle = 'dashed')  
