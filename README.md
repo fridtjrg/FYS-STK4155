@@ -19,7 +19,7 @@ Different techniques of Applied Data Analysis and Machine Learning are here expl
 
 - *Project1*: Regression and resampling techniques (OLS, Ridge, Lasso Regression - Bootstrap and cross validation). Bias-variance analysis.
 
-**⚠️ Deadline: 11 Oct 2021 (POSTPONED: 12 Oct 2021)**
+**⚠️ Deadline: 11 Oct 2021 (POSTPONED: 13 Oct 2021)**
 - *Project2*:
 
 Deadline: 13 Nov 2021
@@ -28,7 +28,7 @@ Deadline: 13 Nov 2021
 
 Deadline: 13 Dic 2021
 
-📂 All the material is located on the ```projects``` derectory, including the source codes and delivery reports (quick link here for the [```reports``` directory](https://github.com/fridtjrg/FYS-STK4155/tree/main/projects/reports)).
+📂 All the material is located on the ```projects``` directory, including the source codes and delivery reports (quick link here for the [```reports``` directory](https://github.com/fridtjrg/FYS-STK4155/tree/main/projects/reports)). In the ```projects``` directory, you can find a `README.md` file explaining the folder structure.
 
 *Advise*: the Jupyter Notebook may not display properly when opened directly from Github , we suggest to download the file and open it locally.
 
