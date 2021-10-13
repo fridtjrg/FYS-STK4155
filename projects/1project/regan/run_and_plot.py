@@ -21,7 +21,7 @@ import numpy as np
 from time import time
 import os
 
-def run_CV(k,x,y,z,solver,m, n_lambdas = 20):
+def run_CV(k,x,y,z,solver,m, lmd = 10**(-12)):
     complexity = []
     MSE_train_set = []
     MSE_test_set = []
@@ -29,7 +29,7 @@ def run_CV(k,x,y,z,solver,m, n_lambdas = 20):
     for i in range(2,m):
         t_0 = time()
         X = create_X(x, y, i)
-        MSE_train, MSE_test = cross_validation(k,X,z,solver=solver,n_lambdas = n_lambdas)
+        MSE_train, MSE_test = cross_validation(k,X,z,solver=solver,lmd=lmd)
         complexity.append(i)
         MSE_train_set.append(MSE_train)
         MSE_test_set.append(MSE_test)
@@ -37,24 +37,8 @@ def run_CV(k,x,y,z,solver,m, n_lambdas = 20):
 
     return complexity,MSE_train_set,MSE_test_set, runtime_set
 
-def run_BS(x,y,z,solver,m,n_resampling,n_lambdas=20):
-    bias_set = []
-    variance_set = []
-    error_set = []
-    runtime_set = []
-    for i in range(2,m):
-        t_0 = time()
-        error, bias2, variance = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,n_lambdas=n_lambdas)
-        bias_set.append(bias2)
-        variance_set.append(variance)
-        error_set.append(error)
-        runtime_set.append(t_0-time())
 
-    print("RUN_BS: ",bias_set)
-    return bias_set, variance_set, error_set, runtime_set
-
-
-def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lambdas = 20, k = 5, poly_degree = 10, plot_runtime=True, saveplots=False):
+def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10**(-12), k = 5, poly_degree = 10, plot_runtime=True, saveplots=False):
     """[summary]
 
     Args:
@@ -114,14 +98,14 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
     BS_variance = []
     BS_runtimes = []
     for solver in solvers:
-        bias, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,n_lambdas=n_lambdas)
+        bias, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
         BS_bias.append(bias)
         BS_error.append(variance)
         BS_variance.append(error)
 
     if plot:
         fig3, ax3 = plt.subplots()
-        ax3.set_yscale('log')
+        #ax3.set_yscale('log')
         #ax4 = ax3.twinx()
         BS_complexity = [x for x in range(1,m)]
         lns = []
@@ -135,9 +119,9 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
         ax3.legend(lns,labs)
 
         ax3.set_xlabel("complexity")
-        ax3.set_ylabel("MSE")
+        ax3.set_ylabel("")
         #ax4.set_ylabel("variance")
-        ax3.set_title(f"bias, variance and error from bootstrap resampling as a function of complexity \n with n_samples = {n_resampling}, and $N_\lambda$ = {n_lambdas}")
+        ax3.set_title(f"bias, variance and error from bootstrap resampling as a function of complexity \n with n_samples = {n_resampling}, and $\lambda$ = {lmd}")
         ax3.grid()
         if saveplots: fig3.savefig(path+"BS.png")
 
@@ -152,7 +136,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
     CV_runtimes = []
 
     for solver in solvers:
-        complexity,MSE_train_set,MSE_test_set,runtimes = run_CV(k,x,y,z,solver,m,n_lambdas = n_lambdas)
+        complexity,MSE_train_set,MSE_test_set,runtimes = run_CV(k,x,y,z,solver,m,lmd=lmd)
         CV_MSE_train.append(MSE_train_set)
         CV_MSE_test.append(MSE_test_set)
         CV_complexity.append(complexity)
@@ -173,7 +157,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
     
         ax1.set_xlabel("complexity")
         ax1.set_ylabel("MSE")
-        ax1.set_title(f"Plot of the MSE as a function of complexity of the models \n with k = {k}, and $N_\lambda$ = {n_lambdas}")
+        ax1.set_title(f"Plot of the MSE as a function of complexity of the models \n with k = {k}, and $\lambda$ = {lmd}")
         ax1.legend()
         ax1.grid()
         if saveplots: fig1.savefig(path+"CV.png")
@@ -189,5 +173,76 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, n_lamb
 
         plt.show() 
     
-    
-    
+
+def compare_lmd_CV(datapoints, N, k, lambdas, poly_degree, solver = 'RIDGE', saveplots = False, folderpath = 'Task5'):
+    m = poly_degree # polynomial order
+    datapoints = datapoints[:N,:N]
+    z = datapoints
+
+    # Creates mesh of image pixels
+    x = np.linspace(0,1, np.shape(z)[0])
+    y = np.linspace(0,1, np.shape(z)[1])
+    x,y = np.meshgrid(x,y)
+    z = z.ravel()
+
+    CV_MSE_train = []
+    CV_MSE_test = []
+    CV_complexity = []
+    for lmd in lambdas:
+        complexity,MSE_train_set,MSE_test_set,runtimes = run_CV(k,x,y,z,solver,m,lmd=lmd)
+        CV_MSE_train.append(MSE_train_set)
+        CV_MSE_test.append(MSE_test_set)
+        CV_complexity.append(complexity)
+
+    fig1, ax1 = plt.subplots()
+    ax1.set_yscale('log')
+    for i in range(len(lambdas)):
+        #ax1.plot(CV_complexity[i],CV_MSE_train[i], label = f"$\lambda$ = {lambdas[i]} train",linestyle = 'dashed')  
+        ax1.plot(CV_complexity[i],CV_MSE_test[i], label =f"$\lambda$ = {lambdas[i]} test")  
+
+    ax1.set_xlabel("complexity")
+    ax1.set_ylabel("MSE")
+    ax1.set_title(f"CV Plot of the MSE as a function of complexity of {solver} regression \n with k = {k}, and different lambdas")
+    ax1.legend()
+    ax1.grid()
+    if saveplots:
+        fig1.savefig("./Figures/"+folderpath+"/"+solver+"k"+str(k)+"_CV.png")
+    plt.show()
+
+
+def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resampling = 100, saveplots = False, folderpath = 'Task5'):
+ 
+    m = poly_degree # polynomial order
+    datapoints = datapoints[:N,:N]
+    z = datapoints
+
+    # Creates mesh of image pixels
+    x = np.linspace(0,1, np.shape(z)[0])
+    y = np.linspace(0,1, np.shape(z)[1])
+    x,y = np.meshgrid(x,y)
+    z = z.ravel()
+
+    BS_bias = []
+    BS_error = []
+    BS_variance = []
+    BS_complexity = [x for x in range(1,m)]
+    for lmd in lambdas:
+        bias, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
+        BS_bias.append(bias)
+        BS_error.append(variance)
+        BS_variance.append(error)
+
+    fig1, ax1 = plt.subplots()
+    for i in range(len(lambdas)):
+        color = next(ax1._get_lines.prop_cycler)['color']
+        ax1.plot(BS_complexity,BS_bias[i], label =f"$\lambda$ = {lambdas[i]} bias$^2$", color=color)
+        ax1.plot(BS_complexity,BS_error[i], label =f"$\lambda$ = {lambdas[i]} error", linestyle = 'dashed', color=color)
+        ax1.plot(BS_complexity,BS_variance[i], label =f"$\lambda$ = {lambdas[i]} variance", linestyle = 'dotted', color=color) 
+
+    ax1.set_xlabel("complexity")
+    ax1.set_ylabel("")
+    ax1.set_title(f"Bootstrap parameters as a function of complexity of {solver} regression \n resampling = {n_resampling} times, and different lambdas")
+    ax1.legend(loc=2, prop={'size': 6})
+    ax1.grid()
+    if saveplots: fig1.savefig("./Figures/"+folderpath+"/"+solver+"_BS.png")
+    plt.show()

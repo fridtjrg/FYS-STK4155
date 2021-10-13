@@ -14,19 +14,35 @@
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from numpy.core.function_base import logspace
 from regan import *
 import numpy as np
 
-savefigures = False
+savefigures = True
 degree=5
 np.random.seed(1234)
 
 # Datapoints (squared root of datapoints -> meshgrid)
-n = 25
+n = 30
 # Paramaters of noise distribution
 mu_N = 0; sigma_N = 0.2
+degree = 20
 
 # Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
 
-run_plot_compare(z,'Task 5 Franke Function', 100, N=n, n_lambdas=30, k=5,poly_degree = 5,plot=True,saveplots=savefigures)
+lambdas = [10**x for x in [-12, -6, -3, 0, 3]]
+
+foldername = 'Task5'
+
+compare_lmd_BS(z, n, lambdas, degree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, folderpath = 'Task4')
+compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
+compare_lmd_CV(z, n, 10, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
+
+compare_lmd_BS(z, n, lambdas, degree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, folderpath = foldername)
+compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
+compare_lmd_CV(z, n, 10, lambdas, degree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
+
+
+run_plot_compare(z,'Task 5', 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures)
+

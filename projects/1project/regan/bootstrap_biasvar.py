@@ -36,7 +36,7 @@ def Confidence_Interval(beta, X, sigma=1):
 
 # Bootstrap resampling
 # Return a (m x n_bootstraps) matrix with the column vectors z_pred for each bootstrap iteration.
-def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS", n_lambdas = 20):
+def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS", lmd = 10**(-12)):
     if solver not in ["OLS", "RIDGE", "LASSO"]:
         raise ValueError("solver must be OLS, RIDGE OR LASSO")
 
@@ -48,11 +48,12 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS",
         if solver == "OLS":
             ols_beta, z_tilde, z_pred = OLS_solver(X_sample, X_test, z_sample, z_test)
         elif solver == "RIDGE":
-            ridge_beta_opt, z_tilde, z_pred, best_lamda = ridge_reg(X_sample, X_test, z_sample, z_test, nlambdas=n_lambdas)
+            ridge_beta_opt, z_tilde, z_pred = ridge_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
         elif solver == "LASSO":
-            z_tilde, z_pred, best_lamda = lasso_reg(X_sample, X_test, z_sample, z_test, nlambdas=n_lambdas)
+            z_tilde, z_pred = lasso_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
 
         z_pred_boot[:, i] = z_pred.ravel()
+
     return z_pred_boot
     
 # Bias-variance tradeoff
@@ -66,9 +67,9 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS",
 
 # conclude with cross validation
 
-def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling = 100, solver = "OLS", n_lambdas = 20):
+def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling = 100, solver = "OLS", lmd = 10**(-12)):
     if(resampling=="bootstrap"):
-        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling, solver = solver,n_lambdas = n_lambdas)
+        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling, solver = solver,lmd = lmd)
     """ else:
         z_pred = crossvalidation(X_train, X_test, z_train, z_test, n_resampling)
     """
@@ -80,7 +81,7 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     return error, bias2, variance
     
 # Plot bias-variance tradeoff in function of complexity of the model
-def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", n_lambdas = 20):
+def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", lmd=10**(-12)):
 
     if complexity.__class__ == int:
         complexity = np.arange(1,complexity)
@@ -91,7 +92,7 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
     for degree in complexity:
         X = create_X(x, y, degree)
         X_train, X_test, z_train, z_test = Split_and_Scale(X,z,test_size=test_size) #StardardScaler, test_size=0.2, scale=true
-        error[degree-1], bias[degree-1], variance[degree-1] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling,solver = solver,n_lambdas = n_lambdas)
+        error[degree-1], bias[degree-1], variance[degree-1] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling,solver = solver,lmd = lmd)
     
         # For debugging
         #print('Error:', error[degree])
