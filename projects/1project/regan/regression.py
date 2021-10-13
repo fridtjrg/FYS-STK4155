@@ -203,18 +203,18 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     plt.grid()
     plt.show()
     
+def ridge_reg(X_train, X_test, z_train, z_test, lmd = 10**(-12)):
+ 
+    ridge_beta = np.linalg.pinv(X_train.T @ X_train + lmd*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+    z_model = X_train @ ridge_beta #calculates model
+    z_predict = X_test @ ridge_beta
+
+    #finds the lambda that gave the best MSE
+    #best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
+
+    return ridge_beta, z_model, z_predict
+    
 def lasso_reg(X_train, X_test, z_train, z_test, lmd = 10**(-12)):
-    """Lasso regression using sklearn
-
-    Args:
-        X_train ([type]): [description]
-        X_test ([type]): [description]
-        z_train ([type]): [description]
-        z_test ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
 
     RegLasso = linear_model.Lasso(lmd)
     _ = RegLasso.fit(X_train,z_train)
@@ -223,33 +223,4 @@ def lasso_reg(X_train, X_test, z_train, z_test, lmd = 10**(-12)):
 
     return z_model, z_predict
 
-def ridge_reg(X_train, X_test, z_train, z_test, lmd = 10**(-12)):
- 
-    ridge_beta = np.linalg.pinv(X_train.T @ X_train + lmd*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
-    z_model = X_train @ ridge_beta #calculates model
-    z_predict = X_test @ ridge_beta
 
-
-    #finds the lambda that gave the best MSE
-    #best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
-
-    """
-    print(np.min(MSE_values))
-    print(MSE_values)
-    print(lambdas)
-    print(best_lamda)
-    """
-    z_model = X_train @ ridge_beta
-    z_predict = X_test @ ridge_beta
-
-    return ridge_beta, z_model, z_predict
-
-    
-def Ridge_solver(X_train, X_test, z_train, z_test, lamb):
-
-  ridge_beta = ridge_beta = np.linalg.pinv(X_train.T @ X_train + lamb*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
-
-  z_tilde = X_train @ ridge_beta # z_prediction of the train data
-  z_predict = X_test @ ridge_beta # z_prediction of the test data
-  
-  return ridge_beta, z_tilde, z_predict
