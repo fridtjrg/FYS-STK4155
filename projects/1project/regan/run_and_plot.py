@@ -38,7 +38,7 @@ def run_CV(k,x,y,z,solver,m, lmd = 10**(-12)):
     return complexity,MSE_train_set,MSE_test_set, runtime_set
 
 
-def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10**(-12), k = 5, poly_degree = 10, plot_runtime=True, saveplots=False):
+def run_plot_compare(datapoints, n_resampling, N = 50, plot=False, lmd=10**(-12), k = 5, poly_degree = 10, plot_runtime=True, saveplots=False, foldername = 'Figures'):
     """[summary]
 
     Args:
@@ -54,14 +54,16 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
     #----------------------------------------------------------------------------
     #                         Storing figures
     #----------------------------------------------------------------------------
-    if saveplots and plot:
-        path = 'Figures'
+    """if saveplots and plot:
+        path = 'Proj1_Plots'
         foldername = title.replace(' ','')
         try:
             os.mkdir(path+'/'+foldername)
         except FileExistsError:
             print("Dir already exists")
         path = path+'/'+foldername+'/'
+    """
+    path = "../reports/Proj1_Plots/"+foldername+"/"
 
     #----------------------------------------------------------------------------
     #                           Preparing the dataset
@@ -80,11 +82,11 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
     if plot:
         fig, ax = plt.subplots(figsize = ( 10, 7))
         im = ax.imshow(datapoints, cmap='gray')
-        ax.set_title(title)
+        ax.set_title("Terrain")
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         fig.colorbar(im)
-        if saveplots: fig.savefig(path+"Image")
+        if saveplots: fig.savefig(path+"Terrain")
 
     solvers = ['OLS','RIDGE','LASSO']
 
@@ -110,9 +112,10 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
         BS_complexity = [x for x in range(1,m)]
         lns = []
         for i in range(len(solvers)):
-            lns.append(ax3.plot(BS_complexity,BS_bias[i], label =solvers[i]+" bias$^2$"))
-            lns.append(ax3.plot(BS_complexity,BS_error[i], label =solvers[i]+ " error", linestyle = 'dashed'))
-            lns.append(ax3.plot(BS_complexity,BS_variance[i], label =solvers[i]+ " variance", linestyle = 'dotted') )
+            color = next(ax3._get_lines.prop_cycler)['color']
+            lns.append(ax3.plot(BS_complexity,BS_error[i], label =solvers[i]+ " error", color=color))
+            lns.append(ax3.plot(BS_complexity,BS_bias[i], label =solvers[i]+" bias$^2$", color=color, linestyle = 'dashed'))
+            lns.append(ax3.plot(BS_complexity,BS_variance[i], label =solvers[i]+ " variance", linestyle = 'dotted', color=color ))
 
         lns = [l[0] for l in lns]
         labs = [l.get_label() for l in lns]
@@ -121,7 +124,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
         ax3.set_xlabel("complexity")
         ax3.set_ylabel("")
         #ax4.set_ylabel("variance")
-        ax3.set_title(f"bias, variance and error from bootstrap resampling as a function of complexity \n with n_samples = {n_resampling}, and $\lambda$ = {lmd}")
+        ax3.set_title(f"Bias-variance tradeoff analysis as a function of complexity from bootstrap resampling\n resampling = {n_resampling} times, and $\lambda$ = {lmd}")
         ax3.grid()
         if saveplots: fig3.savefig(path+"BS.png")
 
@@ -157,7 +160,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
     
         ax1.set_xlabel("complexity")
         ax1.set_ylabel("MSE")
-        ax1.set_title(f"Plot of the MSE as a function of complexity of the models \n with k = {k}, and $\lambda$ = {lmd}")
+        ax1.set_title(f"Plot of the MSE as a function of complexity with CV resampling\n with k = {k}, and $\lambda$ = {lmd}")
         ax1.legend()
         ax1.grid()
         if saveplots: fig1.savefig(path+"CV.png")
@@ -174,7 +177,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
         plt.show() 
     
 
-def compare_lmd_CV(datapoints, N, k, lambdas, poly_degree, solver = 'RIDGE', saveplots = False, folderpath = 'Task5'):
+def compare_lmd_CV(datapoints, N, k, lambdas, poly_degree, solver = 'RIDGE', saveplots = False, foldername = 'Figures'):
     m = poly_degree # polynomial order
     datapoints = datapoints[:N,:N]
     z = datapoints
@@ -198,19 +201,19 @@ def compare_lmd_CV(datapoints, N, k, lambdas, poly_degree, solver = 'RIDGE', sav
     ax1.set_yscale('log')
     for i in range(len(lambdas)):
         #ax1.plot(CV_complexity[i],CV_MSE_train[i], label = f"$\lambda$ = {lambdas[i]} train",linestyle = 'dashed')  
-        ax1.plot(CV_complexity[i],CV_MSE_test[i], label =f"$\lambda$ = {lambdas[i]} test")  
+        ax1.plot(CV_complexity[i],CV_MSE_test[i], label =f"$\lambda$ = {lambdas[i]}")
 
     ax1.set_xlabel("complexity")
     ax1.set_ylabel("MSE")
-    ax1.set_title(f"CV Plot of the MSE as a function of complexity of {solver} regression \n with k = {k}, and different lambdas")
+    ax1.set_title(f"Plot of the MSE as a function of complexity of {solver} regression with CV resampling\n with k = {k}, and different $\lambda$s")
     ax1.legend()
     ax1.grid()
     if saveplots:
-        fig1.savefig("./Figures/"+folderpath+"/"+solver+"k"+str(k)+"_CV.png")
+        fig1.savefig("../reports/Proj1_Plots/"+foldername+"/"+solver+"k"+str(k)+"_CV.png")
     plt.show()
 
 
-def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resampling = 100, saveplots = False, folderpath = 'Task5'):
+def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resampling = 100, saveplots = False, foldername = 'Figures'):
  
     m = poly_degree # polynomial order
     datapoints = datapoints[:N,:N]
@@ -241,8 +244,8 @@ def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resa
 
     ax1.set_xlabel("complexity")
     ax1.set_ylabel("")
-    ax1.set_title(f"Bias-variance tradeoff analysis as a function of complexity of {solver} regression \n resampling = {n_resampling} times, and different lambdas")
+    ax1.set_title(f"Bias-variance tradeoff analysis as a function of complexity of {solver} regression from bootstrap resampling\n resampling = {n_resampling} times, and different $\lambda$s")
     ax1.legend(loc=2, prop={'size': 6})
     ax1.grid()
-    if saveplots: fig1.savefig("./Figures/"+folderpath+"/"+solver+"_BS.png")
+    if saveplots: fig1.savefig("../reports/Proj1_Plots/"+foldername+"/"+solver+"_BS.png")
     plt.show()

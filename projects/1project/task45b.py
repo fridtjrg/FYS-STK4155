@@ -19,7 +19,7 @@ from random import random, seed
 from regan import create_xyz_dataset, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg, lasso_reg
 import matplotlib.pyplot as plt
 
-savefigure = False
+savefigure = True
 
 np.random.seed(1234)
 
@@ -66,5 +66,5 @@ plt.title(f"Plot of the MSE for different $\lambda$ for complexity {degree}")
 plt.legend()
 plt.grid()
 if savefigure:
-    plt.savefig("./Figures/Task4/MSE_lambdas.png")
+    plt.savefig("../reports/Proj1_Plots/Task5/MSE_lambdas.png")
 plt.show() 

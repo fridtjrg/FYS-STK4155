@@ -18,7 +18,7 @@ from numpy.core.function_base import logspace
 from regan import *
 import numpy as np
 
-savefigures = False
+savefigures = True
 
 np.random.seed(1234)
 
@@ -34,16 +34,13 @@ x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
 
 lambdas = [10**x for x in [-12, -6, -3, 0, 3]]
 
-foldername = 'Task5'
+run_plot_compare(z, 100, N=n, k=5,poly_degree = 18,plot=True, saveplots=savefigures, foldername = 'Task5')
 
-compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, folderpath = 'Task4')
-compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
-compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, foldername = 'Task4')
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = 'Task4')
+compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = 'Task4')
 
-compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, folderpath = foldername)
-compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
-compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
-
-
-run_plot_compare(z,'Task 5', 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures)
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, foldername = 'Task5')
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = 'Task5')
+compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = 'Task5')
 
