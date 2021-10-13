@@ -36,7 +36,7 @@ x = np.linspace(0,1, np.shape(z)[0])
 y = np.linspace(0,1, np.shape(z)[1])
 x,y = np.meshgrid(x,y)
 
-degree = 20
+maxdegree = 20
 
 #---------------------------------------------------
 #RUN cv and bootstrap
@@ -47,13 +47,13 @@ foldername = 'Task6'
 
 run_plot_compare(z, 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures, foldername = foldername)
 
-compare_lmd_BS(z, n, lambdas, degree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 10, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
 
-compare_lmd_BS(z, n, lambdas, degree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
 
 
 #----------------------------------------------------

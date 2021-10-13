@@ -48,7 +48,7 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS",
         if solver == "OLS":
             ols_beta, z_tilde, z_pred = OLS_solver(X_sample, X_test, z_sample, z_test)
         elif solver == "RIDGE":
-            ridge_beta_opt, z_tilde, z_pred = ridge_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
+            ridge_beta, z_tilde, z_pred = ridge_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
         elif solver == "LASSO":
             z_tilde, z_pred = lasso_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
 
@@ -82,10 +82,9 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     return error, bias2, variance
     
 # Plot bias-variance tradeoff in function of complexity of the model
-def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", lmd=10**(-12)):
+def bias_variance_complexity(x, y, z, maxdegree=20, n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", lmd=10**(-12)):
 
-    if complexity.__class__ == int:
-        complexity = np.arange(1,complexity)
+    complexity = np.arange(0,maxdegree+1)
     error = np.zeros(complexity.size)
     bias = np.zeros(complexity.size)
     variance = np.zeros(complexity.size)
@@ -93,7 +92,7 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
     for degree in complexity:
         X = create_X(x, y, degree)
         X_train, X_test, z_train, z_test = Split_and_Scale(X,z,test_size=test_size) #StardardScaler, test_size=0.2, scale=true
-        error[degree-1], bias[degree-1], variance[degree-1] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling,solver = solver,lmd = lmd)
+        error[degree], bias[degree], variance[degree] = bias_variance_analysis(X_train, X_test, z_train, z_test, n_resampling = n_resampling,solver = solver,lmd = lmd)
     
         # For debugging
         #print('Error:', error[degree])
@@ -120,7 +119,7 @@ def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling
         plt.plot(complexity, bias, '--', alpha=0.3, color="forestgreen", label ="Bias (actual values)")
         plt.plot(complexity, variance, '--', alpha=0.3, color="darkorange", label ="Variance (actual values)")
          
-        #plt.xlim(complexity[~np.isnan(error_mean)][0]-1,complexity[-1]+1)
+        plt.xlim(complexity[~np.isnan(error_mean)][0]-1,complexity[-1]+1)
         title=title+str("\n– Rolling mean and one-sigma region –")
         plt.grid()
     

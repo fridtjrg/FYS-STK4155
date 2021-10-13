@@ -38,20 +38,23 @@ test_size = 0.2
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N); z = z.ravel()
 
 print("Part 1: MSE_train and MSE_test in function of the complexity of the model (degree-order of polynomial) \n")
-complexity = np.arange(0,21)
-plot_ols_complexity(x,y,z, complexity)
+# Max degree of complexity
+maxdegree=20
+plot_ols_complexity(x,y,z, maxdegree)
 
 print("Part 2: perform a bias-variance tradeoff analysis \n")
-complexity = np.arange(0,13)
+# Max degree of complexity
+maxdegree=15
 
 print("Train datapoints:", train_n(n,test_size))
 print("Test datapoints:", test_n(n,test_size))
-bias_variance_complexity(x, y, z, complexity, test_size=test_size)
+bias_variance_complexity(x, y, z, maxdegree, test_size=test_size)
 
 print("Bias-variance tradeoff analysis with variation in training and testing datapoints")
 n_ = [25,40]
 test_size_ = [0.2, 0.33]
-complexity = np.arange(0,20)
+maxdegree = 20
+complexity = np.arange(0,maxdegree+1)
 colors=["forestgreen", "purple", "maroon", "darkorange"]
 
 fig, ax = plt.subplots(3, figsize=(17, 25))
@@ -65,7 +68,7 @@ for i in n_:
     for ts in test_size_:
         print(count,") Datapoints:", i*i, "– Test size:", round(ts,3))
         
-        error, bias, variance = bias_variance_complexity(x, y, z, complexity, test_size=ts, plot=False)
+        error, bias, variance = bias_variance_complexity(x, y, z, maxdegree, test_size=ts, plot=False)
         
         error_mean, error_down, error_up = Rolling_Mean(error,2)
         bias_mean, bias_down, bias_up = Rolling_Mean(bias,2)

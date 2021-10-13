@@ -169,8 +169,9 @@ def Rolling_Mean(vector, windows=3):
     return rolling_mean, value_down, value_up
 
 # Plot MSE in function of complexity of the model (rolling mean)
-def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a function of model complexity"):
+def plot_ols_complexity(x, y, z, maxdegree = 20, title="MSE as a function of model complexity"):
 
+    complexity = np.arange(0,maxdegree+1)
     MSE_train_set = []
     MSE_test_set = []
 
