@@ -36,6 +36,10 @@ x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
+ols_beta, ols_model, ols_predict  = OLS_solver(X_train, X_test, z_train, z_test)
+print("Training MSE for OLS:", round(MSE(z_train,ols_model),4))
+print("Test MSE for OLS", round(MSE(z_test,ols_predict),4))
+
 lambdas = np.logspace(-30,10,num=50)
 
 MSE_lmd_ridge_train = []
