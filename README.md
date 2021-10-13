@@ -28,7 +28,7 @@ Deadline: 13 Nov 2021
 
 Deadline: 13 Dic 2021
 
-📂 All the material is located on the ```projects``` derectory, including the source codes and delivery reports (quick link here for the [```reports``` directory](https://github.com/fridtjrg/FYS-STK4155/tree/main/projects/reports)).
+📂 All the material is located on the ```projects``` directory, including the source codes and delivery reports (quick link here for the [```reports``` directory](https://github.com/fridtjrg/FYS-STK4155/tree/main/projects/reports)). In the ```projects``` directory, you can find a `README.md` file explaining the folder structure.
 
 *Advise*: the Jupyter Notebook may not display properly when opened directly from Github , we suggest to download the file and open it locally.
 
