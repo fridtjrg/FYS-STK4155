@@ -19,7 +19,7 @@ from random import random, seed
 from regan import create_xyz_dataset, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg, lasso_reg
 import matplotlib.pyplot as plt
 
-savefigure = True
+savefigure = False
 
 np.random.seed(1234)
 
@@ -33,7 +33,6 @@ mu_N = 0; sigma_N = 0.2
 # Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
 
-# Ridge
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
@@ -53,7 +52,7 @@ for lmd in lambdas:
     MSE_lmd_lasso_test.append(MSE(lasso_predict,z_test))
 
 
-fig = plt.figure()
+fig = plt.figure(figsize = ( 10, 7))
 ax = fig.add_subplot(1,1,1)
 ax.plot(lambdas,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
 ax.plot(lambdas,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')

@@ -78,7 +78,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
     z = z.ravel()
 
     if plot:
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize = ( 10, 7))
         im = ax.imshow(datapoints, cmap='gray')
         ax.set_title(title)
         ax.set_xlabel('X')
@@ -104,7 +104,7 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
         BS_variance.append(error)
 
     if plot:
-        fig3, ax3 = plt.subplots()
+        fig3, ax3 = plt.subplots(figsize = ( 10, 7))
         #ax3.set_yscale('log')
         #ax4 = ax3.twinx()
         BS_complexity = [x for x in range(1,m)]
@@ -144,8 +144,8 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
     
     
     if plot:
-        fig1, ax1 = plt.subplots()
-        fig2, ax2 = plt.subplots()
+        fig1, ax1 = plt.subplots(figsize = ( 10, 7))
+        fig2, ax2 = plt.subplots(figsize = ( 10, 7))
         ax1.set_yscale('log')
         if plot_runtime:
             ax2.set_yscale('log')
@@ -194,7 +194,7 @@ def compare_lmd_CV(datapoints, N, k, lambdas, poly_degree, solver = 'RIDGE', sav
         CV_MSE_test.append(MSE_test_set)
         CV_complexity.append(complexity)
 
-    fig1, ax1 = plt.subplots()
+    fig1, ax1 = plt.subplots(figsize = ( 10, 7))
     ax1.set_yscale('log')
     for i in range(len(lambdas)):
         #ax1.plot(CV_complexity[i],CV_MSE_train[i], label = f"$\lambda$ = {lambdas[i]} train",linestyle = 'dashed')  
@@ -232,7 +232,7 @@ def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resa
         BS_error.append(variance)
         BS_variance.append(error)
 
-    fig1, ax1 = plt.subplots()
+    fig1, ax1 = plt.subplots(figsize = ( 10, 7))
     for i in range(len(lambdas)):
         color = next(ax1._get_lines.prop_cycler)['color']
         ax1.plot(BS_complexity,BS_bias[i], label =f"$\lambda$ = {lambdas[i]} bias$^2$", color=color)
@@ -241,7 +241,7 @@ def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resa
 
     ax1.set_xlabel("complexity")
     ax1.set_ylabel("")
-    ax1.set_title(f"Bootstrap parameters as a function of complexity of {solver} regression \n resampling = {n_resampling} times, and different lambdas")
+    ax1.set_title(f"Bias-variance tradeoff analysis as a function of complexity of {solver} regression \n resampling = {n_resampling} times, and different lambdas")
     ax1.legend(loc=2, prop={'size': 6})
     ax1.grid()
     if saveplots: fig1.savefig("./Figures/"+folderpath+"/"+solver+"_BS.png")

@@ -22,7 +22,7 @@ from regan import *
 from imageio import imread
 import matplotlib.pyplot as plt
 
-savefigures = True
+savefigures = False
 
 
 # Load the terrain

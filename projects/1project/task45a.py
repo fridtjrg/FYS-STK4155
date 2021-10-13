@@ -18,17 +18,16 @@ from numpy.core.function_base import logspace
 from regan import *
 import numpy as np
 
-savefigures = True
+savefigures = False
 
 np.random.seed(1234)
 
-#Dreee of polynomial
-degree=5
 # Datapoints (squared root of datapoints -> meshgrid)
 n = 30
 # Paramaters of noise distribution
 mu_N = 0; sigma_N = 0.2
-degree = 20
+# Max degree of complexity
+maxdegree = 20
 
 # Create vanilla dataset:
 x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
@@ -37,13 +36,13 @@ lambdas = [10**x for x in [-12, -6, -3, 0, 3]]
 
 foldername = 'Task5'
 
-compare_lmd_BS(z, n, lambdas, degree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, folderpath = 'Task4')
-compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
-compare_lmd_CV(z, n, 10, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, folderpath = 'Task4')
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
+compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task4')
 
-compare_lmd_BS(z, n, lambdas, degree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, folderpath = foldername)
-compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
-compare_lmd_CV(z, n, 10, lambdas, degree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, folderpath = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
+compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
 
 
 run_plot_compare(z,'Task 5', 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures)
