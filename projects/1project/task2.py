@@ -53,7 +53,7 @@ bias_variance_complexity(x, y, z, maxdegree, test_size=test_size)
 print("Bias-variance tradeoff analysis with variation in training and testing datapoints")
 n_ = [25,40]
 test_size_ = [0.2, 0.33]
-maxdegree = 20
+maxdegree = 17
 complexity = np.arange(0,maxdegree+1)
 colors=["forestgreen", "purple", "maroon", "darkorange"]
 
