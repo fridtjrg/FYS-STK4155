@@ -109,7 +109,7 @@ def run_plot_compare(datapoints, n_resampling, N = 50, plot=False, lmd=10**(-12)
         fig3, ax3 = plt.subplots(figsize = ( 10, 7))
         #ax3.set_yscale('log')
         #ax4 = ax3.twinx()
-        BS_complexity = [x for x in range(1,m)]
+        BS_complexity = [x for x in range(0,m+1)]
         lns = []
         for i in range(len(solvers)):
             color = next(ax3._get_lines.prop_cycler)['color']
@@ -228,7 +228,7 @@ def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resa
     BS_bias = []
     BS_error = []
     BS_variance = []
-    BS_complexity = [x for x in range(1,m)]
+    BS_complexity = [x for x in range(0,m+1)]
     for lmd in lambdas:
         error, bias, variance = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
         BS_error.append(error)
