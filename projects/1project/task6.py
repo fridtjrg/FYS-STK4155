@@ -42,7 +42,7 @@ x = np.linspace(0,1, np.shape(z)[0])
 y = np.linspace(0,1, np.shape(z)[1])
 x,y = np.meshgrid(x,y)
 
-maxdegree = 40
+maxdegree = 35
 degree=5
 test_size = 0.2
 
@@ -83,10 +83,6 @@ MSE_test_set_k5 = []
 MSE_train_set_k10 = []
 MSE_test_set_k10 = []
 
-
-MSE_train_noCV = []
-MSE_test_noCV = []
-
 for i in range(0,maxdegree): #goes out of range for high i?
 
 
@@ -94,8 +90,6 @@ for i in range(0,maxdegree): #goes out of range for high i?
   X = create_X(x, y, i)
   X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
   ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
-  MSE_train_noCV.append(MSE(z_train,z_tilde))
-  MSE_test_noCV.append(MSE(z_test,z_predict))
 
   complexity.append(i)
   #k = 5
@@ -111,8 +105,6 @@ for i in range(0,maxdegree): #goes out of range for high i?
 
 fig = plt.figure(figsize=(10,7))
 ax = fig.add_subplot(1,1,1)
-ax.plot(complexity,MSE_train_noCV, label ="train k=1", color = 'red', linestyle = 'dashed')
-ax.plot(complexity,MSE_test_noCV, label ="test k=1", color = 'red')
 ax.plot(complexity,MSE_train_set_k5, label ="train k=5", color = 'green', linestyle = 'dashed')
 ax.plot(complexity,MSE_test_set_k5, label ="test k=5", color = 'green')
 ax.plot(complexity,MSE_train_set_k10, label ="train k=10", color = 'blue', linestyle = 'dashed')
@@ -130,24 +122,6 @@ plt.show()
 
 
 print("––––––––– TASK 4-5 –––––––––––––––")
-#---------------------------------------------------
-#RUN cv and bootstrap
-
-lambdas = [10**x for x in [-12, -6, -3, 0, 3]]
-
-foldername = 'Task6'
-
-run_plot_compare(z, 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures, foldername = foldername, title="Portion of analyzed terrain")
-
-compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
-
-compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
-compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
-
-
 #----------------------------------------------------
 #Get MSE vs lambdas
 
@@ -169,10 +143,10 @@ for lmd in lambdas:
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
-ax.plot(lambdas,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
+ax.plot(lambdas,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')
 ax.plot(lambdas,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')
-ax.plot(lambdas,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')  
-ax.plot(lambdas,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')  
+ax.plot(lambdas,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')
+ax.plot(lambdas,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')
 ax.set_xscale('log')
 
 plt.xlabel("$\lambda$")
@@ -182,4 +156,24 @@ plt.legend()
 plt.grid()
 if savefigures:
     plt.savefig("../reports/Proj1_Plots/Task6/MSE_lambdas.png")
-plt.show() 
+plt.show()
+
+#---------------------------------------------------
+#RUN cv and bootstrap
+
+#lambdas = [10**x for x in [-12, -6, -3, 0, 3]]
+
+foldername = 'Task6'
+
+run_plot_compare(z, 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures, foldername = foldername, title="Portion of analyzed terrain")
+
+"""
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 10, lambdas, maxdegree, solver = 'RIDGE', saveplots = savefigures, foldername = foldername)
+
+compare_lmd_BS(z, n, lambdas, maxdegree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)
+compare_lmd_CV(z, n, 5, lambdas, maxdegree, solver = 'LASSO', saveplots = savefigures, foldername = foldername)"""
+
+
