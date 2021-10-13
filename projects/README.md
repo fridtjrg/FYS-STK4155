@@ -1,5 +1,8 @@
 # Folder structure
 
+## Deadline extensions
+For project1 we had some last minute issues and bugs that took way longer to fix than anticipated initially. We were given an extended deadline until October 13th 23:59
+
 ## `*project` - Source code
 All the source code in Python of the projects are contains in the folders `1project`, `2project`, `3project`.
 
