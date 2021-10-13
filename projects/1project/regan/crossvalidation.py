@@ -115,7 +115,7 @@ def combine_groups(index_pairs, data):
     return combined_groups
 
 
-def cross_validation(k, designmatrix, datapoints, solver="OLS",random_groupsize = False, n_lambdas = 20):
+def cross_validation(k, designmatrix, datapoints, solver="OLS",random_groupsize = False, lmd=10**(-12)):
     """Divides the dataset into k folds of n groups and peforms cross validation
 
     Args:
@@ -165,9 +165,9 @@ def cross_validation(k, designmatrix, datapoints, solver="OLS",random_groupsize 
         if solver == "OLS":
             ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
         elif solver == "RIDGE":
-            ridge_beta_opt, z_tilde, z_predict, best_lamda = ridge_reg(X_train, X_test, z_train, z_test, nlambdas = n_lambdas)
+            ridge_beta_opt, z_tilde, z_predict = ridge_reg(X_train, X_test, z_train, z_test,lmd=lmd)
         elif solver == "LASSO":
-            z_tilde, z_predict, best_lamda = lasso_reg(X_train, X_test, z_train, z_test, nlambdas = n_lambdas)
+            z_tilde, z_predict = lasso_reg(X_train, X_test, z_train, z_test, lmd=lmd)
 
         MSE_train = MSE(z_train,z_tilde)
         MSE_test = MSE(z_test,z_predict)
