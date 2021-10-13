@@ -22,54 +22,77 @@ from regan import *
 from imageio import imread
 import matplotlib.pyplot as plt
 
-savefigure = False
+savefigures = True
 
 
 # Load the terrain
 terrain = imread('./DataFiles/SRTM_data_Norway_2.tif')
-N = 25
+N = 30
+n = N
 
-#---------------------------------------------------
-#RUN cv and bootstrap
-
-run_plot_compare(terrain,'terrain in Norway', 100, N=N, n_lambdas=30, k=5,poly_degree = 5,plot=True,saveplots=savefigure)
-
-
-#----------------------------------------------------
-#Get lambda vs MSE
 z = terrain[:N,:N]
 # Creates mesh of image pixels
 x = np.linspace(0,1, np.shape(z)[0])
 y = np.linspace(0,1, np.shape(z)[1])
 x,y = np.meshgrid(x,y)
-z = z.ravel()
+
+degree = 20
+
+#---------------------------------------------------
+#RUN cv and bootstrap
+
+lambdas = [10**x for x in [-12, -6, -3, 0, 3]]
+
+foldername = 'Task6'
+
+compare_lmd_BS(z, n, lambdas, degree, solver = 'RIDGE', n_resampling = 100, saveplots = savefigures, folderpath = 'Task6')
+compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task6')
+compare_lmd_CV(z, n, 10, lambdas, degree, solver = 'RIDGE', saveplots = savefigures, folderpath = 'Task6')
+
+compare_lmd_BS(z, n, lambdas, degree, solver = 'LASSO', n_resampling = 100, saveplots = savefigures, folderpath = foldername)
+compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
+compare_lmd_CV(z, n, 5, lambdas, degree, solver = 'LASSO', saveplots = savefigures, folderpath = foldername)
+
+run_plot_compare(z,'Task 6', 100, N=n, k=5,poly_degree = 18,plot=True,saveplots=savefigures)
+
+#----------------------------------------------------
+#Get lambda vs MSE
 
 degree = 5
+lambdas = np.logspace(-30,20,num=50)
+
+z = z.ravel()
 
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
-n_lambdas = 30
-lmd_start = -10
-lmd_end = 10
+MSE_lmd_ridge_train = []
+MSE_lmd_ridge_test = []
+MSE_lmd_lasso_train = []
+MSE_lmd_lasso_test = []
 
-MSE_lmd_ridge_train, MSE_lmd_ridge_test, lmd = ridge_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas, lmbd_start = lmd_start, lmbd_end =lmd_end, return_MSE_lmb = True)
-MSE_lmd_lasso_train, MSE_lmd_lasso_test, lmd = lasso_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas, lmbd_start = lmd_start, lmbd_end =lmd_end, return_MSE_lmb = True)
+for lmd in lambdas:
+    _,ridge_model ,ridge_predict  = ridge_reg(X_train, X_test, z_train, z_test, lmd=lmd)
+    lasso_model,lasso_predict  = lasso_reg(X_train, X_test, z_train, z_test, lmd=lmd)
+    MSE_lmd_ridge_train.append(MSE(ridge_model,z_train))
+    MSE_lmd_ridge_test.append(MSE(ridge_predict,z_test))
+    MSE_lmd_lasso_train.append(MSE(lasso_model,z_train))
+    MSE_lmd_lasso_test.append(MSE(lasso_predict,z_test))
 
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
-ax.plot(lmd,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
-ax.plot(lmd,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')
-ax.plot(lmd,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')  
-ax.plot(lmd,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')  
+ax.plot(lambdas,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
+ax.plot(lambdas,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')
+ax.plot(lambdas,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')  
+ax.plot(lambdas,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')  
 ax.set_xscale('log')
 
 plt.xlabel("$\lambda$")
 plt.ylabel("MSE")
-plt.title(f"Plot of the MSE for different $\lambda$ for {degree} degree polynomial")
+plt.title(f"Plot of the MSE for different $\lambda$ with complexity {degree}")
 plt.legend()
 plt.grid()
-if savefigure:
-    plt.savefig("./Figures/Task6/MSE.png")
+if savefigures:
+    plt.savefig("./Figures/Task6/MSE_lambdas.png")
 plt.show() 

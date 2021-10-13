@@ -19,7 +19,8 @@ from random import random, seed
 from regan import create_xyz_dataset, create_X, Split_and_Scale, OLS_solver, MSE, R2, ridge_reg, lasso_reg
 import matplotlib.pyplot as plt
 
-savefigure = False
+savefigure = True
+
 np.random.seed(1234)
 
 #Degree of polynomial
@@ -36,27 +37,35 @@ x,y,z = create_xyz_dataset(n,mu_N, sigma_N)
 X = create_X(x, y, degree)
 X_train, X_test, z_train, z_test = Split_and_Scale(X,np.ravel(z)) #StardardScaler, test_size=0.2, scale=true
 
-n_lambdas = 30
-lmd_start = -10
-lmd_end = 10
+lambdas = np.logspace(-30,10,num=50)
 
-MSE_lmd_ridge_train, MSE_lmd_ridge_test, lmd = ridge_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas, lmbd_start = lmd_start, lmbd_end =lmd_end, return_MSE_lmb = True)
-MSE_lmd_lasso_train, MSE_lmd_lasso_test, lmd = lasso_reg(X_train, X_test, z_train, z_test, nlambdas=n_lambdas, lmbd_start = lmd_start, lmbd_end =lmd_end, return_MSE_lmb = True)
+MSE_lmd_ridge_train = []
+MSE_lmd_ridge_test = []
+MSE_lmd_lasso_train = []
+MSE_lmd_lasso_test = []
+
+for lmd in lambdas:
+    _,ridge_model ,ridge_predict  = ridge_reg(X_train, X_test, z_train, z_test, lmd=lmd)
+    lasso_model,lasso_predict  = lasso_reg(X_train, X_test, z_train, z_test, lmd=lmd)
+    MSE_lmd_ridge_train.append(MSE(ridge_model,z_train))
+    MSE_lmd_ridge_test.append(MSE(ridge_predict,z_test))
+    MSE_lmd_lasso_train.append(MSE(lasso_model,z_train))
+    MSE_lmd_lasso_test.append(MSE(lasso_predict,z_test))
 
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
-ax.plot(lmd,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
-ax.plot(lmd,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')
-ax.plot(lmd,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')  
-ax.plot(lmd,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')  
+ax.plot(lambdas,MSE_lmd_ridge_train, label ="Ridge train", color = 'red', linestyle = 'dashed')  
+ax.plot(lambdas,MSE_lmd_ridge_test, label ="Ridge test", color = 'red')
+ax.plot(lambdas,MSE_lmd_lasso_train, label ="Lasso train", color = 'green', linestyle = 'dashed')  
+ax.plot(lambdas,MSE_lmd_lasso_test, label ="Lasso test", color = 'green')  
 ax.set_xscale('log')
 
 plt.xlabel("$\lambda$")
 plt.ylabel("MSE")
-plt.title("Plot of the MSE for different $\lambda$")
+plt.title(f"Plot of the MSE for different $\lambda$ for complexity {degree}")
 plt.legend()
 plt.grid()
 if savefigure:
-    plt.savefig("./1project/Figures/Task4/MSE.png")
+    plt.savefig("./Figures/Task4/MSE_lambdas.png")
 plt.show() 

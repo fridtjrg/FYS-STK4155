@@ -165,7 +165,7 @@ def cross_validation(k, designmatrix, datapoints, solver="OLS",random_groupsize 
         if solver == "OLS":
             ols_beta, z_tilde,z_predict = OLS_solver(X_train, X_test, z_train, z_test)
         elif solver == "RIDGE":
-            ridge_beta_opt, z_tilde, z_predict = ridge_reg(X_train, X_test, z_train, z_test, lmd=lmd)
+            ridge_beta_opt, z_tilde, z_predict = ridge_reg(X_train, X_test, z_train, z_test,lmd=lmd)
         elif solver == "LASSO":
             z_tilde, z_predict = lasso_reg(X_train, X_test, z_train, z_test, lmd=lmd)
 

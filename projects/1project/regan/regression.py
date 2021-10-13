@@ -203,8 +203,7 @@ def plot_ols_complexity(x, y, z, complexity = np.arange(2,21), title="MSE as a f
     plt.grid()
     plt.show()
     
-
-def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, lmbd_end = 20, return_MSE_lmb = False):
+def lasso_reg(X_train, X_test, z_train, z_test, lmd = 10**(-12)):
     """Lasso regression using sklearn
 
     Args:
@@ -212,86 +211,27 @@ def lasso_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -20, l
         X_test ([type]): [description]
         z_train ([type]): [description]
         z_test ([type]): [description]
-        nlambdas (int, optional): [description]. Defaults to 1000.
-        lmbd_start (int, optional): [description]. Defaults to -20.
-        lmbd_end (int, optional): [description]. Defaults to 20.
 
     Returns:
         [type]: [description]
     """
 
-    lambdas = np.logspace(lmbd_start, lmbd_end, nlambdas)
-    MSE_values = np.zeros(nlambdas)
-    MSE_values_test = np.zeros(nlambdas)
-
-    for i in range(nlambdas):
-        lmb = lambdas[i]
-        RegLasso = linear_model.Lasso(lmb)
-        _ = RegLasso.fit(X_train,z_train)
-        z_model = RegLasso.predict(X_train)
-        z_predict = RegLasso.predict(X_test)
-
-        MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
-        MSE_values_test[i] = MSE(z_test,z_predict)
-        
-    
-    #Find best lamda
-    best_lamda = lambdas[np.argmin(MSE_values)]
-    if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
-        print("NB: No unique value for lambda gets best MSE, multiple lambda gives smallest MSE")
-        best_lamda = best_lamda[0]
-
-    if best_lamda == lambdas[0]:
-        print("NB: the best lambda is the first lambda value")
-
-    if best_lamda == lambdas[-1]:
-        print("NB: the best lambda is the last lambda value")
-    
-    RegLasso = linear_model.Lasso(best_lamda)
-    RegLasso.fit(X_train,z_train)
+    RegLasso = linear_model.Lasso(lmd)
+    _ = RegLasso.fit(X_train,z_train)
     z_model = RegLasso.predict(X_train)
-    beta = RegLasso.alpha
     z_predict = RegLasso.predict(X_test)
 
-    if return_MSE_lmb:
-        return MSE_values, MSE_values_test, lambdas
-    
-    else:
-        return z_model, z_predict, best_lamda
+    return z_model, z_predict
 
-def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lmbd_end = 4, return_MSE_lmb = False):
-
-    MSEPredict = np.zeros(nlambdas)
-    lambdas = np.logspace(lmbd_start, lmbd_end, nlambdas)
-
-    MSE_values = np.zeros(nlambdas)
-    MSE_values_test = np.zeros(nlambdas)
-
-    for i in range(nlambdas):
-        # Optimal paramaters for Ridge
-        #Not sure about np.eye(len(X_train.T)), just to get right size
-        ridge_beta = np.linalg.pinv(X_train.T @ X_train + lambdas[i]*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
-        z_model = X_train @ ridge_beta #calculates model
-        z_predict = X_test @ ridge_beta
-        MSE_values[i] = MSE(z_train,z_model)    #calculates MSE
-        MSE_values_test[i] = MSE(z_test,z_predict)
+def ridge_reg(X_train, X_test, z_train, z_test, lmd = 10**(-12)):
+ 
+    ridge_beta = np.linalg.pinv(X_train.T @ X_train + lmd*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
+    z_model = X_train @ ridge_beta #calculates model
+    z_predict = X_test @ ridge_beta
 
 
     #finds the lambda that gave the best MSE
     #best_lamda = lambdas[np.where(MSE_values == np.min(MSE_values))[0]]
-    best_lamda = lambdas[np.argmin(MSE_values)]
-    if best_lamda.__class__ == np.ndarray and len(best_lamda) > 1:
-        print("NB: No unique value for lambda gets best MSE, multiple lambda gives smallest MSE")
-        best_lamda = best_lamda[0]
-
-    if best_lamda == lambdas[0]:
-        print("NB: the best lambda is the first lambda value")
-
-    if best_lamda == lambdas[-1]:
-        print("NB: the best lambda is the last lambda value")
-
-    #Calculates this Ridge_beta again
-    ridge_beta_opt = np.linalg.pinv(X_train.T @ X_train + best_lamda*np.eye(len(X_train.T))) @ X_train.T @ z_train #psudoinverse
 
     """
     print(np.min(MSE_values))
@@ -299,13 +239,10 @@ def ridge_reg(X_train, X_test, z_train, z_test, nlambdas=20, lmbd_start = -4, lm
     print(lambdas)
     print(best_lamda)
     """
-    z_model = X_train @ ridge_beta_opt
-    z_predict = X_test @ ridge_beta_opt
+    z_model = X_train @ ridge_beta
+    z_predict = X_test @ ridge_beta
 
-    if return_MSE_lmb:
-        return MSE_values, MSE_values_test, lambdas
-    else:
-        return ridge_beta_opt, z_model, z_predict, best_lamda
+    return ridge_beta, z_model, z_predict
 
     
 def Ridge_solver(X_train, X_test, z_train, z_test, lamb):

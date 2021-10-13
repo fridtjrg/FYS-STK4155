@@ -50,9 +50,10 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS",
         elif solver == "RIDGE":
             ridge_beta_opt, z_tilde, z_pred = ridge_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
         elif solver == "LASSO":
-            z_tilde, z_pred = lasso_reg(X_sample, X_test, z_sample, z_test, nlambdas=n_lambdas, lmd=lmd)
+            z_tilde, z_pred = lasso_reg(X_sample, X_test, z_sample, z_test, lmd=lmd)
 
         z_pred_boot[:, i] = z_pred.ravel()
+
     return z_pred_boot
     
 # Bias-variance tradeoff
@@ -68,7 +69,8 @@ def bootstrap(X_train, X_test, z_train, z_test, n_boostraps=100, solver = "OLS",
 
 def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstrap", n_resampling = 100, solver = "OLS", lmd = 10**(-12)):
     if(resampling=="bootstrap"):
-        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling, solver = solver,lmd=lmd)
+        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_boostraps = n_resampling, solver = solver,lmd = lmd)
+
     """ else:
         z_pred = crossvalidation(X_train, X_test, z_train, z_test, n_resampling)
     """
@@ -80,7 +82,7 @@ def bias_variance_analysis(X_train, X_test, z_train, z_test, resampling="bootstr
     return error, bias2, variance
     
 # Plot bias-variance tradeoff in function of complexity of the model
-def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", lmd = 10**(-12)):
+def bias_variance_complexity(x, y, z, complexity = np.arange(1,15), n_resampling = 100, test_size = 0.2, plot=True, title="Bias-variance analysis: MSE as a function of model complexity", solver = "OLS", lmd=10**(-12)):
 
     if complexity.__class__ == int:
         complexity = np.arange(1,complexity)
