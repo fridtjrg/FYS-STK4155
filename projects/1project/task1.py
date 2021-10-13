@@ -16,11 +16,10 @@
 
 import numpy as np
 from random import random, seed
-from regression import create_xyz_dataset, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
+from regan import create_xyz_dataset, create_X, Split_and_Scale, OLS_solver, MSE, R2, Plot_FrankeFunction, Confidence_Interval
 
-
+# Degree of the polynomial
 degree=5
-
 # Datapoints (squared root of datapoints -> meshgrid)
 n = 25
 # Paramaters of noise distribution
