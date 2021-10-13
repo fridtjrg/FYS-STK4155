@@ -98,10 +98,10 @@ def run_plot_compare(datapoints, title, n_resampling, N = 50, plot=False, lmd=10
     BS_variance = []
     BS_runtimes = []
     for solver in solvers:
-        bias, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
+        error, bias, variance = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
+        BS_error.append(error)
         BS_bias.append(bias)
-        BS_error.append(variance)
-        BS_variance.append(error)
+        BS_variance.append(variance)
 
     if plot:
         fig3, ax3 = plt.subplots(figsize = ( 10, 7))
@@ -227,10 +227,10 @@ def compare_lmd_BS(datapoints, N, lambdas, poly_degree, solver = 'RIDGE', n_resa
     BS_variance = []
     BS_complexity = [x for x in range(1,m)]
     for lmd in lambdas:
-        bias, variance, error = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
+        error, bias, variance = bias_variance_complexity(x,y,z,m,n_resampling=n_resampling,plot=False,solver=solver,lmd=lmd)
+        BS_error.append(error)
         BS_bias.append(bias)
-        BS_error.append(variance)
-        BS_variance.append(error)
+        BS_variance.append(variance)
 
     fig1, ax1 = plt.subplots(figsize = ( 10, 7))
     for i in range(len(lambdas)):
