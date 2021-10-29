@@ -1,11 +1,12 @@
+import numpy as np
+
 def sigmoid(x):
     return 1/(1+np.exp(-x))
 
 #Creating the data
 class Frankefunction:
-    def __init__(self, x, y, n_complex):
-        self.x = x
-        self.y = y 
+    def __init__(self, x, y, n_complex=5):
+        self.x,self.y = np.meshgrid(x,y)
         self.n_complex = n_complex
 
     def calculate(self):
@@ -31,11 +32,22 @@ class Frankefunction:
         return X
 
     def dataset(self,mu_N=0 ,sigma_N=0.1):
-        x,y = np.meshgrid(self.x,self.y)
-        self.data_output = self.calculate(x,y) +mu_N +sigma_N*np.random.randn(len(self.x),len(self.y)) #input data
-        self.data_output_target = np.ravel(self.calculate(x,y))
+        #x,y = np.meshgrid(self.x,self.y)
+        self.data_output = self.calculate() +mu_N +sigma_N*np.random.randn(len(self.x),len(self.y)) #input data
+        self.data_output_target = np.ravel(self.calculate())
 
 
+x= np.linspace(0,1,1000)
+y= np.linspace(0,1,1000)
+
+my_dataset = Frankefunction(x,y)
+
+outputs = my_dataset.dataset()
+X_d = my_dataset.designMatrix()
+
+print(X_d)
+
+print(my_dataset.data_output)
 
 #This NN is made for classification and therefore had n_categories, must be adaped to solve for terraindata
 
