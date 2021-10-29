@@ -1,5 +1,6 @@
 import numpy as np
-
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 class Frankefunction:
     def __init__(self, x, y, n_complex=5):
@@ -26,10 +27,27 @@ class Frankefunction:
             q = int((i)*(i+1)/2)
             for k in range(i+1):
                 X[:,q+k] = (x**(i-k))*(y**k)
-        return X
+        self.X = X #Deignmatrix
 
     def dataset(self,mu_N=0 ,sigma_N=0.1):
         #x,y = np.meshgrid(self.x,self.y)
-        self.data_output = self.calculate() +mu_N +sigma_N*np.random.randn(len(self.x),len(self.y)) #input data
-        self.data_output_target = np.ravel(self.calculate())
+        self.data_output = self.calculate() +mu_N +sigma_N*np.random.randn(len(self.x),len(self.y)) #output with noise
+        self.data_output_target = np.ravel(self.calculate())    #output without noise
+
+
+
+    def split_data(self,test_size=0.2):
+        #Splitting training and test data(NB this uses ravel)
+        self.X_train, self.X_test, self.data_output_train, self.data_output_test = train_test_split(self.X, np.ravel(self.data_output), test_size=test_size)
+          
+
+    def scale(self, with_std=False):#scales the data that must be splitted.
+        scaler_X = StandardScaler(with_std=with_std) 
+        scaler_X.fit(self.X_train)
+        self.X_train = scaler_X.transform(self.X_train)
+        self.X_test = scaler_X.transform(self.X_test)
+
+        scaler_output = StandardScaler(with_std=with_std) 
+        self.data_output_train = np.squeeze(scaler_output.fit_transform(self.data_output_train.reshape(-1, 1))) 
+        self.data_output_test = np.squeeze(scaler_output.transform(self.data_output_test.reshape(-1, 1))) 
 
