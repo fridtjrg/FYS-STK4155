@@ -21,3 +21,29 @@ my_dataset.split_data()#this ravels the output
 my_dataset.scale()
 
 print(my_dataset.data_output_train)
+
+#Assuming the beta values(NN_beta) are the output of the NN
+NN = NeuralNetwork(my_dataset.X_train, my_dataset.data_output_train)
+"""
+NeuralNetwork:
+    def __init__(
+            self,
+            X_data,
+            Y_data,
+            n_hidden_neurons=50,
+            n_categories=10,
+            epochs=10,
+            batch_size=100,
+            eta=0.1,
+            lmbd=0.0)
+"""
+NN.train()
+
+
+NN_beta = NN.output #The prediction of the network
+
+
+
+z_tilde = my_dataset.X_train @ NN_beta # z_prediction of the train data
+z_predict = my_dataset.X_test @ NN_beta # z_prediction of the test data
+predict_error = (z_tilde- z_predict)**2

@@ -6,11 +6,12 @@ def sigmoid(x):
 #This NN is made for classification and therefore had n_categories, must be adaped to solve for terraindata
 
 class NeuralNetwork:
-    def __init__(
+    def __init__(#must add hidden layers
             self,
             X_data,
             Y_data,
             n_hidden_neurons=50,
+            n_hidden_layers = 1,
             n_categories=10,
             epochs=10,
             batch_size=100,
@@ -23,6 +24,7 @@ class NeuralNetwork:
         self.n_inputs = X_data.shape[0]
         self.n_features = X_data.shape[1]
         self.n_hidden_neurons = n_hidden_neurons
+        self.n_hidden_layers = n_hidden_layers
         self.n_categories = n_categories
 
         self.epochs = epochs
@@ -33,7 +35,7 @@ class NeuralNetwork:
 
         self.create_biases_and_weights()
 
-    def create_biases_and_weights(self):
+    def create_biases_and_weights(self): #Making 3darray because of hidden layer?
         self.hidden_weights = np.random.randn(self.n_features, self.n_hidden_neurons) #Multiply by 0.1?
         self.hidden_bias = np.zeros(self.n_hidden_neurons) + 0.01
 
