@@ -31,6 +31,11 @@ class NeuralNetwork:
 
         return pred
 
+
+
+
+
+
     def backpropagation(self, X, y, learning_rate, lmbd, output):
         for i in reversed(range(len(self._layers))):
             layer = self._layers[i]
@@ -53,19 +58,33 @@ class NeuralNetwork:
             layer.bias = layer.bias + layer.delta * learning_rate
 
 
+
+
+
+
+
+
+
+    def iterate_minibatches(self, inputs, targets, batchsize):
+        assert inputs.shape[0] == targets.shape[0]
+        indices = np.random.permutation(inputs.shape[0])
+        for start_idx in range(0, inputs.shape[0], batchsize):
+            end_idx = min(start_idx + batchsize, inputs.shape[0])
+            excerpt = indices[start_idx:end_idx]
+            yield inputs[excerpt], targets[excerpt]
+
+
     def train(self, X, y, learning_rate, nb_epochs = 100, batch_size = 10, lmbd=0, _type = 'regression'):
-        iterations = X.shape[0] // batch_size
+
         mses = []
         for i in range(1, nb_epochs+1):
-            np.random.shuffle(X)
-            np.random.shuffle(y)
-            for k in range(iterations):
-                random_index = np.random.randint(iterations)
-                Xi = X[random_index * batch_size:(random_index + 1) * batch_size]
-                Yi = y[random_index * batch_size:(random_index + 1) * batch_size]
-                for j in range(len(Xi)):
-                    output = self.feed_forward(Xi[j])
-                    self.backpropagation(Xi[j], Yi[j], learning_rate, lmbd, output)
+
+            for batch in self.iterate_minibatches(X, y, batch_size):
+
+                X_batch, y_batch = batch
+
+                output = self.feed_forward(X_batch)
+                self.backpropagation(X_batch, y_batch, learning_rate, lmbd, output)
 
 
             if (_type == 'regression'):
