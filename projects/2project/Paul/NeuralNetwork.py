@@ -82,9 +82,9 @@ class NeuralNetwork:
             for batch in self.iterate_minibatches(X, y, batch_size):
 
                 X_batch, y_batch = batch
-
-                output = self.feed_forward(X_batch)
-                self.backpropagation(X_batch, y_batch, learning_rate, lmbd, output)
+                for j in range(len(X_batch)):
+                    output = self.feed_forward(X_batch[j])
+                    self.backpropagation(X_batch[j], y_batch[j], learning_rate, lmbd, output)
 
 
             if (_type == 'regression'):
