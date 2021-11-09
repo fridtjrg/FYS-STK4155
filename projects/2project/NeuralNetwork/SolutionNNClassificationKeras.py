@@ -41,7 +41,7 @@ for i, eta in enumerate(Eta):
         model = Sequential()
         model.add(Dense(n_hidden_neurons, activation = 'relu', input_dim = X_train.shape[1]))
         model.add(Dense(units = n_hidden_neurons, activation = 'relu'))
-        model.add(Dense(units = 1, activation = 'sigmoid'))
+        model.add(Dense(units = 1, activation = None))
         model.compile(optimizer = sgd, loss = 'binary_crossentropy', metrics=['BinaryAccuracy'])
         model.fit(X_train, y_train, batch_size = batch_size, epochs = epochs)
         score_test = model.evaluate(X_test, y_test, verbose=1)

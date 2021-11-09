@@ -30,8 +30,8 @@ for i, eta in enumerate(eta_vals):
     for j, lmbd in enumerate(lmbd_vals):
 
         nn = NeuralNetwork(X_train, Y_train_onehot, n_epochs = n_epochs, batch_size = batch_size)
-        nn.add_layer(DenseLayer(X_train.shape[1], nb_hidden_neurons, 'sigmoid', lmbda=lmbd, eta=eta))
-        nn.add_layer(DenseLayer(nb_hidden_neurons, nb_hidden_neurons, 'sigmoid', lmbda=lmbd, eta=eta))
+        nn.add_layer(DenseLayer(X_train.shape[1], nb_hidden_neurons, 'relu', lmbda=lmbd, eta=eta))
+        nn.add_layer(DenseLayer(nb_hidden_neurons, nb_hidden_neurons, 'relu', lmbda=lmbd, eta=eta))
         nn.add_layer(DenseLayer(nb_hidden_neurons, 2, None, lmbda=lmbd, eta=eta))
         nn.train()
 

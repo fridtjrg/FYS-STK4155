@@ -15,6 +15,30 @@ class DenseLayer:
     def sigmoid(self, x):
         return 1/(1+np.exp(-x))
 
+    def tanh(self, x):
+        return np.tanh(x)
+
+    def relu(self, x):
+        row, col = x.shape
+        for i in range(row):
+            for j in range(col):
+                x[i][j] = max(0, x[i][j])
+        return x
+
+    def reluPrime(self, x):
+        row, col = x.shape
+        for i in range(row):
+            for j in range(col):
+                if x[i][j] > 0:
+                    x[i][j] = 1
+                else:
+                    x[i][j] = 0
+        return x
+
+    def tanhPrime(self, x):
+
+        return 1 - x ** 2
+
     def sigmoidPrime(self, x):
         return x * ( 1 - x)
 
@@ -25,13 +49,25 @@ class DenseLayer:
         elif (self.type_activation == 'sigmoid'):
             return self.sigmoid(x)
 
+        elif (self.type_activation == 'tanh'):
+            return self.tanh(x)
+
+        elif (self.type_activation == 'relu'):
+            return self.relu(x)
+
     def activationPrime(self, x):
 
         if self.type_activation is None:
             return x
 
-        if (self.type_activation == 'sigmoid'):
+        elif (self.type_activation == 'sigmoid'):
             return self.sigmoidPrime(x)
+
+        elif (self.type_activation == 'tanh'):
+            return self.tanhPrime(x)
+
+        elif (self.type_activation == 'relu'):
+            return self.reluPrime(x)
 
     def feedForward(self, x):
 
