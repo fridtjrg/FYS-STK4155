@@ -133,3 +133,7 @@ dmypy.json
 .DS_Store
 */.DS_Store
 projects/.DS_Store
+
+#PyCharm
+.idea
+idea/

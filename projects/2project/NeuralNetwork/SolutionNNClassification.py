@@ -1,4 +1,3 @@
-from DataLogistique import X_test, X_train, y_test, y_train, accuracy_score_numpy
 from NeuralNetwork import NeuralNetwork
 import matplotlib.pyplot as plt
 from Layer import Layer
@@ -6,6 +5,11 @@ import numpy as np
 import seaborn as sns
 sns.set()
 
+
+#====================== DATA
+import sys
+sys.path.append("../Data")
+from DataClassification import X_test, X_train, y_test, y_train, accuracy_score_numpy
 #-------------------  Parameters
 
 eta_vals = np.logspace(-7, 1, 10)

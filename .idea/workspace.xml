@@ -20,9 +20,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc150340-87c4-49e5-a329-eb6b4036b91e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/NeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Paul/NeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegression.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/DataLogistique.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Data/DataClassification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/DataRegression.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Data/DataRegression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/Layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/Layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/NeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/NeuralNetwork.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SDG.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SDG.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionGDOLS.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionGDOLS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionGDRidge.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionGDRidge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionLinalgOLS.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionLinalgOLS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionLinalgRidge.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionLinalgRidge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNLogistique.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNLogistiqueKeras.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassificationKeras.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegression.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegressionKeras.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegressionKeras.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionSGD.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionSGD.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +61,15 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/projects/2project/SGD" />
+      <recent name="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
+      <recent name="$PROJECT_DIR$/projects/2project/Data" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.SolutionNNRegression">
-    <configuration name="SolutionNNLogistiqueKeras" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="SolutionNNClassificationKeras" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FYS-STK4155" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -61,7 +81,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/Paul/SolutionNNLogistiqueKeras.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassificationKeras.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -82,7 +102,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegression.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegression.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -103,7 +123,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegressionKeras.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegressionKeras.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -124,7 +144,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/Paul/SolutionSGD.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/SGD/SolutionSGD.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -137,7 +157,7 @@
       <list>
         <item itemvalue="Python.SolutionNNRegression" />
         <item itemvalue="Python.SolutionNNRegressionKeras" />
-        <item itemvalue="Python.SolutionNNLogistiqueKeras" />
+        <item itemvalue="Python.SolutionNNClassificationKeras" />
         <item itemvalue="Python.SolutionSGD" />
       </list>
     </recent_temporary>

@@ -2,8 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#====================== Data
-
+#====================== DATA
+import sys
+sys.path.append("../Data")
 from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z
 
 

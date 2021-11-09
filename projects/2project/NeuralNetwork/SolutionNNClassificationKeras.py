@@ -1,13 +1,18 @@
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 from keras.layers import Dense, Activation
 from keras.models import Sequential
 import seaborn as sns
 sns.set()
 
-from DataLogistique import X_test, X_train, y_test, y_train, accuracy_score_numpy, X
 
-import matplotlib.pyplot as plt
+#====================== DATA
+import sys
+sys.path.append("../Data")
+from DataClassification import X_test, X_train, y_test, y_train, accuracy_score_numpy, X
+
+
 
 N = len(X)
 
