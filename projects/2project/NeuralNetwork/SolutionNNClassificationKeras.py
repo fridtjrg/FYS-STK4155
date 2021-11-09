@@ -1,16 +1,18 @@
-import tensorflow as tf
-import numpy as np
 import matplotlib.pyplot as plt
-from keras.layers import Dense, Activation
-from keras.models import Sequential
+import numpy as np
 import seaborn as sns
+import tensorflow as tf
+from keras.layers import Dense
+from keras.models import Sequential
+
 sns.set()
 
 
 #====================== DATA
 import sys
 sys.path.append("../Data")
-from DataClassification import X_test, X_train, y_test, y_train, accuracy_score_numpy, X
+
+from DataClassification import X_test, X_train, y_test, y_train, X
 
 
 

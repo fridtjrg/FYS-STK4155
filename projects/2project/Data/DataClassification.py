@@ -18,6 +18,17 @@ scaler.fit(X)
 X = scaler.transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
+def to_categorical_numpy(integer_vector):
+    n_inputs = len(integer_vector)
+    n_categories = 2
+    onehot_vector = np.zeros((n_inputs, n_categories))
+    onehot_vector[range(n_inputs), integer_vector] = 1
+    return onehot_vector
+
+
+Y_train_onehot, Y_test_onehot = to_categorical_numpy(y_train), to_categorical_numpy(y_test)
+# one-hot in numpy
+
 def accuracy_score_numpy(Y_test, Y_pred):
     return np.sum(Y_test == Y_pred) / len(Y_test)
 
