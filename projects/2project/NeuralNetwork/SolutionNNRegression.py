@@ -10,8 +10,8 @@ import sys
 sys.path.append("../Data")
 from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, x_y_test, x_y_train, x_y, z
 
-N = len(x)
 
+N = len(x)
 # Hessian Matrix
 H = (2.0/N)* X_train.T @ X_train
 # Get the eigenvalues
@@ -22,15 +22,14 @@ n_hidden_neurons = 50
 batch_size = 5
 epochs = 100
 
-activation_function = 'sigmoid'
-optimizer = tf.keras.optimizers.Adam(learning_rate= eta_max)
 
 
 model = Sequential()
-model.add(Dense(n_hidden_neurons, activation = activation_function, input_dim = X_train.shape[1]))
-model.add(Dense(units = n_hidden_neurons, activation = activation_function))
+sgd = tf.keras.optimizers.SGD(lr=eta_max, momentum= 0.001, nesterov=True)
+model.add(Dense(n_hidden_neurons, activation = 'sigmoid', input_dim = X_train.shape[1]))
+model.add(Dense(units = n_hidden_neurons, activation = 'sigmoid'))
 model.add(Dense(units = 1))
-model.compile(optimizer = optimizer, loss = 'mean_squared_error')
+model.compile(optimizer = sgd, loss = 'mean_squared_error')
 model.fit(X_train, z_train, batch_size = batch_size, epochs = epochs)
 
 
