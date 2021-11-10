@@ -8,7 +8,7 @@ from NeuralNetworkRegression import DenseLayer, NeuralNetwork
 #====================== DATA
 import sys
 sys.path.append("../Data")
-from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, x_y_test, x_y_train, x_y, z, MSE
+from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotSave, plotFunction, x_y_test, x_y_train, x_y, z, MSE
 
 
 
@@ -84,21 +84,26 @@ nn.train()
 z_pred_NN = nn.predict(x_y)
 
 plotFunction(x_mesh, y_mesh, z, 'FranckFunction')
-plotFunction(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)), 'Regression with NN')
+plotSave(x_mesh, y_mesh, z,'../Figures/NN/Noisy_dataset.pdf')
 
+
+plotFunction(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)), 'Regression with NN')
+plotSave(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)),'../Figures/NN/NN_prediction.pdf')
 
 fig, ax = plt.subplots(figsize = (5, 5))
 sns.heatmap(train_mse, annot=True, ax=ax, cmap="viridis")
-ax.set_title("Training mse")
+#ax.set_title("Training mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
+plt.savefig('../Figures/NN/train_heatmap.pdf')
 
 
 fig, ax = plt.subplots(figsize = (5, 5))
 sns.heatmap(test_mse, annot=True, ax=ax, cmap="viridis")
-ax.set_title("Test mse")
+#ax.set_title("Test mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
+plt.savefig('../Figures/NN/test_heatmap.pdf')
 
 plt.show()
 
