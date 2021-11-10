@@ -39,8 +39,12 @@ def create_X(x, y, n ):
     return X
 
 
+def MSE(y_pred, y_model):
+    return np.mean((y_pred - y_model)**2)
+
+
 poly = 7
-N = 100 #number of data
+N = 50 #number of data
 
 x = np.linspace(0, 1, N)
 y = np.linspace(0, 1, N)
