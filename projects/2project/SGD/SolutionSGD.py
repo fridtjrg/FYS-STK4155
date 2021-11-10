@@ -7,7 +7,7 @@ sns.set()
 #====================== DATA
 import sys
 sys.path.append("../Data")
-from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z
+from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z, plotSave
 
 
 def SGD_ols_ridge_mse():
@@ -75,7 +75,7 @@ def SGD_ols_ridge_mse():
 def SDG_ols_ridge_matrix_mse():
 
     Eta = np.logspace(-5, -3, 10)
-    Lambda = np.logspace(-5, -1, 10)
+    Lambda = np.logspace(-5, -3, 10)
 
     MSE_ridge_val_train = np.zeros((len(Eta), len(Lambda)))
     MSE_ols_val_test = np.zeros((len(Eta), len(Lambda)))
@@ -135,38 +135,43 @@ def SDG_ols_ridge_matrix_mse():
 
     fig, ax = plt.subplots(figsize=(5, 5))
     sns.heatmap(MSE_ridge_val_train, annot=True, ax=ax, cmap="viridis")
-    ax.set_title("Training ridge MSE")
+    #ax.set_title("Training ridge MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
+    plt.savefig('../Figures/GD/SGD_train_heatmap_ridge.pdf')
 
     fig, ax = plt.subplots(figsize=(5, 5))
     sns.heatmap(MSE_ridge_val_test, annot=True, ax=ax, cmap="viridis")
-    ax.set_title("Test ridge MSE")
+    #ax.set_title("Test ridge MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
+    plt.savefig('../Figures/GD/SGD_test_heatmap_ridge.pdf')
 
     fig, ax = plt.subplots(figsize=(5, 5))
     sns.heatmap(MSE_ols_val_train, annot=True, ax=ax, cmap="viridis")
-    ax.set_title("Training ols MSE")
+    #ax.set_title("Training ols MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
+    plt.savefig('../Figures/GD/SGD_train_heatmap_ols.pdf')
+
 
     fig, ax = plt.subplots(figsize=(5, 5))
     sns.heatmap(MSE_ols_val_test, annot=True, ax=ax, cmap="viridis")
-    ax.set_title("Test ols MSE")
+    #ax.set_title("Test ols MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
+    plt.savefig('../Figures/GD/SGD_test_heatmap_ols.pdf')
 
     best_pred_ols = X @ best_beta_ols
     best_pred_ridge = X @ best_beta_ridge
 
+    title_ridge = 'prediction_ridge' + '_lamda_' + str(best_lambda_rate_ridge) + '_eta_' + str(best_learning_rate_ridge)
+    title_ols = 'prediction_ols' + '_lamda_' + str(best_lambda_rate_ols) + '_eta_' + str(best_learning_rate_ols)
     plotFunction(x_mesh, y_mesh, z, 'data')
-    plotFunction(x_mesh, y_mesh, best_pred_ols.reshape(len(x), len(x)), 'OLS')
-    plotFunction(x_mesh, y_mesh, best_pred_ridge.reshape(len(x), len(x)), 'RIDGE')
+    plotSave(x_mesh, y_mesh, best_pred_ols.reshape(len(x), len(x)),'../Figures/GD/',  title_ridge)
+    plotSave(x_mesh, y_mesh, best_pred_ridge.reshape(len(x), len(x)),'../Figures/GD/',  title_ols)
 
     return best_learning_rate_ols,  best_lambda_rate_ols,  best_learning_rate_ridge, best_lambda_rate_ridge
-
-
 
 
 #SGD_ols_ridge_mse()
@@ -199,7 +204,7 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_lambda_rate_ols,  best_lea
                 MSE_ols_val.append(mse_ols_)
 
     plot, ax = plt.subplots()
-    plt.title('MSE for the OLS and Ridge')
+    #plt.title('MSE for the OLS and Ridge')
     plt.semilogx(epochs, MSE_ridge_val, 'k-o', label='Ridge')
     plt.semilogx(epochs, MSE_ols_val, 'r-o', label='OLS')
     plt.xlabel('nb_epochs')
@@ -207,6 +212,7 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_lambda_rate_ols,  best_lea
     #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     plt.legend()
     plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+    plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_nb_epochs.pdf')
 
 
 def SDG_ols_ridge_batch_size(best_learning_rate_ols,  best_lambda_rate_ols,  best_learning_rate_ridge, best_lambda_rate_ridge):
@@ -236,7 +242,7 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols,  best_lambda_rate_ols,  bes
                 MSE_ols_val.append(mse_ols_)
 
     plot, ax = plt.subplots()
-    plt.title('MSE for the OLS and Ridge')
+    #plt.title('MSE for the OLS and Ridge')
     plt.semilogx(batch_size, MSE_ridge_val, 'k-o', label='Ridge')
     plt.semilogx(batch_size, MSE_ols_val, 'r-o', label='OLS')
     plt.xlabel('batch_size')
@@ -244,6 +250,7 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols,  best_lambda_rate_ols,  bes
     #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     plt.legend()
     plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+    plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_batch_size.pdf')
 
 
 

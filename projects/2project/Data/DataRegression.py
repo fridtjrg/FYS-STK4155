@@ -22,6 +22,7 @@ def plotSave(x, y, z, path, title=''):
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
     fig.suptitle(title)
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    path = path+'/'+title+'.pdf'
     plt.savefig(path)
 
 def FrankeFunctionWithNoise(x,y):
