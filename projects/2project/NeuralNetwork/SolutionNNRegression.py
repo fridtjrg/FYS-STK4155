@@ -1,7 +1,5 @@
 import tensorflow as tf
 import numpy as np
-from keras.layers import Dense, Activation
-from keras.models import Sequential
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()

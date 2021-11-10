@@ -14,6 +14,15 @@ def plotFunction(x, y, z, title):
     fig.suptitle(title)
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
+def plotSave(x, y, z, path, title=''):
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.suptitle(title)
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.savefig(path)
 
 def FrankeFunctionWithNoise(x,y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 #====================== DATA
 import sys
 sys.path.append("../Data")
-from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z
+from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotSave, plotFunction, z
 
 
 def gradientOLS(N, x, y, theta):
@@ -42,3 +42,4 @@ print("\n")
 plotFunction(x_mesh, y_mesh, z, "Plot of our data")
 plotFunction(x_mesh, y_mesh, (X @ beta).reshape(len(x), len(x)), "Plot of regression with DG ols")
 plt.show()
+plotSave(x_mesh, y_mesh, (X @ beta).reshape(len(x), len(x)),'../Figures/GD/GDOLS.pdf')
