@@ -17,8 +17,8 @@ n_hidden_neurons = 50
 batch_size = 5
 epochs = 100
 
-Eta = np.logspace(-5, -3, 5)
-Lambda = np.logspace(-5, -3, 5)
+Eta = np.logspace(-5, -2, 5)
+Lambda = np.logspace(-5, -2, 5)
 
 train_mse_keras = np.zeros((len(Eta), len(Lambda)))
 test_mse_keras = np.zeros((len(Eta), len(Lambda)))
