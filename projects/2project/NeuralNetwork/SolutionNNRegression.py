@@ -74,7 +74,7 @@ for i, eta in enumerate(Eta):
 #===============================#
 
 
-#======= OWN NN
+#======= OWN NN (With optimal paramaters)
 
 nn = NeuralNetwork(x_y_train, z_train, n_epochs = epochs, batch_size = batch_size)
 nn.add_layer(DenseLayer(x_y_train.shape[1], n_hidden_neurons, 'sigmoid', lmbda= best_lambda_rate_NN, eta=best_learning_rate_NN))
@@ -85,11 +85,16 @@ nn.train()
 
 z_pred_NN = nn.predict(x_y)
 
-title_NN = 'prediction_NN' + '_lamda_' + str(best_lambda_rate_NN) + '_eta_' + str(best_learning_rate_NN)
+ytilde_test = nn.predict(x_y_test)
+ytilde_train = nn.predict(x_y_train)
+
+
+#title_NN = 'prediction_NN' + '_lamda_' + str(best_lambda_rate_NN) + '_eta_' + str(best_learning_rate_NN)
+title_NN = 'NN_prediction'
 plotSave(x_mesh, y_mesh, z,'../Figures/NN/', 'Noisy_dataset' )
 plotSave(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)),'../Figures/NN/',title_NN)
 
-fig, ax = plt.subplots(figsize = (5, 5))
+fig, ax = plt.subplots(figsize = (6, 5))
 sns.heatmap(train_mse, annot=True, ax=ax, cmap="viridis")
 #ax.set_title("Training mse")
 ax.set_ylabel("$\eta$")
@@ -97,13 +102,28 @@ ax.set_xlabel("$\lambda$")
 plt.savefig('../Figures/NN/train_heatmap.pdf')
 
 
-fig, ax = plt.subplots(figsize = (5, 5))
+fig, ax = plt.subplots(figsize = (6, 5))
 sns.heatmap(test_mse, annot=True, ax=ax, cmap="viridis")
 #ax.set_title("Test mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
 plt.savefig('../Figures/NN/test_heatmap.pdf')
 
+print('==========================================================')
+print('Our final model is built with the following hyperparmaters:')
+print('Lambda = ', best_lambda_rate_NN)
+print('Eta = ', best_lambda_rate_NN)
+print('Epochs = ', epochs)
+print('Batch size = ', batch_size)
+print('----------------------------------------------------------')
+print('The Eta and Lambda values we tested for are as follows:')
+print('Lambda = ',Lambda)
+print('Eta = ', Eta)
+print('----------------------------------------------------------')
+print('Mean square error of prediction:')
+print('Train MSE = ', MSE(z_train, ytilde_train))
+print('Test MSE = ', MSE(z_test, ytilde_test))
+print('==========================================================')
 
 plt.show()
 

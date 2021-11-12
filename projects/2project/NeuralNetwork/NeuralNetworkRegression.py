@@ -152,7 +152,7 @@ class NeuralNetwork:
                 self.backpropagation()
             mse = np.mean((self.y - self.predict(self.X))**2)
             self.loss.append(mse)
-            print("epoch :",i+1, "MSE : ", mse)
+            #print("epoch :",i+1, "MSE : ", mse)
 
     def predict(self, X):
         for layer in self._layers:
