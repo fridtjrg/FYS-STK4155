@@ -133,21 +133,21 @@ def SDG_ols_ridge_matrix_mse():
     print("best_learning_rate_ridge = ", best_learning_rate_ridge)
     print("best_lambda_rate_ridge = ", best_lambda_rate_ridge)
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(MSE_ridge_val_train, annot=True, ax=ax, cmap="viridis")
     #ax.set_title("Training ridge MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
     plt.savefig('../Figures/GD/SGD_train_heatmap_ridge.pdf')
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(MSE_ridge_val_test, annot=True, ax=ax, cmap="viridis")
     #ax.set_title("Test ridge MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
     plt.savefig('../Figures/GD/SGD_test_heatmap_ridge.pdf')
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(MSE_ols_val_train, annot=True, ax=ax, cmap="viridis")
     #ax.set_title("Training ols MSE")
     ax.set_ylabel("$\eta$")
@@ -155,7 +155,7 @@ def SDG_ols_ridge_matrix_mse():
     plt.savefig('../Figures/GD/SGD_train_heatmap_ols.pdf')
 
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(MSE_ols_val_test, annot=True, ax=ax, cmap="viridis")
     #ax.set_title("Test ols MSE")
     ax.set_ylabel("$\eta$")
