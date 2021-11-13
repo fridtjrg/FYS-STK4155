@@ -13,25 +13,29 @@ from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_trai
 n_hidden_neurons = 50
 batch_size = 5
 
-Epochs = [70, 100, 200, 300, 400]
+Epochs = [50, 100, 150, 200, 250,  300, 350, 400]
 mse_epochs = []
-for epoch in Epochs:
 
-    # ===============================#
+_lambda = 1e-5
+eta = 1e-5
+for i, epoch in enumerate(Epochs):
+
+    #===============================#
     #           Training            #
-    # ===============================#
+    #===============================#
 
     # ======= OWN NN
+    print("step: ", i+1,"/", len(Epochs))
 
     nn = NeuralNetwork(x_y_train, z_train, n_epochs=epoch, batch_size=batch_size)
-    nn.add_layer(DenseLayer(x_y_train.shape[1], n_hidden_neurons, 'sigmoid', lmbda=0.0001, eta=0.001))
-    nn.add_layer(DenseLayer(n_hidden_neurons, n_hidden_neurons, 'relu', lmbda=0.0001, eta=0.001))
-    nn.add_layer(DenseLayer(n_hidden_neurons, 1, None, lmbda=0.0001, eta=0.001))
+    nn.add_layer(DenseLayer(x_y_train.shape[1], n_hidden_neurons, 'sigmoid', lmbda=_lambda, eta=eta))
+    nn.add_layer(DenseLayer(n_hidden_neurons, n_hidden_neurons, 'relu', lmbda=_lambda, eta=eta))
+    nn.add_layer(DenseLayer(n_hidden_neurons, 1, None, lmbda=_lambda, eta=eta))
     nn.train()
 
-    # ===============================#
-    #           Testing             #
-    # ===============================#
+    #===============================#
+    #          Testing              #
+    #===============================#
 
     # ======= OWN NN
 
@@ -39,7 +43,7 @@ for epoch in Epochs:
     mse_epochs.append(MSE(ytilde_test, z_test))
 
 plot, ax = plt.subplots()
-plt.semilogx(Epochs, mse_epochs, 'k-o', label='MSE')
+plt.plot(Epochs, mse_epochs, 'k-o', label='MSE')
 plt.xlabel('nb_epochs')
 plt.ylabel('MSE')
 plt.legend()

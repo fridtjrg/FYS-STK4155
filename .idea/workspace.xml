@@ -20,22 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc150340-87c4-49e5-a329-eb6b4036b91e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/DataLogistique.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Data/DataClassification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/DataRegression.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Data/DataRegression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/Layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/Layer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/NeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/NeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SDG.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SDG.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionGDOLS.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionGDOLS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionGDRidge.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionGDRidge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionLinalgOLS.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionLinalgOLS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionLinalgRidge.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionLinalgRidge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNLogistique.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNLogistiqueKeras.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassificationKeras.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegression.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionNNRegressionKeras.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegressionKeras.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/2project/Paul/SolutionSGD.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/SGD/SolutionSGD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/Figures/NN/MSE_for_NN_for_nb_epochs.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/Figures/NN/MSE_for_NN_for_nb_epochs.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/2project/NeuralNetwork/NNRegressionMSEepochs.py" beforeDir="false" afterPath="$PROJECT_DIR$/projects/2project/NeuralNetwork/NNRegressionMSEepochs.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,13 +50,13 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/projects/2project/SGD" />
       <recent name="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
+      <recent name="$PROJECT_DIR$/projects/2project/SGD" />
       <recent name="$PROJECT_DIR$/projects/2project/Data" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.SolutionNNRegression">
-    <configuration name="SolutionNNClassificationKeras" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.NNRegressionMSEepochs">
+    <configuration name="NNRegressionMSEepochs" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FYS-STK4155" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -77,11 +64,74 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/Paul" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassificationKeras.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/NNRegressionMSEepochs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="NN_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FYS-STK4155" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/NN_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="SolutionNNClassification" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FYS-STK4155" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassification.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="SolutionNNClassification" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FYS-STK4155" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNClassification.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -98,7 +148,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/Paul" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -111,7 +161,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="SolutionNNRegressionKeras" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="SolutionNNRegression" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FYS-STK4155" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -119,11 +169,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/Paul" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/NeuralNetwork" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegressionKeras.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/projects/2project/NeuralNetwork/SolutionNNRegression.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -140,7 +190,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/Paul" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/projects/2project/SGD" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -155,10 +205,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.NNRegressionMSEepochs" />
         <item itemvalue="Python.SolutionNNRegression" />
-        <item itemvalue="Python.SolutionNNRegressionKeras" />
-        <item itemvalue="Python.SolutionNNClassificationKeras" />
         <item itemvalue="Python.SolutionSGD" />
+        <item itemvalue="Python.SolutionNNClassification" />
+        <item itemvalue="Python.NN_test" />
       </list>
     </recent_temporary>
   </component>
@@ -186,21 +237,33 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1419" height="210" key="GridCell.Tab.0.bottom" timestamp="1636206477377">
+    <state width="1419" height="188" key="GridCell.Tab.0.bottom" timestamp="1636832741895">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="210" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1636206477377" />
-    <state width="1419" height="210" key="GridCell.Tab.0.center" timestamp="1636206477375">
+    <state width="1419" height="188" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1636832741895" />
+    <state width="1419" height="188" key="GridCell.Tab.0.bottom/0.25.1440.805@0.25.1440.805" timestamp="1636583504314" />
+    <state width="1419" height="188" key="GridCell.Tab.0.bottom/0.25.1440.809@0.25.1440.809" timestamp="1636486838521" />
+    <state width="1419" height="188" key="GridCell.Tab.0.center" timestamp="1636832741894">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="210" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1636206477375" />
-    <state width="1419" height="210" key="GridCell.Tab.0.left" timestamp="1636206477374">
+    <state width="1419" height="188" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1636832741894" />
+    <state width="1419" height="188" key="GridCell.Tab.0.center/0.25.1440.805@0.25.1440.805" timestamp="1636583504313" />
+    <state width="1419" height="188" key="GridCell.Tab.0.center/0.25.1440.809@0.25.1440.809" timestamp="1636486838519" />
+    <state width="1419" height="188" key="GridCell.Tab.0.left" timestamp="1636832741893">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="210" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1636206477374" />
-    <state width="1419" height="210" key="GridCell.Tab.0.right" timestamp="1636206477376">
+    <state width="1419" height="188" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1636832741893" />
+    <state width="1419" height="188" key="GridCell.Tab.0.left/0.25.1440.805@0.25.1440.805" timestamp="1636583504310" />
+    <state width="1419" height="188" key="GridCell.Tab.0.left/0.25.1440.809@0.25.1440.809" timestamp="1636486838519" />
+    <state width="1419" height="188" key="GridCell.Tab.0.right" timestamp="1636832741894">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="210" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1636206477376" />
+    <state width="1419" height="188" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1636832741894" />
+    <state width="1419" height="188" key="GridCell.Tab.0.right/0.25.1440.805@0.25.1440.805" timestamp="1636583504314" />
+    <state width="1419" height="188" key="GridCell.Tab.0.right/0.25.1440.809@0.25.1440.809" timestamp="1636486838520" />
+    <state width="500" height="445" key="SwitcherDM" timestamp="1636473098393">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="500" height="445" key="SwitcherDM/0.0.1440.900@0.0.1440.900" timestamp="1636473098393" />
   </component>
 </project>
