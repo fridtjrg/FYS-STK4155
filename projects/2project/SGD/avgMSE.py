@@ -1,0 +1,23 @@
+LOLStrain = 0.01019399 + 0.01063588 + 0.01050826 + 0.01042768 + 0.01008536
+LOLStest = 0.0102321 + 0.01170574 + 0.01105141 + 0.01108092 + 0.01080052
+
+print("linearOLS MSE(train): ",LOLStrain/5)
+print("linearOLS MSE(test): ",LOLStest/5)
+
+Lridgetrain = 0.01017244+0.01024562+0.01030725+0.01072239+0.01024897
+Lridgetest = 0.01064395+0.01023136+0.01006839+0.00921899+0.010865
+
+print("linearRidge MSE(train): ",Lridgetrain/5)
+print("linearRidge MSE(test): ",Lridgetest/5)
+
+GDridgetrain = 0.01331902+0.01488951+0.01486474+0.01574375+0.01638995
+GDridgetest = 0.01364092+ 0.01446392+0.01455626+0.01460808+0.01805699
+
+print("GDRidge MSE(train): ",GDridgetrain/5)
+print("GDRidge MSE(test): ",GDridgetest/5)
+
+GDOLStrain = 0.0115871+0.01050732+0.01313598+0.01175034+0.01165877
+GDOLStest = 0.0121851+0.01263543+0.01449768+0.01297765+0.0127536
+
+print("GDOLS MSE(train): ",GDOLStrain/5)
+print("GDOLS MSE(test): ",GDOLStest/5)
