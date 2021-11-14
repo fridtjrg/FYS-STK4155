@@ -129,28 +129,51 @@ def SDG_ols_ridge_matrix_mse():
     print("best_learning_rate_ridge = ", best_learning_rate_ridge)
     print("best_lambda_rate_ridge = ", best_lambda_rate_ridge)
 
-    fig, ax = plt.subplots(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=(7, 5))
     sns.heatmap(MSE_ridge_val_train, annot=True, ax=ax)
     #ax.set_title("Training ridge MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
+    plt.subplots_adjust(
+    top=0.98,
+    bottom=0.117,
+    left=0.08,
+    right=1,
+    hspace=0.2,
+    wspace=0.2
+    )
     plt.savefig('../Figures/GD/SGD_train_heatmap_ridge.pdf')
 
-    fig, ax = plt.subplots(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=(7, 5))
     sns.heatmap(MSE_ridge_val_test, annot=True, ax=ax, cmap="viridis")
     #ax.set_title("Test ridge MSE")
     ax.set_ylabel("$\eta$")
     ax.set_xlabel("$\lambda$")
+    plt.subplots_adjust(
+    top=0.98,
+    bottom=0.117,
+    left=0.08,
+    right=1,
+    hspace=0.2,
+    wspace=0.2
+    )
     plt.savefig('../Figures/GD/SGD_test_heatmap_ridge.pdf')
 
-    fig, ax = plt.subplots(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=(7, 5))
     plt.semilogx(Eta_ols, MSE_ols_val_train, 'k-o', label='MSE_train')
     plt.semilogx(Eta_ols, MSE_ols_val_test, 'r-o', label='MSE_test')
     plt.xlabel("$\eta$")
     plt.ylabel('MSE')
     #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     plt.legend()
-    plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+    plt.subplots_adjust(
+    top=0.933,
+    bottom=0.129,
+    left=0.121,
+    right=0.95,
+    hspace=0.2,
+    wspace=0.2
+    )
     plt.savefig('../Figures/GD/SGD_mse_ols.pdf')
 
 
