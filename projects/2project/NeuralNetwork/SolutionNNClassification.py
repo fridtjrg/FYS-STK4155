@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import tensorflow as tf
-from keras.layers import Dense
-from keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
 from NeuralNetworkClassification import DenseLayer, NeuralNetwork
 
 sns.set()
@@ -83,18 +83,21 @@ sns.heatmap(train_accuracy_keras, annot=True, ax=ax, cmap="viridis")
 ax.set_title("Training accuracy keras")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
+plt.savefig('../Figures/NN/Classification_Keras_train.pdf')
 
 fig, ax = plt.subplots(figsize=(5, 5))
 sns.heatmap(test_accuracy_keras, annot=True, ax=ax, cmap="viridis")
 ax.set_title("Test accuracy keras")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
+plt.savefig('../Figures/NN/Classification_Keras_test.pdf')
 
 fig, ax = plt.subplots(figsize = (5, 5))
 sns.heatmap(train_accuracy, annot=True, ax=ax, cmap="viridis")
 ax.set_title("Training Accuracy")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
+plt.savefig('../Figures/NN/Classification_NN_train.pdf')
 
 
 fig, ax = plt.subplots(figsize = (5, 5))
@@ -102,6 +105,7 @@ sns.heatmap(test_accuracy, annot=True, ax=ax, cmap="viridis")
 ax.set_title("Test Accuracy")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
+plt.savefig('../Figures/NN/Classification_NN_test.pdf')
 
 plt.show()
 
