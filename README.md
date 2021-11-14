@@ -11,7 +11,7 @@ This repository aims to explore different tecniques of Machine Learning and Data
 
 It is created for the course [*FYS-STK4155 - Applied Data Analysis and Machine Learning*](https://www.uio.no/studier/emner/matnat/fys/FYS-STK4155/index-eng.html) held by professor [Morten Hjorth-Jensen](https://github.com/mhjensen) (University of Oslo, AY2021-2022).
 
-👩🏻‍💻 The main contributors to this repository are [Fridtjof Gjengset](https://github.com/fridtjrg), [Adele Zaini](https://github.com/adelezaini) and [Gaute Holen](https://github.com/GauteHolen).
+👩🏻‍💻 The main contributors to this repository are [Fridtjof Gjengset](https://github.com/fridtjrg), [Paul Giraud](https://github.com/paulgiraudIMT) and [Gaute Holen](https://github.com/GauteHolen).
 
 
 ## Description
