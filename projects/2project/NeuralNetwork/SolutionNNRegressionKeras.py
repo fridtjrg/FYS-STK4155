@@ -81,7 +81,7 @@ for i, eta in enumerate(Eta):
 #===============================#
 
 
-#======= OWN NN (With optimal paramaters)
+#======= Keras NN (With optimal paramaters)
 
 sgd = tf.keras.optimizers.SGD(lr=Eta[best_learning_rate_NN], momentum=Lambda[best_lambda_rate_NN], nesterov=True)
 model = Sequential()
