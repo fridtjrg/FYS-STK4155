@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from keras.layers import Dense, Activation
-from keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation
+from tensorflow.keras.models import Sequential
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()
@@ -103,7 +103,7 @@ plotSave(x_mesh, y_mesh, z,'../Figures/NN/', 'Noisy_dataset' )
 plotSave(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)),'../Figures/NN/',title_NN)
 
 fig, ax = plt.subplots(figsize = (6, 5))
-sns.heatmap(train_mse, annot=True, ax=ax)
+sns.heatmap(train_mse,vmin=0,vmax=0.3, annot=True, ax=ax)
 #ax.set_title("Training mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
@@ -111,7 +111,7 @@ plt.savefig('../Figures/NN/train_heatmap_keras.pdf')
 
 
 fig, ax = plt.subplots(figsize = (6, 5))
-sns.heatmap(test_mse, annot=True, ax=ax)
+sns.heatmap(test_mse,vmin=0,vmax=0.3, annot=True, ax=ax)
 #ax.set_title("Test mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
