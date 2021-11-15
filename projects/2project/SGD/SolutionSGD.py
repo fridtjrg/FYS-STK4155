@@ -10,70 +10,13 @@ sys.path.append("../Data")
 from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z, plotSave
 
 
-def SGD_ols_ridge_mse():
-    MSE_ridge_val = []
-    MSE_ols_val = []
-
-    Eta = np.logspace(-5, -3, 10)
-    methods = ['ridge', 'ols']
-
-    for method in methods:
-
-        if method == 'ridge':
-
-            best_learning_rate_ridge = Eta[0]
-            best_beta_ridge = np.zeros(X.shape)
-            best_mse_ridge = 1e10
-
-            for eta in Eta:
-                sdg = SDG(learning_rate=eta, n_epochs=100, batch_size=10, method='ridge', lmbda= 0.01)
-                beta = sdg.train(X_train, z_train)
-                mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0.01, beta=beta)
-                MSE_ridge_val.append(mse_ridge_)
-                if mse_ridge_ < best_mse_ridge:
-                    best_learning_rate_ridge = eta
-                    best_beta_ridge = beta
-                    best_mse_ridge = mse_ridge_
-
-        if method == 'ols':
-            best_learning_rate_ols = Eta[0]
-            best_beta_ridge = np.zeros(X.shape)
-            best_mse_ols = 1e10
-
-            for eta in Eta:
-                sdg = SDG(learning_rate=eta, n_epochs=100, batch_size=10, method='ols', lmbda= 0)
-                beta = sdg.train(X_train, z_train)
-                mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0, beta=beta)
-                MSE_ols_val.append(mse_ols_)
-                if mse_ols_ < best_mse_ols:
-                    best_learning_rate_ols = eta
-                    best_beta_ols = beta
-                    best_mse_ols = mse_ols_
-    print("MSE ridge")
-    print(MSE_ridge_val)
-    print("MSE ols")
-    print(MSE_ols_val)
-    plot, ax = plt.subplots()
-    plt.title('MSE for the OLS and Ridge')
-    plt.semilogx(Eta, MSE_ridge_val, 'k-o', label='Ridge')
-    plt.semilogx(Eta, MSE_ols_val, 'r-o', label='OLS')
-    plt.xlabel(r'Learning rate $\eta$')
-    plt.ylabel('MSE')
-    #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    plt.legend()
-    plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
-    print("best_learning_rate_ols = ", best_learning_rate_ols)
-    print("best_learning_rate_ridge = ", best_learning_rate_ridge)
-    best_pred_ols = X @ best_beta_ols
-    best_pred_ridge = X @ best_beta_ridge
-    plotFunction(x_mesh, y_mesh, z, 'data')
-    plotFunction(x_mesh, y_mesh, best_pred_ols.reshape(len(x), len(x)), 'OLS')
-    plotFunction(x_mesh, y_mesh, best_pred_ridge.reshape(len(x), len(x)), 'RIDGE')
-    return plt.show()
-
+#This function plot the heatmap matrix of the MSE for ridge regression and the MSE against the learning rate for OLS
 
 def SDG_ols_ridge_matrix_mse():
 
+    #This function plot the heatmap for ridge SGD and plot the MSE against the learning rate for OLS
+
+    #Creation of or parameters
     Eta = np.logspace(-5, -4, 10)
     Lambda = np.logspace(-5, -3, 10)
 
@@ -82,11 +25,13 @@ def SDG_ols_ridge_matrix_mse():
     MSE_ridge_val_test = np.zeros((len(Eta), len(Lambda)))
     MSE_ols_val_train = [0]*len(Eta)
 
+
     methods = ['ridge', 'ols']
 
     for method in methods:
 
         if method == 'ridge':
+            #initialization of or best parameters
             Eta = np.logspace(-5, -4, 10)
             best_learning_rate_ridge = Eta[0]
             best_lambda_rate_ridge = Lambda[0]
@@ -95,12 +40,17 @@ def SDG_ols_ridge_matrix_mse():
 
             for i, eta in enumerate(Eta):
                 for j, _lambda in enumerate(Lambda):
+                    #Create a SGD
                     sdg = SDG(learning_rate=eta, n_epochs=100, batch_size=10, method='ridge', lmbda= _lambda)
+                    #Compute the beta for our train data
                     beta = sdg.train(X_train, z_train)
+                    #Compute our MSE
                     mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=_lambda, beta=beta)
                     mse_ols_train, mse_ridge_train = sdg.compute_test_mse(X_train, z_train, lambda_=_lambda, beta=beta)
+                    #Add it to our heatmap
                     MSE_ridge_val_train[i][j] = mse_ridge_train
                     MSE_ridge_val_test[i][j] = mse_ridge_
+                    #testing the value of the mse against our best value
                     if mse_ridge_ <= best_mse_ridge:
                         best_lambda_rate_ridge = _lambda
                         best_learning_rate_ridge = eta
@@ -108,18 +58,24 @@ def SDG_ols_ridge_matrix_mse():
                         best_mse_ridge = mse_ridge_
 
         if method == 'ols':
+            # initialization of or best parameters
             Eta_ols = np.logspace(-5, -1, 10)
             best_learning_rate_ols = Eta[0]
             best_beta_ols = np.zeros(X.shape)
             best_mse_ols = 1e10
 
             for i, eta in enumerate(Eta_ols):
+                # Create a SGD
                 sdg = SDG(learning_rate=eta, n_epochs=100, batch_size=10, method='ols', lmbda= 0)
+                # Compute the beta for our train data
                 beta = sdg.train(X_train, z_train)
+                # Compute our MSE
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0, beta=beta)
                 mse_ols_train, mse_ridge_train = sdg.compute_test_mse(X_train, z_train, lambda_=0, beta=beta)
+                # Add it to our list of MSE
                 MSE_ols_val_train[i] = mse_ols_train
                 MSE_ols_val_test[i] = mse_ols_
+                # testing the value of the mse against our best value
                 if mse_ols_ <= best_mse_ols:
                     best_learning_rate_ols = eta
                     best_beta_ols = beta
@@ -128,6 +84,11 @@ def SDG_ols_ridge_matrix_mse():
     print("best_learning_rate_ols = ", best_learning_rate_ols)
     print("best_learning_rate_ridge = ", best_learning_rate_ridge)
     print("best_lambda_rate_ridge = ", best_lambda_rate_ridge)
+
+
+    #=============================#
+    #       Plot and Save         #
+    #=============================#
 
     fig, ax = plt.subplots(figsize=(7, 5))
     sns.heatmap(MSE_ridge_val_train, annot=True, ax=ax)
@@ -190,11 +151,15 @@ def SDG_ols_ridge_matrix_mse():
     return best_learning_rate_ols,best_learning_rate_ridge, best_lambda_rate_ridge
 
 
+#This function will plot the MSE againts the number for epochs
 
 def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_lambda_rate_ridge):
+
+
     MSE_ridge_val = []
     MSE_ols_val = []
 
+    #Liste of value for the number of epochs that  we will test
     epochs = [50, 100, 150, 200, 250,  300, 350, 400]
     methods = ['ridge', 'ols']
 
@@ -203,8 +168,10 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_
         if method == 'ridge':
 
             for nb_epochs in epochs:
+                #Create the SGD
                 sdg = SDG(learning_rate=best_learning_rate_ridge, n_epochs= nb_epochs, batch_size=10, method='ridge', lmbda= best_lambda_rate_ridge)
                 beta = sdg.train(X_train, z_train)
+                #Compute the MSE
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=best_lambda_rate_ridge, beta=beta)
                 MSE_ridge_val.append(mse_ridge_)
 
@@ -212,10 +179,17 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_
         if method == 'ols':
 
             for nb_epochs in epochs:
+                # Create the SGD
                 sdg = SDG(learning_rate=best_learning_rate_ols, n_epochs=nb_epochs, batch_size=10, method='ols', lmbda= 0)
                 beta = sdg.train(X_train, z_train)
+                # Compute the MSE
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0, beta=beta)
                 MSE_ols_val.append(mse_ols_)
+
+
+    #======================#
+    #     Plot the MSE     #
+    #======================#
 
     plot, ax = plt.subplots()
     #plt.title('MSE for the OLS and Ridge')
@@ -228,11 +202,12 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_
     plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
     plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_nb_epochs.pdf')
 
+#This function will plot the MSE againts the batch_size
 
 def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, best_lambda_rate_ridge):
     MSE_ridge_val = []
     MSE_ols_val = []
-
+    # Liste of value for the batch_size that  we will test
     batch_size = [5, 10, 20, 30, 40, 50, 100, 150, 200]
     methods = ['ridge', 'ols']
 
@@ -241,8 +216,10 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
         if method == 'ridge':
 
             for batch in batch_size:
+                # Create the SGD
                 sdg = SDG(learning_rate=best_learning_rate_ridge, n_epochs= 100, batch_size=batch, method='ridge', lmbda= best_lambda_rate_ridge)
                 beta = sdg.train(X_train, z_train)
+                #Compute the MSE
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=best_lambda_rate_ridge, beta=beta)
                 MSE_ridge_val.append(mse_ridge_)
 
@@ -250,10 +227,17 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
         if method == 'ols':
 
             for batch in batch_size:
+                # Create the SGD
                 sdg = SDG(learning_rate=best_learning_rate_ols, n_epochs=100, batch_size=batch, method='ols', lmbda= 0)
                 beta = sdg.train(X_train, z_train)
+                # Compute the MSE
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0, beta=beta)
                 MSE_ols_val.append(mse_ols_)
+
+
+    #======================#
+    #     Plot the MSE     #
+    #======================#
 
     plot, ax = plt.subplots()
     #plt.title('MSE for the OLS and Ridge')
@@ -265,8 +249,6 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
     plt.legend()
     plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
     plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_batch_size.pdf')
-
-
 
 #SDG_ols_ridge_matrix_mse()
 
