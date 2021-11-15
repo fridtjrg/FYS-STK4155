@@ -21,16 +21,23 @@ Lambdas = np.logspace(-3, 1, 10)
 N = len(x)
 
 #############################################
+
 best_test_MSE = 1 #Must trigger the test for a lower mse
 best_lambda = Lambdas[0]
 
+
+#=================== GD for different values of Lambda
+
 for lmbda in Lambdas:
+
     # Hessian matrix
     H = (2.0/N)* X_train.T @ X_train
     # Get the eigenvalues
     EigValues, EigVectors = np.linalg.eig(H)
     beta = np.random.randn(X_train.shape[1])
     eta = 1.0/np.max(EigValues)
+
+    #================== GD
 
     for iter in range(Niterations):
         beta = beta - eta*gradientsRidge(N, lmbda, X_train, z_train, beta)
@@ -39,9 +46,14 @@ for lmbda in Lambdas:
     print("beta from own dg")
     print(beta)
     """
+
+    #Prediction
     ztildeDG = predict(beta, X_train)
     ztestDG = predict(beta, X_test)
     z_pred = predict(beta, X)
+
+
+    #MSE
     MSE_train_dg = np.mean((z_train - ztildeDG)**2, keepdims=True )
     MSE_test_dg = np.mean((z_test - ztestDG)**2, keepdims=True )
     
