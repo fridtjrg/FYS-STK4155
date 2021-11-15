@@ -55,14 +55,19 @@ for i, eta in enumerate(Eta):
         ytilde_test = nn.predict(x_y_test)
         ytilde_train = nn.predict(x_y_train)
 
+        mse_test = MSE(z_test, ytilde_test)
+
         if MSE(z_train, ytilde_train) < 1e10:
             train_mse[i][j] = MSE(z_train, ytilde_train)
             test_mse[i][j] = MSE(z_test, ytilde_test)
+        else:
+            train_mse[i][j] = np.inf
+            test_mse[i][j] = np.inf
 
-        if MSE(z_test, ytilde_test) < best_mse_NN:
-            best_lambda_rate_NN = _lambda
-            best_learning_rate_NN = eta
-            best_mse_NN = MSE(z_test, ytilde_test)
+        if  mse_test < best_mse_NN:
+            best_lambda_rate_NN = j
+            best_learning_rate_NN = i
+            best_mse_NN = mse_test
 
         compt += 1
         print("step : " + str(compt) + "/" + str(len(Eta) * len(Lambda)))
@@ -77,9 +82,9 @@ for i, eta in enumerate(Eta):
 #======= OWN NN (With optimal paramaters)
 
 nn = NeuralNetwork(x_y_train, z_train, n_epochs = epochs, batch_size = batch_size)
-nn.add_layer(DenseLayer(x_y_train.shape[1], n_hidden_neurons, 'sigmoid', lmbda= best_lambda_rate_NN, eta=best_learning_rate_NN))
-nn.add_layer(DenseLayer(n_hidden_neurons, n_hidden_neurons, 'sigmoid', lmbda= best_lambda_rate_NN, eta=best_learning_rate_NN))
-nn.add_layer(DenseLayer(n_hidden_neurons, 1, None, lmbda= best_lambda_rate_NN, eta=best_learning_rate_NN))
+nn.add_layer(DenseLayer(x_y_train.shape[1], n_hidden_neurons, 'sigmoid', lmbda= Lambda[best_lambda_rate_NN], eta=Eta[best_learning_rate_NN]))
+nn.add_layer(DenseLayer(n_hidden_neurons, n_hidden_neurons, 'sigmoid', lmbda= Lambda[best_lambda_rate_NN], eta=Eta[best_learning_rate_NN]))
+nn.add_layer(DenseLayer(n_hidden_neurons, 1, None, lmbda= Lambda[best_lambda_rate_NN], eta=Eta[best_learning_rate_NN]))
 nn.train()
 
 
@@ -95,7 +100,7 @@ plotSave(x_mesh, y_mesh, z,'../Figures/NN/', 'Noisy_dataset' )
 plotSave(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)),'../Figures/NN/',title_NN)
 
 fig, ax = plt.subplots(figsize = (6, 5))
-sns.heatmap(train_mse, annot=True, ax=ax, cmap="viridis")
+sns.heatmap(train_mse, annot=True, ax=ax)
 #ax.set_title("Training mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
@@ -103,7 +108,7 @@ plt.savefig('../Figures/NN/train_heatmap.pdf')
 
 
 fig, ax = plt.subplots(figsize = (6, 5))
-sns.heatmap(test_mse, annot=True, ax=ax, cmap="viridis")
+sns.heatmap(test_mse, annot=True, ax=ax)
 #ax.set_title("Test mse")
 ax.set_ylabel("$\eta$")
 ax.set_xlabel("$\lambda$")
