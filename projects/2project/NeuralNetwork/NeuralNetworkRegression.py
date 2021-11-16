@@ -1,7 +1,7 @@
 import numpy as np
 
 class DenseLayer:
-
+    # important paramaters of a layer
     def __init__(self, n_hidden_neurons, n_categories,type_activation,lmbda, eta):
 
         self.weights = np.random.randn(n_hidden_neurons, n_categories)
@@ -12,6 +12,7 @@ class DenseLayer:
         self.lmbda = lmbda
         self.eta = eta
 
+    # ========================= Activation function
 
     def sigmoid(self, x):
         return 1/(1+np.exp(-x))
@@ -25,6 +26,9 @@ class DenseLayer:
             for j in range(col):
                 x[i][j] = max(0, x[i][j])
         return x
+
+    #======================= Differential activation function
+
 
     def reluPrime(self, x):
         row, col = x.shape
@@ -70,8 +74,11 @@ class DenseLayer:
         elif (self.type_activation == 'relu'):
             return self.reluPrime(x)
 
-    def feedForward(self, x):
+    #================== Feed forward
 
+
+    def feedForward(self, x):
+        #return the value of the activation function of a vector mutply by the weight of the layer plus the bias of the layer
         self.last_activation = self.activation(np.dot(x, self.weights) + self.bias)
         return self.last_activation
 
@@ -95,8 +102,15 @@ class DenseLayer:
         return error
 
 
+
+
+
+
+
 class NeuralNetwork:
 
+
+    # important paramaters of a NN
     def __init__(self, X, y, n_epochs, batch_size):
         self.epochs = n_epochs
         self.X = X
@@ -109,7 +123,10 @@ class NeuralNetwork:
     def add_layer(self, layer):
         self._layers.append(layer)
 
+    #================== Feed forward
+
     def feed_forward(self):
+        #we pass our data to all the activation functions of our layers
         X = self.X_batch
         for layer in self._layers:
             X = layer.feedForward(X)
@@ -136,7 +153,7 @@ class NeuralNetwork:
         err = layer.backPropagation(err, self._layers[1],self.X_batch)
 
 
-
+    #train the NN
     def train(self):
         data_indices = np.arange(self.X.shape[0])
         for i in range(self.epochs):
@@ -148,12 +165,15 @@ class NeuralNetwork:
                 # minibatch training data
                 self.X_batch = self.X[chosen_datapoints]
                 self.y_batch = self.y[chosen_datapoints]
+                #feed forward
                 self.feed_forward()
+                #back propagation
                 self.backpropagation()
             mse = np.mean((self.y - self.predict(self.X))**2)
             self.loss.append(mse)
             #print("epoch :",i+1, "MSE : ", mse)
 
+    #return our prediction for a set of data
     def predict(self, X):
         for layer in self._layers:
             X = layer.feedForward(X)
