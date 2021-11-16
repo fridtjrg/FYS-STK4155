@@ -76,9 +76,14 @@ for i, eta in enumerate(Eta):
 #===============================#
 
 
+
 #======= OWN NN (With optimal paramaters)
 optimizer = tf.keras.optimizers.Adam(learning_rate=Eta[best_learning_rate_NN])
 #sgd = tf.keras.optimizers.SGD(lr=Eta[best_learning_rate_NN], momentum=Lambda[best_lambda_rate_NN], nesterov=True)
+
+#======= Keras NN (With optimal paramaters)
+
+
 model = Sequential()
 model.add(Dense(n_hidden_neurons, activation='sigmoid', input_dim=X_train.shape[1]))
 model.add(Dense(units=n_hidden_neurons, activation='sigmoid'))
