@@ -4,7 +4,7 @@ class DenseLayer:
     # important paramaters of a layer
     def __init__(self, n_hidden_neurons, n_categories,type_activation,lmbda, eta):
 
-        self.weights = np.random.randn(n_hidden_neurons, n_categories)
+        self.weights = np.random.randn(n_hidden_neurons, n_categories) #Xavier or he itit(Normalizing weights)
         self.bias = np.zeros(n_categories) + 0.01
         self.n_hidden_neurons = n_hidden_neurons
         self.n_categories = n_categories
