@@ -1,5 +1,4 @@
 # Stucture
-
 ### Data/
 This folder contains the source code for creating the datasets used for this project. 
 
@@ -14,8 +13,11 @@ This folder contains the source code for the Neural Netorks(NeuralNetwokClassifi
 ### SGD/
 This folder contains out stochastic gradient decent source code. It also contains the code we used to obtain different plots, such as the regresson without SGD.
 
-### Logreg
+### Logreg/
 This folder contains the logistics regression code.
 
 ### Arkive/
 This folder can be disregarded. It contains code we chose to store, and has not been used for the project at all.
+
+# Reproducing results
+The files with the prefix 'Solution' will produce the plots that are present in the report, and will be automatically savde in the 'Figures/' folder. You can also find all the figures we used in the report currently in the 'Figures/' folder.
