@@ -7,11 +7,11 @@ sns.set()
 #====================== DATA
 import sys
 sys.path.append("../Data")
-#from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z, plotSave
+from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z, plotSave
 
-from DataClassification import X_test, X_train, Y_train_onehot, Y_test_onehot, accuracy_score_numpy, X, y_test, y_train
-z_test = y_test
-z_train = y_train
+#from DataClassification import X_test, X_train, Y_train_onehot, Y_test_onehot, accuracy_score_numpy, X, y_test, y_train
+#z_test = y_test
+#z_train = y_train
 
 
 #This function plot the heatmap matrix of the MSE for ridge regression and the MSE against the learning rate for OLS
@@ -160,7 +160,7 @@ def SDG_ols_ridge_matrix_mse():
 def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_lambda_rate_ridge, methods = None):
 
     if methods == None:
-        methods = ['ridge', 'ols', 'logreg']
+        methods = ['ridge', 'ols']
 
     MSE_ridge_val = []
     MSE_ols_val = []
@@ -213,9 +213,9 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_
 
     plot, ax = plt.subplots()
     #plt.title('MSE for the OLS and Ridge')
-    if 'Ridge' in methods:
+    if 'ridge' in methods:
         plt.plot(epochs, MSE_ridge_val, 'k-o', label='Ridge')
-    if 'OLS' in methods:
+    if 'ols' in methods:
         plt.plot(epochs, MSE_ols_val, 'r-o', label='OLS')
     if 'logreg' in methods:
         plt.plot(epochs, MSE_logreg_val, 'r-o', label='logreg')
@@ -235,7 +235,7 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
     # Liste of value for the batch_size that  we will test
     batch_size = [5, 10, 20, 30, 40, 50, 100, 150, 200]
     if methods == None:
-        methods = ['ridge', 'ols', 'logreg']
+        methods = ['ridge', 'ols']
 
     for method in methods:
 
@@ -277,9 +277,9 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
 
     plot, ax = plt.subplots()
     #plt.title('MSE for the OLS and Ridge')
-    if 'Ridge' in methods:
+    if 'ridge' in methods:
         plt.plot(batch_size, MSE_ridge_val, 'k-o', label='Ridge')
-    if 'OLS' in methods:
+    if 'ols' in methods:
         plt.plot(batch_size, MSE_ols_val, 'r-o', label='OLS')
     if 'logreg' in methods:
         plt.plot(batch_size, MSE_logreg_val, 'r-o', label='logreg')
@@ -295,8 +295,11 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
 learning_rate = 1e-5
 _lambda = 1e-5
 
-SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda, methods=['logreg'])
-SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda, methods=['logreg'])
+SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda)
+SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda)
+
+#SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda, methods=['logreg'])
+#SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda, methods=['logreg'])
 
 
 
