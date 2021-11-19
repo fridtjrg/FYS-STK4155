@@ -18,61 +18,56 @@ n_hidden_neurons = 50
 batch_size = 5
 epochs = 100
 
-Eta = np.logspace(-5, -2, 5)
-Lambda = np.logspace(-5, -2, 5)
+Eta = np.logspace(-5, -3, 10)
 
-train_mse_keras = np.zeros((len(Eta), len(Lambda)))
-test_mse_keras = np.zeros((len(Eta), len(Lambda)))
-train_mse = np.zeros((len(Eta), len(Lambda)))
-test_mse = np.zeros((len(Eta), len(Lambda)))
+
+
+train_mse = [0]*len(Eta)
+test_mse = [0]*len(Eta)
 compt = 0
 
 best_learning_rate_NN = Eta[0]
-best_lambda_rate_NN = Lambda[0]
 best_mse_NN = 1e10
 
 for i, eta in enumerate(Eta):
-    for j, _lambda in enumerate(Lambda):
+    #===============================#
+    #           Training            #
+    #===============================#
 
-        #===============================#
-        #           Training            #
-        #===============================#
+    #======= Keras NN
 
-        #======= Keras NN
+    optimizer = tf.keras.optimizers.Adam(learning_rate=eta)
+    model = Sequential()
+    model.add(Dense(n_hidden_neurons, activation='sigmoid', input_dim=X_train.shape[1]))
+    model.add(Dense(units=n_hidden_neurons, activation='sigmoid'))
+    model.add(Dense(units=1))
+    model.compile(optimizer=optimizer, loss='mean_squared_error')
+    model.fit(X_train, z_train, batch_size=batch_size, epochs=epochs)
 
-        sgd = tf.keras.optimizers.SGD(lr=eta, momentum=_lambda, nesterov=True)
-        model = Sequential()
-        model.add(Dense(n_hidden_neurons, activation='sigmoid', input_dim=X_train.shape[1]))
-        model.add(Dense(units=n_hidden_neurons, activation='sigmoid'))
-        model.add(Dense(units=1))
-        model.compile(optimizer=sgd, loss='mean_squared_error')
-        model.fit(X_train, z_train, batch_size=batch_size, epochs=epochs)
+    #===============================#
+    #           Testing             #
+    #===============================#
 
-        #===============================#
-        #           Testing             #
-        #===============================#
+    #======= OWN NN
 
-        #======= OWN NN
+    ytilde_test = model.predict(X_test)
+    ytilde_train = model.predict(X_train)
 
-        ytilde_test = model.predict(X_test)
-        ytilde_train = model.predict(X_train)
+    mse_test = MSE(z_test, ytilde_test)
 
-        mse_test = MSE(z_test, ytilde_test)
+    if MSE(z_train, ytilde_train) < 1e10:
+        train_mse[i] = MSE(z_train, ytilde_train)
+        test_mse[i] = MSE(z_test, ytilde_test)
+    else:
+        train_mse[i] = np.inf
+        test_mse[i]= np.inf
 
-        if MSE(z_train, ytilde_train) < 1e10:
-            train_mse[i][j] = MSE(z_train, ytilde_train)
-            test_mse[i][j] = MSE(z_test, ytilde_test)
-        else:
-            train_mse[i][j] = np.inf
-            test_mse[i][j] = np.inf
+    if  mse_test < best_mse_NN:
+        best_learning_rate_NN = i
+        best_mse_NN = mse_test
 
-        if  mse_test < best_mse_NN:
-            best_lambda_rate_NN = j
-            best_learning_rate_NN = i
-            best_mse_NN = mse_test
-
-        compt += 1
-        print("step : " + str(compt) + "/" + str(len(Eta) * len(Lambda)))
+    compt += 1
+    print("step : " + str(compt) + "/" + str(len(Eta)))
 
 
 #===============================#
@@ -81,18 +76,22 @@ for i, eta in enumerate(Eta):
 #===============================#
 
 
+
+#======= OWN NN (With optimal paramaters)
+optimizer = tf.keras.optimizers.Adam(learning_rate=Eta[best_learning_rate_NN])
+#sgd = tf.keras.optimizers.SGD(lr=Eta[best_learning_rate_NN], momentum=Lambda[best_lambda_rate_NN], nesterov=True)
+
 #======= Keras NN (With optimal paramaters)
 
-sgd = tf.keras.optimizers.SGD(lr=Eta[best_learning_rate_NN], momentum=Lambda[best_lambda_rate_NN], nesterov=True)
+
 model = Sequential()
 model.add(Dense(n_hidden_neurons, activation='sigmoid', input_dim=X_train.shape[1]))
 model.add(Dense(units=n_hidden_neurons, activation='sigmoid'))
 model.add(Dense(units=1))
-model.compile(optimizer=sgd, loss='mean_squared_error')
+model.compile(optimizer=optimizer, loss='mean_squared_error')
 model.fit(X_train, z_train, batch_size=batch_size, epochs=epochs)
 
 z_pred_NN = model.predict(X)
-
 ytilde_test = model.predict(X_test)
 ytilde_train = model.predict(X_train)
 
@@ -103,29 +102,29 @@ plotSave(x_mesh, y_mesh, z,'../Figures/NN/', 'Noisy_dataset' )
 plotSave(x_mesh, y_mesh, z_pred_NN.reshape(len(x), len(x)),'../Figures/NN/',title_NN)
 
 fig, ax = plt.subplots(figsize = (6, 5))
-sns.heatmap(train_mse,vmin=0,vmax=0.3, annot=True, ax=ax)
-#ax.set_title("Training mse")
-ax.set_ylabel("$\eta$")
-ax.set_xlabel("$\lambda$")
-plt.savefig('../Figures/NN/train_heatmap_keras.pdf')
-
-
-fig, ax = plt.subplots(figsize = (6, 5))
-sns.heatmap(test_mse,vmin=0,vmax=0.3, annot=True, ax=ax)
-#ax.set_title("Test mse")
-ax.set_ylabel("$\eta$")
-ax.set_xlabel("$\lambda$")
-plt.savefig('../Figures/NN/test_heatmap_keras.pdf')
+plt.semilogx(Eta, train_mse, 'k-o', label = 'train MSE')
+plt.semilogx(Eta, test_mse, 'r-o', label = 'test MSE')
+plt.xlabel("$\eta$")
+plt.ylabel('MSE')
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+plt.legend()
+plt.subplots_adjust(
+    top=0.933,
+    bottom=0.129,
+    left=0.121,
+    right=0.95,
+    hspace=0.2,
+    wspace=0.2
+)
+plt.savefig('../Figures/NN/MSE_keras.pdf')
 
 print('==========================================================')
 print('Our final model is built with the following hyperparmaters:')
-print('Lambda = ', best_lambda_rate_NN)
-print('Eta = ', best_lambda_rate_NN)
+print('Lambda = ', best_learning_rate_NN)
 print('Epochs = ', epochs)
 print('Batch size = ', batch_size)
 print('----------------------------------------------------------')
 print('The Eta and Lambda values we tested for are as follows:')
-print('Lambda = ',Lambda)
 print('Eta = ', Eta)
 print('----------------------------------------------------------')
 print('Mean square error of prediction:')
