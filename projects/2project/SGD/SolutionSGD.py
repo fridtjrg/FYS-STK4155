@@ -305,13 +305,13 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
         plt.savefig('../Figures/GD/MSE_for_the_Logreg_for_batch_size.pdf')
 
 
-#SDG_ols_ridge_matrix_mse()
+SDG_ols_ridge_matrix_mse()
 
-learning_rate = 10**(-5)
-_lambda = 10**(-5)
+#learning_rate = 10**(-5)
+#_lambda = 10**(-5)
 
-SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda, methods=['ridge', 'ols'])
-SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda, methods=['ridge', 'ols'])
+#SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda, methods=['ridge', 'ols'])
+#SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda, methods=['ridge', 'ols'])
 
 
 
