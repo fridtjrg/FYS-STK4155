@@ -7,7 +7,12 @@ sns.set()
 #====================== DATA
 import sys
 sys.path.append("../Data")
+
 from DataRegression import X, X_test, X_train, x, x_mesh, y_mesh, z_test, z_train, plotFunction, z, plotSave
+
+#from DataClassification import X_test, X_train, Y_train_onehot, Y_test_onehot, accuracy_score_numpy, X, y_test, y_train
+#z_test = y_test
+#z_train = y_train
 
 
 #This function plot the heatmap matrix of the MSE for ridge regression and the MSE against the learning rate for OLS
@@ -153,15 +158,17 @@ def SDG_ols_ridge_matrix_mse():
 
 #This function will plot the MSE againts the number for epochs
 
-def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_lambda_rate_ridge):
+def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_lambda_rate_ridge, methods = None):
 
+    if methods == None:
+        methods = ['ridge', 'ols', 'logreg']
 
     MSE_ridge_val = []
     MSE_ols_val = []
+    MSE_logreg_val = []
 
     #Liste of value for the number of epochs that  we will test
     epochs = [50, 100, 150, 200, 250,  300, 350, 400]
-    methods = ['ridge', 'ols']
 
     for method in methods:
 
@@ -186,30 +193,57 @@ def SDG_ols_ridge_epoch(best_learning_rate_ols,  best_learning_rate_ridge, best_
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0, beta=beta)
                 MSE_ols_val.append(mse_ols_)
 
+        if method == 'logreg':
+            print('here')
+            for nb_epochs in epochs:
+                # Create the SGD
+                sdg = SDG(learning_rate=best_learning_rate_ols, n_epochs=nb_epochs, batch_size=10, method='logreg', lmbda= 0)
+                beta = sdg.train(X_train, z_train)
+                # Compute the MSE
+                mse_logreg = sdg.logreg_loss(X_test, z_test, beta, 0)
+                print('MSE')
+                print('MSE',mse_logreg)
+                MSE_logreg_val.append(mse_logreg)
+
 
     #======================#
     #     Plot the MSE     #
     #======================#
+    print(MSE_logreg_val)
+    print(len(epochs),len(MSE_logreg_val))
 
     plot, ax = plt.subplots()
     #plt.title('MSE for the OLS and Ridge')
-    plt.plot(epochs, MSE_ridge_val, 'k-o', label='Ridge')
-    plt.plot(epochs, MSE_ols_val, 'r-o', label='OLS')
-    plt.xlabel('nb_epochs')
-    plt.ylabel('MSE')
-    #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    plt.legend()
-    plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
-    plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_nb_epochs.pdf')
+    if 'ridge' and 'ols' in methods:
+        plt.plot(epochs, MSE_ridge_val, 'k-o', label='Ridge')
+        plt.plot(epochs, MSE_ols_val, 'r-o', label='OLS')
+        plt.xlabel('nb_epochs')
+        plt.ylabel('MSE')
+        # ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+        plt.legend()
+        plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+        plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_nb_epochs.pdf')
+
+    if 'logreg' in methods:
+        plt.plot(epochs, MSE_logreg_val, 'r-o', label='logreg')
+        plt.xlabel('nb_epochs')
+        plt.ylabel('MSE')
+        # ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+        plt.legend()
+        plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+        plt.savefig('../Figures/GD/MSE_for_the_Logreg_for_nb_epochs.pdf')
+
 
 #This function will plot the MSE againts the batch_size
 
-def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, best_lambda_rate_ridge):
+def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, best_lambda_rate_ridge, methods = None):
     MSE_ridge_val = []
     MSE_ols_val = []
+    MSE_logreg_val = []
     # Liste of value for the batch_size that  we will test
     batch_size = [5, 10, 20, 30, 40, 50, 100, 150, 200]
-    methods = ['ridge', 'ols']
+    if methods == None:
+        methods = ['ridge', 'ols', 'logreg']
 
     for method in methods:
 
@@ -234,6 +268,16 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
                 mse_ols_, mse_ridge_ = sdg.compute_test_mse(X_test, z_test, lambda_=0, beta=beta)
                 MSE_ols_val.append(mse_ols_)
 
+        if method == 'logreg':
+
+            for batch in batch_size:
+                # Create the SGD
+                sdg = SDG(learning_rate=best_learning_rate_ols, n_epochs=100, batch_size=batch, method='logreg', lmbda= 0)
+                beta = sdg.train(X_train, z_train)
+                # Compute the MSE
+                MSE_logreg_val.append(sdg.logreg_loss(X_test, z_test, beta, 0))
+
+
 
     #======================#
     #     Plot the MSE     #
@@ -241,22 +285,33 @@ def SDG_ols_ridge_batch_size(best_learning_rate_ols, best_learning_rate_ridge, b
 
     plot, ax = plt.subplots()
     #plt.title('MSE for the OLS and Ridge')
-    plt.plot(batch_size, MSE_ridge_val, 'k-o', label='Ridge')
-    plt.plot(batch_size, MSE_ols_val, 'r-o', label='OLS')
-    plt.xlabel('batch_size')
-    plt.ylabel('MSE')
-    #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    plt.legend()
-    plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
-    plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_batch_size.pdf')
+    if 'ridge' and 'ols' in methods:
+        plt.plot(batch_size, MSE_ridge_val, 'k-o', label='Ridge')
+        plt.plot(batch_size, MSE_ols_val, 'r-o', label='OLS')
+        plt.xlabel('batch_size')
+        plt.ylabel('MSE')
+        # ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+        plt.legend()
+        plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+        plt.savefig('../Figures/GD/MSE_for_the_OLS_and_Ridge_SDG_for_batch_size.pdf')
 
-#SDG_ols_ridge_matrix_mse()
+    if 'logreg' in methods:
+        plt.plot(batch_size, MSE_logreg_val, 'r-o', label='logreg')
+        plt.xlabel('batch_size')
+        plt.ylabel('MSE')
+        # ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+        plt.legend()
+        plt.subplots_adjust(left=0.2, bottom=0.2, right=0.9)
+        plt.savefig('../Figures/GD/MSE_for_the_Logreg_for_batch_size.pdf')
 
-learning_rate = 1e-5
-_lambda = 1e-5
 
-SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda)
-SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda)
+SDG_ols_ridge_matrix_mse()
+
+#learning_rate = 10**(-5)
+#_lambda = 10**(-5)
+
+#SDG_ols_ridge_epoch(learning_rate,  learning_rate, _lambda, methods=['ridge', 'ols'])
+#SDG_ols_ridge_batch_size(learning_rate,  learning_rate, _lambda, methods=['ridge', 'ols'])
 
 
 
