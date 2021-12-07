@@ -86,6 +86,7 @@ def plot_u_xt(u_xt,x,t):
     ax.set_ylabel('x')
     ax.set_zlabel('u')
     plt.show()
+    plt.savefig('./figures/temperature_of_rod.pdf')
     
 
 
