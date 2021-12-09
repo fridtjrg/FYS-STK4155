@@ -3,9 +3,12 @@ from autograd import jacobian,hessian,grad
 import autograd.numpy.random as npr
 
 
-## Set up the network
+#=============== lenght of the bar
 
 L = 1
+
+## Set up the network
+
 
 #================== Different Activation Functions
 
@@ -33,9 +36,22 @@ def f(point):
 
 # The cost function:
 def cost_function(P, x, t):
+    """
+    Args :
+        P (list) : list of parameters for each layer
+        x (list) : value list for distance x
+        t (list) : value list for time t
+
+    Return :
+        the value of the cost function
+
+    """
+    #initialize the cost function
     cost_sum = 0
+    #initializa the jacobian and hessian function
     u_t_jacobian_func = jacobian(u_trial)
     u_t_hessian_func = hessian(u_trial)
+    #for each point:
     for x_ in x:
         for t_ in t:
             point = np.array([x_,t_])
@@ -45,9 +61,9 @@ def cost_function(P, x, t):
             u_t_dt = u_t_jacobian[1]
             u_t_d2x = u_t_hessian[0][0]
             func = f(point)
+            #This is from the definition of the problem :   u_t_dt = u_t_d2x
             err_sqr = ((u_t_dt - u_t_d2x) - func)**2
             cost_sum += err_sqr
-
     return cost_sum /( np.size(x)*np.size(t))
 
 
@@ -55,8 +71,21 @@ def cost_function(P, x, t):
 
 
 
-## Set up a function for training the network to solve for the equation
+
 def solve_pde_deep_neural_network(x,t, num_neurons, num_iter, lmb):
+    """
+    Set up a function for training the network to solve for the equation
+
+    Args :
+        x (list) : value list for distance x
+        t (list) : value list for time t
+        num_neurons (list) : list of number of neurons for each layer
+        num_iter (int) : number of updates we do for the list of parameters for each layer
+        lmb (float): learning rate of the NN
+
+    Returns:
+        P (list) : list of parameters for each layer
+    """
     ## Set up initial weigths and biases
     N_hidden = np.size(num_neurons)
     ## Set up initial weigths and biases
@@ -124,15 +153,24 @@ def deep_neural_network(deep_params, x):
 
 
 def u_trial(point,P):
-
+    """
+    Args :
+        P (list) : list of parameters for each layer
+        point (arr) : The values of the point x1, x2, ..., Xn
+    Return:
+        the value of the function u for input point = x1, x2... (here point = x,t)
+    """
     x,t = point
     return (1-t)*v(x) + x*(L-x)*t*deep_neural_network(P,point)
 
 
 
 
-## For comparison, define the analytical solution
+
 def u_analytic(point):
+    """
+        For comparison, define the analytical solution
+    """
     x,t = point
     return np.exp(-np.pi**2*t)*v(x)
 

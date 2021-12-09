@@ -12,7 +12,6 @@ from NeuralNetworks import solve_pde_deep_neural_network, u_trial, u_analytic, L
 npr.seed(15)
 
 ## Decide the vales of arguments to the function to solve
-
 tf = 1
 
 Nx = 10; Nt = 10
@@ -22,7 +21,7 @@ t = np.linspace(0,tf,Nt)
 ## Set up the parameters for the network
 num_hidden_neurons = [50, 50, 50]
 num_iter = 100
-lmb = 0.001
+lmb = 1e-4
 
 P = solve_pde_deep_neural_network(x,t, num_hidden_neurons, num_iter, lmb)
 
