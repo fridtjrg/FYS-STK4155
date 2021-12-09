@@ -19,6 +19,7 @@ def sigmoid(z):
 def tanh(z):
     return np.tanh(z)
 
+
 #================== Deep Neural Network
 
 
