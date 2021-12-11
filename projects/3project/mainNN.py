@@ -34,7 +34,7 @@ t = np.linspace(0,tf,Nt)
 
 ## Set up the parameters for the network
 num_hidden_neurons = [50, 25, 25]
-num_iter = 100
+num_iter = 500
 lmb = 3*1e-2
 
 P = solve_pde_deep_neural_network(x,t, num_hidden_neurons, num_iter, lmb)
