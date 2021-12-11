@@ -27,15 +27,15 @@ Nt = int(math.ceil(tf/Dt)) #Round up so that Dt rather becomes smaller
 
 Dt = tf/Nt  #The new Dt
 """
-Nx= 20; Nt=20
+Nx= 50; Nt=50
 
 x = np.linspace(0, L, Nx)
 t = np.linspace(0,tf,Nt)
 
 ## Set up the parameters for the network
 num_hidden_neurons = [50, 25, 25]
-num_iter = 500
-lmb = 3*1e-2
+num_iter = 100
+lmb = 2*1e-2
 
 P = solve_pde_deep_neural_network(x,t, num_hidden_neurons, num_iter, lmb)
 
