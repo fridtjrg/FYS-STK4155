@@ -101,10 +101,15 @@ def solve_pde_deep_neural_network(x,t, num_neurons, num_iter, lmb):
     cost_function_grad = grad(cost_function,0)
     # Let the update be done num_iter times
     for i in range(num_iter):
+        old_cost = cost_function(P, x, t)
         cost_grad =  cost_function_grad(P, x , t)
         for l in range(N_hidden+1):
             P[l] = P[l] - lmb * cost_grad[l]
-        print('cost: ', i,"  ",cost_function(P, x, t))
+        new_cost = cost_function(P, x, t)
+        print('cost: ', i,"  ",new_cost)
+        if old_cost<new_cost: #Adaptive lambda value
+            lmb = lmb*0.7
+            print('lmb changes to: ',lmb)
     print('Final cost: ',cost_function(P, x, t))
     return P
 

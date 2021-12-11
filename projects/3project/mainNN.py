@@ -16,7 +16,7 @@ npr.seed(15)
 
 ## Decide the vales of arguments to the function to solve
 tf = 1
-
+"""only for numerical solution
 #delta values by stability requirement
 Dx = float(sys.argv[1]) #Takes delta x as argument
 Dt = Dx**2/2 #Nt(delta t) must be this or smaller for stability requirement.
@@ -26,16 +26,16 @@ Nx = int(L/Dx)
 Nt = int(math.ceil(tf/Dt)) #Round up so that Dt rather becomes smaller
 
 Dt = tf/Nt  #The new Dt
-
-
+"""
+Nx= 20; Nt=20
 
 x = np.linspace(0, L, Nx)
 t = np.linspace(0,tf,Nt)
 
 ## Set up the parameters for the network
 num_hidden_neurons = [50, 25, 25]
-num_iter = 20
-lmb = float(sys.argv[2])#1e-2
+num_iter = 100
+lmb = 3*1e-2
 
 P = solve_pde_deep_neural_network(x,t, num_hidden_neurons, num_iter, lmb)
 
