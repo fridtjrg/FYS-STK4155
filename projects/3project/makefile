@@ -1,7 +1,8 @@
-run:
-	python3 mainNN.py 
-	#python3 mainNN.py 0.1 0.002  
-	#python3 mainNN.py 0.1 0.003  
+NN:
+	#python3 mainNN.py Nx,Nt, number of iterations
+	python3 mainNN.py 50 50 100
+	python3 mainNN.py 20 20 500  
+
 
 
 	
