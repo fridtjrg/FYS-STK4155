@@ -42,10 +42,8 @@ def cost_function(P, x, t):
         P (list) : list of parameters for each layer
         x (list) : value list for distance x
         t (list) : value list for time t
-
     Return :
         the value of the cost function
-
     """
     #initialize the cost function
     cost_sum = 0
@@ -76,14 +74,12 @@ def cost_function(P, x, t):
 def solve_pde_deep_neural_network(x,t, num_neurons, num_iter, lmb):
     """
     Set up a function for training the network to solve for the equation
-
     Args :
         x (list) : value list for distance x
         t (list) : value list for time t
         num_neurons (list) : list of number of neurons for each layer
         num_iter (int) : number of updates we do for the list of parameters for each layer
         lmb (float): learning rate of the NN
-
     Returns:
         P (list) : list of parameters for each layer
     """
@@ -101,10 +97,15 @@ def solve_pde_deep_neural_network(x,t, num_neurons, num_iter, lmb):
     cost_function_grad = grad(cost_function,0)
     # Let the update be done num_iter times
     for i in range(num_iter):
+        old_cost = cost_function(P, x, t)
         cost_grad =  cost_function_grad(P, x , t)
         for l in range(N_hidden+1):
             P[l] = P[l] - lmb * cost_grad[l]
-        print('cost: ', i,"  ",cost_function(P, x, t))
+        new_cost = cost_function(P, x, t)
+        print('cost: ', i,"  ",new_cost)
+        if old_cost<new_cost: #Adaptive lambda value
+            lmb = lmb*0.7
+            print('lmb changes to: ',lmb)
     print('Final cost: ',cost_function(P, x, t))
     return P
 
@@ -118,7 +119,6 @@ def deep_neural_network(deep_params, x):
     Args :
         deep_params (list) : list of parameters for each layer
         x (arr) : The values of the point x1, x2, ..., Xn
-
     Returns :
         the output of the input above the NN
     """
@@ -174,6 +174,3 @@ def u_analytic(point):
     """
     x,t = point
     return np.exp(-np.pi**2*t)*v(x)
-
-
-
