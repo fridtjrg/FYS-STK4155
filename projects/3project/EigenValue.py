@@ -107,6 +107,8 @@ class EigenValue:
         plt.plot(self.losses[:100])
         plt.xlabel("Iteration")
         plt.ylabel("Loss")
+        plt.grid()
+        plt.savefig('./figures/EigenValue_loss.pdf')
 
 
         fig0, ax0 = plt.subplots()
@@ -124,7 +126,9 @@ class EigenValue:
             title = "(Maximum eigenValue)"
         ax0.set_title("Convergence of the estimated eigenvector" + title)
         ax0.legend()
-        plt.show()
+        plt.grid()
+        plt.savefig('./figures/EigenValue_convergence.pdf')
+        #plt.show()
 
 
 
