@@ -1,7 +1,7 @@
 from math import degrees
 import numpy as np
 import matplotlib.pyplot as plt
-from dataregression import x,y, z,dx,dt
+from src.dataregression import x,y, z,dx,dt
 
 #Run from 3project folder
 import sys

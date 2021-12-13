@@ -161,4 +161,4 @@ plt.savefig(f'./figures/u_diff_linreg_dx={dx}.pdf')
 
 
 
-plt.show()
+#plt.show()

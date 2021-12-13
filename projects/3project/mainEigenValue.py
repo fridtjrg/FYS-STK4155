@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from EigenValue import EigenValue
+from src.EigenValue import EigenValue
 
 
 A = np.random.random_sample(size=(6, 6))

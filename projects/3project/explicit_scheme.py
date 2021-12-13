@@ -9,7 +9,7 @@ With initial conditions
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from NeuralNetworks import u_analytic
+from src.NeuralNetworks import u_analytic
 
 def explicit_scheme_solver(I, dx, L, t_max, outfile = None):
     """Explicit scheme solver for diffusion euqation on a rod with boundaries u(0,t) = u(L,t) = 0

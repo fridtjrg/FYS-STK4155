@@ -5,7 +5,7 @@ import autograd.numpy.random as npr
 import math
 import sys
 
-from NeuralNetworks import solve_pde_deep_neural_network, u_trial, u_analytic, L
+from src.NeuralNetworks import solve_pde_deep_neural_network, u_trial, u_analytic, L
 
 #================================================#
 
