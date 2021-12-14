@@ -59,7 +59,7 @@ print('Max absolute difference between the analytical solution and the network: 
 
 T,X = np.meshgrid(t,x)
 
-fig = plt.figure(figsize=(7,7))
+fig = plt.figure(figsize=(5,5))
 ax = fig.gca(projection='3d')
 ax.set_title('Solution from the deep neural network w/ %d layer'%len(num_hidden_neurons))
 s = ax.plot_surface(T,X,u_dnn_ag,linewidth=0,antialiased=False,cmap=cm.viridis)
@@ -69,7 +69,7 @@ ax.set_zlabel('$u_{NN}$')
 plt.savefig('./figures/Solution_NN_%dhiddenLayer_datapoints=%gx%g_iterations=%g.pdf'%(len(num_hidden_neurons),Nx,Nt,num_iter))
 
 
-fig = plt.figure(figsize=(7,7))
+fig = plt.figure(figsize=(5,5))
 ax = fig.gca(projection='3d')
 ax.set_title('Analytical solution')
 s = ax.plot_surface(T,X,U_analytical,linewidth=0,antialiased=False,cmap=cm.viridis)
@@ -78,7 +78,7 @@ ax.set_ylabel('Position $x$');
 ax.set_zlabel('$u_{analytical}$')
 plt.savefig('./figures/analytical_solution_datapoints=%gx%g_iterations=%g.pdf'%(Nx,Nt,num_iter))
 
-fig = plt.figure(figsize=(10,10))
+fig = plt.figure(figsize=(5,5))
 ax = fig.gca(projection='3d')
 ax.set_title('Difference')
 s = ax.plot_surface(T,X,diff_ag,linewidth=0,antialiased=False,cmap=cm.viridis)
@@ -91,7 +91,7 @@ plt.savefig('./figures/difference_datapoints=%gx%g_iterations=%g.pdf'%(Nx,Nt,num
 
 x_min = t[0];x_max = t[-1]
 y_min = x[0];y_max = x[-1]
-fig = plt.figure(figsize=(10, 10))
+fig = plt.figure(figsize=(5, 5))
 fig.subplots_adjust(hspace=0.5)
 gs = fig.add_gridspec(2, 1)
 
@@ -134,7 +134,7 @@ res_analytical2 = U_analytical[:,indx2]
 res_analytical3 = U_analytical[:,indx3]
 
 # Plot the slices
-plt.figure(figsize=(7,7))
+plt.figure(figsize=(5,5))
 plt.title("Computed solutions at time = %g"%t1)
 plt.plot(x, res1)
 plt.plot(x,res_analytical1)
@@ -142,7 +142,7 @@ plt.legend(['dnn','analytical'])
 plt.grid()
 plt.savefig('./figures/Computed solutions at time=%g_datapoints=%gx%g_iterations=%g.pdf'%(t1,Nx,Nt,num_iter))
 
-plt.figure(figsize=(7,7))
+plt.figure(figsize=(5,5))
 plt.title("Computed solutions at time = %g"%t2)
 plt.plot(x, res2)
 plt.plot(x,res_analytical2)
@@ -151,7 +151,7 @@ plt.grid()
 plt.savefig('./figures/Computed solutions at time=%g_datapoints=%gx%g_iterations=%g.pdf'%(t2,Nx,Nt,num_iter))
 
 
-plt.figure(figsize=(7,7))
+plt.figure(figsize=(5,5))
 plt.title("Computed solutions at time = %g"%t3)
 plt.plot(x, res3)
 plt.plot(x,res_analytical3)

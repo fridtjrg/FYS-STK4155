@@ -145,7 +145,7 @@ diff = np.abs(diff)
 
 print(z.shape,u_exact)
 
-fig = plt.figure(figsize=(10, 10))
+fig = plt.figure(figsize=(5, 5))
 fig.subplots_adjust(hspace=0.5)
 gs = fig.add_gridspec(2, 1)
 ax = fig.add_subplot(gs[0, :], )

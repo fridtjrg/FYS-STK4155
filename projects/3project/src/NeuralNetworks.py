@@ -138,7 +138,7 @@ def deep_neural_network(deep_params, x):
         # Add a row of ones to include bias
         x_prev = np.concatenate((np.ones((1,num_points)), x_prev ), axis = 0)
         z_hidden = np.matmul(w_hidden, x_prev)
-        x_hidden = sigmoid(z_hidden)
+        x_hidden = sigmoid(z_hidden)    #switched to tanh to get the different activation function
         # Update x_prev such that next layer can use the output from this layer
         x_prev = x_hidden
 
