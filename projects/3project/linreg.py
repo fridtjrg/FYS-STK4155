@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from matplotlib import cm
+import os
 
 #=============================================================
 #            Defining useful functions
@@ -157,7 +158,8 @@ h = ax.imshow(diff.T, extent=[x.min(), x.max(), y.min(), y.max()],
                origin='lower', aspect='auto', label='u')
 plt.colorbar(h)
 plt.title(f'Difference between ridge and analytical solution for $\Delta x={dx}$ and $\Delta t={dt:.2f}$')
-plt.savefig(f'./figures/u_diff_linreg_dx={dx}.pdf')
+path = os.sys.path[0]
+plt.savefig(path+f'/figures/u_diff_linreg_dx={dx}.pdf')
 
 
 
