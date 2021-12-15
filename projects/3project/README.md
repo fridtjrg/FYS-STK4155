@@ -5,7 +5,7 @@ This folder contains all the code used for project3, where we compare the use of
 ## Folder structure
 
 ### `figures/` folder
-This folder is the default save location for all plots. Here you can find all the figures that were included in the report, and some that were not.
+This folder is the default save location for all plots. Here you can find all the figures that were included in the report, and some that were not. Note that all the figures might not be exactly the same as the ones in the report, as some of them are influenced by some random elements, such as train_test_split().
 
 ### `src/` folder
 This folder contains source code used by other programs. The python scripts in the `src/` folder is not intended to be run alone. 
