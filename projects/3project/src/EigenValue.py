@@ -112,12 +112,12 @@ class EigenValue:
 
 
         fig0, ax0 = plt.subplots()
-        ax0.plot(range(self.num_iter+1), self.EV[:, 0], color='b', label=f'NN $v_1$={self.getEigenVector[0][0]:.5f}')
-        ax0.plot(range(self.num_iter+1), self.EV[:, 1], color='g', label=f'NN $v_2$={self.getEigenVector[1][0]:.5f}')
-        ax0.plot(range(self.num_iter+1), self.EV[:, 2], color='r', label=f'NN $v_3$={self.getEigenVector[2][0]:.5f}')
-        ax0.plot(range(self.num_iter+1), self.EV[:, 3], color='y', label=f'NN $v_4$={self.getEigenVector[3][0]:.5f}')
-        ax0.plot(range(self.num_iter+1), self.EV[:, 4], color='k', label=f'NN $v_5$={self.getEigenVector[4][0]:.5f}')
-        ax0.plot(range(self.num_iter+1), self.EV[:, 5], color='c', label=f'NN $v_6$={self.getEigenVector[5][0]:.5f}')
+        ax0.plot(range(self.num_iter+1), self.EV[:, 0], color='b', label=f'NN $v_1$={self.getEigenVector()[0][0]:.5f}')
+        ax0.plot(range(self.num_iter+1), self.EV[:, 1], color='g', label=f'NN $v_2$={self.getEigenVector()[1][0]:.5f}')
+        ax0.plot(range(self.num_iter+1), self.EV[:, 2], color='r', label=f'NN $v_3$={self.getEigenVector()[2][0]:.5f}')
+        ax0.plot(range(self.num_iter+1), self.EV[:, 3], color='y', label=f'NN $v_4$={self.getEigenVector()[3][0]:.5f}')
+        ax0.plot(range(self.num_iter+1), self.EV[:, 4], color='k', label=f'NN $v_5$={self.getEigenVector()[4][0]:.5f}')
+        ax0.plot(range(self.num_iter+1), self.EV[:, 5], color='c', label=f'NN $v_6$={self.getEigenVector()[5][0]:.5f}')
         ax0.set_ylabel('Value of the elements of the estimated eigenvector, $v$')
         ax0.set_xlabel('Number of Iterations')
         if self.type_ == 'min':
@@ -127,8 +127,8 @@ class EigenValue:
         ax0.set_title("Convergence of the estimated eigenvector" + title)
         ax0.legend()
         plt.grid()
-        plt.savefig('./figures/EigenValue_convergence.pdf')
-        #plt.show()
+        #plt.savefig('./figures/EigenValue_convergence.pdf')
+        plt.show()
 
 
 
